@@ -5,6 +5,7 @@
 }
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -28,7 +29,7 @@
           href="https://fonts.gstatic.com"
           crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nunito:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
 
 
@@ -40,18 +41,19 @@
 
 
     <!-- =====================================================
-         LUCIDE ICONS
+         LUCIDE
          ===================================================== -->
 
     <script src="https://unpkg.com/lucide@latest"></script>
 
 
     <!-- =====================================================
-         GLOBAL DESIGN CSS
+         GLOBAL CSS
          ===================================================== -->
 
     <link rel="stylesheet"
-          href="~/css/site.css" />
+          href="~/css/site.css"
+          asp-append-version="true">
 
 
     <!-- =====================================================
@@ -59,58 +61,222 @@
          ===================================================== -->
 
     <link rel="stylesheet"
-          href="~/css/student/register.css" />
+          href="~/css/Student/register.css"
+          asp-append-version="true">
 
 </head>
 
 
-<body class="min-h-screen flex items-center justify-center md:p-2">
+<body class="registration-page">
 
 
     <!-- =====================================================
-         REGISTRATION CONTAINER
+         TOAST CONTAINER
          ===================================================== -->
 
-    <div class="registration-card flex flex-col md:flex-row w-full max-w-[1100px] overflow-hidden min-h-[700px]">
+    <div id="toastContainer"
+         class="toast-container"
+         aria-live="polite"
+         aria-atomic="true">
 
 
         <!-- =================================================
-             LEFT SIDE
+             SUCCESS TOAST
              ================================================= -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="settlemate-toast success-toast"
+                 role="alert">
 
-        <div class="w-full md:w-[50%] md:p-5 p-8 flex flex-col justify-between">
+                <div class="toast-icon">
+
+                    <i data-lucide="check"></i>
+
+                </div>
+
+                <div class="toast-content">
+
+                    <strong>
+                        Saved successfully
+                    </strong>
+
+                    <p>
+                        @TempData["Success"]
+                    </p>
+
+                </div>
+
+                <button type="button"
+                        class="toast-close"
+                        onclick="closeToast(this)"
+                        aria-label="Close notification">
+
+                    <i data-lucide="x"></i>
+
+                </button>
+
+            </div>
+        }
 
 
-            <div>
+        <!-- =================================================
+             BACKEND VALIDATION ERROR TOASTS
+
+             IMPORTANT:
+             These will ONLY display when the controller
+             sets ViewBag.ShowBackendErrors = true.
+             ================================================= -->
+        @if (ViewBag.ShowBackendErrors == true &&
+                !ViewData.ModelState.IsValid)
+        {
+            var validationErrors = ViewData.ModelState
+            .SelectMany(x => x.Value.Errors)
+            .Select(x => string.IsNullOrWhiteSpace(x.ErrorMessage)
+            ? "Please check your entered details."
+            : x.ErrorMessage)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct()
+            .ToList();
+
+            foreach (var error in validationErrors)
+            {
+                <div class="settlemate-toast error-toast"
+                     role="alert">
+
+                    <div class="toast-icon">
+
+                        <i data-lucide="x"></i>
+
+                    </div>
+
+                    <div class="toast-content">
+
+                        <strong>
+                            Something went wrong
+                        </strong>
+
+                        <p>
+                            @error
+                        </p>
+
+                    </div>
+
+                    <button type="button"
+                            class="toast-close"
+                            onclick="closeToast(this)"
+                            aria-label="Close notification">
+
+                        <i data-lucide="x"></i>
+
+                    </button>
+
+                </div>
+            }
+        }
 
 
-                <!-- =========================================
-                     LOGO
-                     ========================================= -->
+        <!-- =================================================
+             RESEND OTP TOAST
+             ================================================= -->
+        @if (ViewBag.ResendMessage != null)
+        {
+            <div class="settlemate-toast success-toast"
+                 role="alert">
 
-                <div class="flex flex-col items-center mb-8">
+                <div class="toast-icon">
 
-                    <img src="~/images/Student/logo.png"
-                         alt="SettleMate Logo"
-                         class="h-34 w-32 object-contain">
+                    <i data-lucide="send"></i>
 
-                    <h3 class="text-sm font-semibold text-[#526777]">
-                        Find your perfect space, effortlessly.
-                    </h3>
+                </div>
+
+                <div class="toast-content">
+
+                    <strong>
+                        OTP Sent
+                    </strong>
+
+                    <p>
+                        @ViewBag.ResendMessage
+                    </p>
+
+                </div>
+
+                <button type="button"
+                        class="toast-close"
+                        onclick="closeToast(this)"
+                        aria-label="Close notification">
+
+                    <i data-lucide="x"></i>
+
+                </button>
+
+            </div>
+        }
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MAIN REGISTRATION CARD
+         ===================================================== -->
+
+    <main class="registration-shell">
+
+
+        <div class="registration-card">
+
+
+            <!-- =================================================
+                 LEFT / FORM SIDE
+                 ================================================= -->
+
+            <section class="registration-form-side">
+
+
+                <!-- =================================================
+                     BRAND
+                     ================================================= -->
+
+                <div class="brand-block">
+
+                    <div class="brand-logo-wrap">
+
+                        <img src="~/images/Student/logo.png"
+                             alt="SettleMate Logo"
+                             class="brand-logo">
+
+                    </div>
+
+                    <div>
+
+                        <h1 class="brand-title">
+                            Create your account
+                        </h1>
+
+                        <p class="brand-subtitle">
+                            Find your perfect space, effortlessly.
+                        </p>
+
+                    </div>
 
                 </div>
 
 
-                <!-- =========================================
-                     PROGRESS BAR
-                     ========================================= -->
 
-                <div class="registration-step-track relative flex justify-between items-center max-w-[300px] mx-auto mb-12">
+                <!-- =================================================
+                     PROGRESS
+                     ================================================= -->
+
+                <div class="registration-progress"
+                     aria-label="Registration progress">
+
+                    <div class="progress-line"></div>
 
 
                     <!-- STEP 1 -->
 
-                    <div class="relative z-10 flex flex-col items-center">
+                    <div class="progress-step-wrap">
 
                         <div id="pill-1"
                              class="step-pill active">
@@ -119,7 +285,7 @@
 
                         </div>
 
-                        <span class="text-[10px] font-medium text-[#0D9488] mt-1">
+                        <span>
                             Account
                         </span>
 
@@ -128,7 +294,7 @@
 
                     <!-- STEP 2 -->
 
-                    <div class="relative z-10 flex flex-col items-center">
+                    <div class="progress-step-wrap">
 
                         <div id="pill-2"
                              class="step-pill">
@@ -137,7 +303,7 @@
 
                         </div>
 
-                        <span class="text-[10px] font-medium text-[#0D9488] mt-1">
+                        <span>
                             Security
                         </span>
 
@@ -146,7 +312,7 @@
 
                     <!-- STEP 3 -->
 
-                    <div class="relative z-10 flex flex-col items-center">
+                    <div class="progress-step-wrap">
 
                         <div id="pill-3"
                              class="step-pill">
@@ -155,7 +321,7 @@
 
                         </div>
 
-                        <span class="text-[10px] font-medium text-[#0D9488] mt-1">
+                        <span>
                             Location
                         </span>
 
@@ -164,7 +330,7 @@
 
                     <!-- STEP 4 -->
 
-                    <div class="relative z-10 flex flex-col items-center">
+                    <div class="progress-step-wrap">
 
                         <div id="pill-4"
                              class="step-pill">
@@ -173,7 +339,7 @@
 
                         </div>
 
-                        <span class="text-[10px] font-medium text-[#0D9488] mt-1">
+                        <span>
                             Profile
                         </span>
 
@@ -182,60 +348,17 @@
                 </div>
 
 
-                <!-- =========================================
-                     SUCCESS MESSAGE
-                     ========================================= -->
-                @if (TempData["Success"] != null)
-                {
-                    <div class="mb-6 text-center text-green-600 font-semibold">
 
-                        @TempData["Success"]
-
-                    </div>
-                }
-
-
-                <!-- =========================================
-                     ERROR MESSAGE
-                     ========================================= -->
-                @if (!ViewData.ModelState.IsValid)
-                {
-                    <div class="mb-6 text-red-500 text-sm">
-
-                        @Html.ValidationSummary(
-                        false,
-                                        "",
-                                        new { @class = "text-red-500" })
-
-                </div>
-                                }
-
-
-                <!-- =========================================
-                     RESEND MESSAGE
-                     ========================================= -->
-                @if (ViewBag.ResendMessage != null)
-                {
-                    <div class="mb-4 text-center text-green-600 text-sm font-semibold">
-
-                        @ViewBag.ResendMessage
-
-                    </div>
-                }
-
-
-                <!-- =========================================
-                     REGISTRATION FORM
-                     ========================================= -->
+                <!-- =================================================
+                     FORM
+                     ================================================= -->
 
                 <form id="regForm"
                       method="post"
                       action="/Student/Register/SendOTP">
 
 
-                    <!-- =================================================
-                         HIDDEN GENDER
-                         ================================================= -->
+                    <!-- HIDDEN GENDER -->
 
                     <input type="hidden"
                            name="Gender"
@@ -243,9 +366,7 @@
                            value="@(Model?.Gender ?? "Other")">
 
 
-                    <!-- =================================================
-                         HIDDEN PROFILE PHOTO
-                         ================================================= -->
+                    <!-- HIDDEN PROFILE PHOTO -->
 
                     <input type="hidden"
                            name="ProfilePhoto"
@@ -253,153 +374,170 @@
                            value="@(Model?.ProfilePhoto ?? "female_01.png")">
 
 
+
                     <!-- =================================================
-                         STEP 1 - ACCOUNT
+                         STEP 1
                          ================================================= -->
 
                     <div id="step-1"
                          class="step-content active">
 
 
-                        <h2 class="text-xl font-bold mx-auto border-b-2 border-[#123B66] w-fit pb-1 mb-8">
+                        <div class="step-heading">
 
-                            Account Setup
+                            <span class="step-eyebrow">
+                                STEP 01
+                            </span>
 
-                        </h2>
+                            <h2>
+                                Account setup
+                            </h2>
+
+                            <p>
+                                Tell us a little about yourself.
+                            </p>
+
+                        </div>
 
 
-                        <div class="space-y-4">
+
+                        <div class="form-fields">
 
 
                             <!-- FULL NAME -->
 
-                            <div>
+                            <div class="form-field">
 
                                 <label class="registration-label">
                                     Full Name
                                 </label>
 
-                                <input type="text"
-                                       name="Name"
-                                       value="@Model?.Name"
-                                       placeholder="John Doe"
-                                       class="registration-input"
-                                       maxlength="100"
-                                       minlength="3"
-                                       required>
+                                <div class="input-wrap">
 
-                            </div>
+                                    <i data-lucide="user"
+                                       class="input-icon">
+                                    </i>
 
-
-                            <!-- GENDER -->
-
-                            <div>
-
-                                <label class="registration-label mb-2">
-                                    Gender Preference
-                                </label>
-
-
-                                <div class="flex gap-3">
-
-
-                                    <div class="gender-pill text-sm @(Model?.Gender == "Male" ? "selected" : "")"
-                                         onclick="selectGender(this)">
-
-                                        Male
-
-                                    </div>
-
-
-                                    <div class="gender-pill text-sm @(Model?.Gender == "Female" ? "selected" : "")"
-                                         onclick="selectGender(this)">
-
-                                        Female
-
-                                    </div>
-
-
-                                    <div class="gender-pill text-sm @(string.IsNullOrEmpty(Model?.Gender) || Model?.Gender == "Other" ? "selected" : "")"
-                                         onclick="selectGender(this)">
-
-                                        Other
-
-                                    </div>
+                                    <input type="text"
+                                           name="Name"
+                                           id="txtname"
+                                           value="@Model?.Name"
+                                           placeholder="Enter your full name"
+                                           class="registration-input">
 
                                 </div>
 
                             </div>
 
 
+
+                            <!-- GENDER -->
+
+                            <div class="form-field">
+
+                                <label class="registration-label">
+                                    Gender
+                                </label>
+
+                                <div class="gender-options">
+
+
+                                    <button type="button"
+                                            class="gender-pill @(Model?.Gender == "Male" ? "selected" : "")"
+                                            onclick="selectGender(this)">
+
+                                        <i data-lucide="user"></i>
+
+                                        <span>
+                                            Male
+                                        </span>
+
+                                    </button>
+
+
+                                    <button type="button"
+                                            class="gender-pill @(Model?.Gender == "Female" ? "selected" : "")"
+                                            onclick="selectGender(this)">
+
+                                        <i data-lucide="user-round"></i>
+
+                                        <span>
+                                            Female
+                                        </span>
+
+                                    </button>
+
+
+                                    <button type="button"
+                                            class="gender-pill @(string.IsNullOrEmpty(Model?.Gender) || Model?.Gender == "Other" ? "selected" : "")"
+                                            onclick="selectGender(this)">
+
+                                        <i data-lucide="users"></i>
+
+                                        <span>
+                                            Other
+                                        </span>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+
                             <!-- MOBILE -->
 
-                            <div>
+                            <div class="form-field">
 
                                 <label class="registration-label">
                                     Mobile Number
                                 </label>
 
+                                <div class="input-wrap">
 
-                                <div class="relative">
-
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#526777]">
-
-                                        <i data-lucide="phone"
-                                           class="w-4 h-4">
-                                        </i>
-
-                                    </span>
-
+                                    <i data-lucide="phone"
+                                       class="input-icon">
+                                    </i>
 
                                     <input type="tel"
                                            name="Phone"
+                                           id="phoneNumber"
                                            value="@Model?.Phone"
-                                           placeholder="1234567890"
-                                           class="registration-input pl-10"
-                                           maxlength="10"
-                                           pattern="[0-9]{10}"
-                                           required>
+                                           placeholder="Enter your mobile number"
+                                           class="registration-input">
 
                                 </div>
 
                             </div>
 
 
+
                             <!-- EMAIL -->
 
-                            <div>
+                            <div class="form-field">
 
                                 <label class="registration-label">
                                     Email Address
                                 </label>
 
+                                <div class="input-wrap">
 
-                                <div class="relative">
+                                    <i data-lucide="mail"
+                                       class="input-icon">
+                                    </i>
 
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#526777]">
-
-                                        <i data-lucide="mail"
-                                           class="w-4 h-4">
-                                        </i>
-
-                                    </span>
-
-
-                                    <input type="email"
-                                           name="Email"
+                                    <input type="text"
+                                           name="email"
+                                           id="emailInput"
                                            value="@Model?.Email"
-                                           placeholder="john@example.com"
-                                           class="registration-input pl-10"
-                                           maxlength="100"
-                                           required>
+                                           placeholder="you@example.com"
+                                           class="registration-input">
 
                                 </div>
 
-
-                                <p class="text-xs text-[#526777] mt-1 ml-1">
-
-                                    OTP will be sent to this email after you complete the registration form.
-
+                                <p class="field-helper">
+                                    We'll send a verification code to this email.
                                 </p>
 
                             </div>
@@ -409,113 +547,99 @@
                     </div>
 
 
+
                     <!-- =================================================
-                         STEP 2 - SECURITY
+                         STEP 2
                          ================================================= -->
 
                     <div id="step-2"
                          class="step-content">
 
 
-                        <h2 class="text-xl font-bold mx-auto border-b-2 border-[#123B66] w-fit pb-1 mb-6">
+                        <div class="step-heading">
 
-                            Security
+                            <span class="step-eyebrow">
+                                STEP 02
+                            </span>
 
-                        </h2>
+                            <h2>
+                                Secure your account
+                            </h2>
+
+                            <p>
+                                Create a password you'll remember.
+                            </p>
+
+                        </div>
 
 
-                        <div class="space-y-4">
+
+                        <div class="form-fields">
 
 
                             <!-- PASSWORD -->
 
-                            <div>
+                            <div class="form-field">
 
                                 <label class="registration-label">
                                     Create Password
                                 </label>
 
+                                <div class="input-wrap">
 
-                                <div class="relative">
-
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#526777]">
-
-                                        <i data-lucide="lock"
-                                           class="w-4 h-4">
-                                        </i>
-
-                                    </span>
-
+                                    <i data-lucide="lock"
+                                       class="input-icon">
+                                    </i>
 
                                     <input type="password"
                                            name="Password"
                                            id="passwordInput"
-                                           placeholder="••••••••"
-                                           class="registration-input px-10"
-                                           minlength="8"
-                                           maxlength="50"
-                                           required>
-
+                                           placeholder="Enter your password"
+                                           class="registration-input password-field">
 
                                     <button type="button"
                                             onclick="togglePassword('passwordInput', this)"
-                                            class="absolute right-4 top-1/2 -translate-y-1/2 text-[#526777]">
+                                            class="password-toggle">
 
-                                        <i data-lucide="eye-off"
-                                           class="w-4 h-4">
-                                        </i>
+                                        <i data-lucide="eye-off"></i>
 
                                     </button>
 
                                 </div>
 
-
-                                <p class="password-helper mt-1 ml-1">
-
-                                    Must be at least 8 characters long.
-
+                                <p class="password-helper">
+                                    Use a secure password for your account.
                                 </p>
 
                             </div>
 
 
+
                             <!-- CONFIRM PASSWORD -->
 
-                            <div>
+                            <div class="form-field">
 
                                 <label class="registration-label">
                                     Confirm Password
                                 </label>
 
+                                <div class="input-wrap">
 
-                                <div class="relative">
-
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#526777]">
-
-                                        <i data-lucide="refresh-cw"
-                                           class="w-4 h-4">
-                                        </i>
-
-                                    </span>
-
+                                    <i data-lucide="shield-check"
+                                       class="input-icon">
+                                    </i>
 
                                     <input type="password"
                                            name="ConfirmPassword"
                                            id="confirmPasswordInput"
-                                           placeholder="••••••••"
-                                           class="registration-input px-10"
-                                           minlength="8"
-                                           maxlength="50"
-                                           required>
-
+                                           placeholder="Re-enter your password"
+                                           class="registration-input password-field">
 
                                     <button type="button"
                                             onclick="togglePassword('confirmPasswordInput', this)"
-                                            class="absolute right-4 top-1/2 -translate-y-1/2 text-[#526777]">
+                                            class="password-toggle">
 
-                                        <i data-lucide="eye-off"
-                                           class="w-4 h-4">
-                                        </i>
+                                        <i data-lucide="eye-off"></i>
 
                                     </button>
 
@@ -528,87 +652,104 @@
                     </div>
 
 
+
                     <!-- =================================================
-                         STEP 3 - LOCATION
+                         STEP 3
                          ================================================= -->
 
                     <div id="step-3"
                          class="step-content">
 
 
-                        <h2 class="text-xl font-bold mx-auto border-b-2 border-[#123B66] w-fit pb-1 mb-6">
+                        <div class="step-heading">
 
-                            Location Details
+                            <span class="step-eyebrow">
+                                STEP 03
+                            </span>
 
-                        </h2>
+                            <h2>
+                                Where are you based?
+                            </h2>
+
+                            <p>
+                                This helps us personalize your experience.
+                            </p>
+
+                        </div>
 
 
-                        <div class="space-y-6">
+
+                        <div class="form-fields">
 
 
                             <!-- CITY -->
 
-                            <div>
+                            <div class="form-field">
 
                                 <label class="registration-label">
                                     City
                                 </label>
 
+                                <div class="input-wrap">
 
-                                <select name="City"
-                                        class="registration-input appearance-none"
-                                        required>
+                                    <i data-lucide="building-2"
+                                       class="input-icon">
+                                    </i>
 
-                                    <option value="">
-                                        Select your city
-                                    </option>
+                                    <select name="City"
+                                            id="ddlcity"
+                                            class="registration-input registration-select">
 
-                                    <option value="Rajkot"
-                                            selected="@(Model?.City == "Rajkot")">
+                                        <option value="">
+                                            Select your city
+                                        </option>
 
-                                        Rajkot
+                                        <option value="Rajkot"
+                                                selected="@(Model?.City == "Rajkot")">
 
-                                    </option>
+                                            Rajkot
 
-                                    <option value="Ahmedabad"
-                                            selected="@(Model?.City == "Ahmedabad")">
+                                        </option>
 
-                                        Ahmedabad
+                                        <option value="Ahmedabad"
+                                                selected="@(Model?.City == "Ahmedabad")">
 
-                                    </option>
+                                            Ahmedabad
 
-                                </select>
+                                        </option>
+
+                                    </select>
+
+                                    <i data-lucide="chevron-down"
+                                       class="select-icon">
+                                    </i>
+
+                                </div>
 
                             </div>
 
 
+
                             <!-- ADDRESS -->
 
-                            <div>
+                            <div class="form-field">
 
                                 <label class="registration-label">
-                                    Preferred Location
+                                    Address
                                 </label>
 
+                                <div class="input-wrap">
 
-                                <div class="relative">
-
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#526777]">
-
-                                        <i data-lucide="map-pin"
-                                           class="w-4 h-4">
-                                        </i>
-
-                                    </span>
-
+                                    <i data-lucide="map-pin"
+                                       class="input-icon">
+                                    </i>
 
                                     <input type="text"
                                            name="Address"
+                                           id="address"
                                            value="@Model?.Address"
-                                           placeholder="Neighborhood or Zip"
-                                           class="registration-input pl-10"
-                                           maxlength="250"
-                                           required>
+                                           placeholder="Enter your address"
+                                           class="registration-input">
 
                                 </div>
 
@@ -619,101 +760,181 @@
                     </div>
 
 
+
                     <!-- =================================================
-                         STEP 4 - AVATAR
+                         STEP 4
                          ================================================= -->
 
                     <div id="step-4"
                          class="step-content">
 
 
-                        <h2 class="text-xl font-bold mx-auto border-b-2 border-[#123B66] w-fit pb-1 mb-6">
+                        <div class="step-heading">
 
-                            Choose Your Avatar
+                            <span class="step-eyebrow">
+                                STEP 04
+                            </span>
 
-                        </h2>
+                            <h2>
+                                Choose your avatar
+                            </h2>
 
-
-                        <!-- FEMALE AVATARS -->
-
-                        <div class="flex justify-between items-center px-2 mb-8">
-
-
-                            <div class="avatar-circle @(Model?.ProfilePhoto == "female_01.png" || string.IsNullOrEmpty(Model?.ProfilePhoto) ? "selected" : "")"
-                                 onclick="selectAvatar(this)">
-
-                                <img src="~/images/Student/female_01.png"
-                                     alt="Female Avatar 1">
-
-                            </div>
-
-
-                            <div class="avatar-circle @(Model?.ProfilePhoto == "female_02.png" ? "selected" : "")"
-                                 onclick="selectAvatar(this)">
-
-                                <img src="~/images/Student/female_02.png"
-                                     alt="Female Avatar 2">
-
-                            </div>
-
-
-                            <div class="avatar-circle @(Model?.ProfilePhoto == "female_03.png" ? "selected" : "")"
-                                 onclick="selectAvatar(this)">
-
-                                <img src="~/images/Student/female_03.png"
-                                     alt="Female Avatar 3">
-
-                            </div>
-
-
-                            <div class="avatar-circle @(Model?.ProfilePhoto == "female_04.png" ? "selected" : "")"
-                                 onclick="selectAvatar(this)">
-
-                                <img src="~/images/Student/female_04.png"
-                                     alt="Female Avatar 4">
-
-                            </div>
+                            <p>
+                                Pick an avatar that represents you.
+                            </p>
 
                         </div>
 
 
-                        <!-- MALE AVATARS -->
 
-                        <div class="flex justify-between items-center px-2 mb-8">
+                        <div class="avatar-section">
 
 
-                            <div class="avatar-circle @(Model?.ProfilePhoto == "male_01.png" ? "selected" : "")"
-                                 onclick="selectAvatar(this)">
+                            <p class="avatar-group-title">
+                                Female
+                            </p>
 
-                                <img src="~/images/Student/male_01.png"
-                                     alt="Male Avatar 1">
+
+                            <div class="avatar-grid">
+
+
+                                <button type="button"
+                                        class="avatar-card @(Model?.ProfilePhoto == "female_01.png" || string.IsNullOrEmpty(Model?.ProfilePhoto) ? "selected" : "")"
+                                        onclick="selectAvatar(this)">
+
+                                    <img src="~/images/Student/female_01.png"
+                                         alt="Female Avatar 1">
+
+                                    <span class="avatar-check">
+
+                                        <i data-lucide="check"></i>
+
+                                    </span>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="avatar-card @(Model?.ProfilePhoto == "female_02.png" ? "selected" : "")"
+                                        onclick="selectAvatar(this)">
+
+                                    <img src="~/images/Student/female_02.png"
+                                         alt="Female Avatar 2">
+
+                                    <span class="avatar-check">
+
+                                        <i data-lucide="check"></i>
+
+                                    </span>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="avatar-card @(Model?.ProfilePhoto == "female_03.png" ? "selected" : "")"
+                                        onclick="selectAvatar(this)">
+
+                                    <img src="~/images/Student/female_03.png"
+                                         alt="Female Avatar 3">
+
+                                    <span class="avatar-check">
+
+                                        <i data-lucide="check"></i>
+
+                                    </span>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="avatar-card @(Model?.ProfilePhoto == "female_04.png" ? "selected" : "")"
+                                        onclick="selectAvatar(this)">
+
+                                    <img src="~/images/Student/female_04.png"
+                                         alt="Female Avatar 4">
+
+                                    <span class="avatar-check">
+
+                                        <i data-lucide="check"></i>
+
+                                    </span>
+
+                                </button>
 
                             </div>
 
 
-                            <div class="avatar-circle @(Model?.ProfilePhoto == "male_02.png" ? "selected" : "")"
-                                 onclick="selectAvatar(this)">
 
-                                <img src="~/images/Student/male_02.png"
-                                     alt="Male Avatar 2">
-
-                            </div>
+                            <p class="avatar-group-title">
+                                Male
+                            </p>
 
 
-                            <div class="avatar-circle @(Model?.ProfilePhoto == "male_03.png" ? "selected" : "")"
-                                 onclick="selectAvatar(this)">
-
-                                <img src="~/images/Student/male_03.png"
-                                     alt="Male Avatar 3">
-
-                            </div>
+                            <div class="avatar-grid">
 
 
-                            <div class="avatar-circle @(Model?.ProfilePhoto == "male_04.png" ? "selected" : "")"
-                                 onclick="selectAvatar(this)">
+                                <button type="button"
+                                        class="avatar-card @(Model?.ProfilePhoto == "male_01.png" ? "selected" : "")"
+                                        onclick="selectAvatar(this)">
 
-                                <img src="~/images/Student/male_04.png"
-                                     alt="Male Avatar 4">
+                                    <img src="~/images/Student/male_01.png"
+                                         alt="Male Avatar 1">
+
+                                    <span class="avatar-check">
+
+                                        <i data-lucide="check"></i>
+
+                                    </span>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="avatar-card @(Model?.ProfilePhoto == "male_02.png" ? "selected" : "")"
+                                        onclick="selectAvatar(this)">
+
+                                    <img src="~/images/Student/male_02.png"
+                                         alt="Male Avatar 2">
+
+                                    <span class="avatar-check">
+
+                                        <i data-lucide="check"></i>
+
+                                    </span>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="avatar-card @(Model?.ProfilePhoto == "male_03.png" ? "selected" : "")"
+                                        onclick="selectAvatar(this)">
+
+                                    <img src="~/images/Student/male_03.png"
+                                         alt="Male Avatar 3">
+
+                                    <span class="avatar-check">
+
+                                        <i data-lucide="check"></i>
+
+                                    </span>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="avatar-card @(Model?.ProfilePhoto == "male_04.png" ? "selected" : "")"
+                                        onclick="selectAvatar(this)">
+
+                                    <img src="~/images/Student/male_04.png"
+                                         alt="Male Avatar 4">
+
+                                    <span class="avatar-check">
+
+                                        <i data-lucide="check"></i>
+
+                                    </span>
+
+                                </button>
 
                             </div>
 
@@ -724,68 +945,173 @@
 
                 </form>
 
-            </div>
+
+
+                <!-- =================================================
+                     NAVIGATION BUTTONS
+                     ================================================= -->
+
+                <div class="registration-actions">
+
+
+                    <button id="backBtn"
+                            type="button"
+                            onclick="prevStep()"
+                            class="registration-back-btn hidden">
+
+                        <i data-lucide="arrow-left"></i>
+
+                        <span>
+                            Back
+                        </span>
+
+                    </button>
+
+
+                    <button id="nextBtn"
+                            type="button"
+                            onclick="nextStep()"
+                            class="registration-primary-btn">
+
+                        <span id="nextText">
+                            Continue
+                        </span>
+
+                        <i data-lucide="arrow-right"
+                           id="nextIcon">
+                        </i>
+
+                    </button>
+
+                </div>
+
+
+
+                <p class="registration-footer">
+
+                    By continuing, you agree to use SettleMate responsibly.
+
+                </p>
+
+
+            </section>
+
 
 
             <!-- =================================================
-                 FOOTER BUTTONS
+                 RIGHT ILLUSTRATION
                  ================================================= -->
 
-            <div class="flex gap-4 mt-12">
+            <aside class="registration-visual">
 
 
-                <!-- BACK -->
+                <div class="visual-glow glow-one"></div>
 
-                <button id="backBtn"
-                        type="button"
-                        onclick="prevStep()"
-                        class="hidden flex-1 registration-back-btn py-3 font-semibold">
-
-                    Back
-
-                </button>
+                <div class="visual-glow glow-two"></div>
 
 
-                <!-- NEXT -->
+                <div class="visual-content">
 
-                <button id="nextBtn"
-                        type="button"
-                        onclick="nextStep()"
-                        class="flex-[2] registration-primary-btn py-3 font-semibold flex items-center justify-center gap-2">
 
-                    <span id="nextText">
+                    <span class="visual-badge">
 
-                        Continue
+                        <i data-lucide="sparkles"></i>
+
+                        <span>
+                            Welcome to SettleMate
+                        </span>
 
                     </span>
 
 
-                    <i data-lucide="arrow-right"
-                       class="w-4 h-4"
-                       id="nextIcon">
+                    <h2>
 
-                    </i>
+                        Your new city.
 
-                </button>
+                        <br>
 
-            </div>
+                        Your new beginning.
+
+                    </h2>
+
+
+                    <p>
+
+                        Discover trusted spaces, connect with people,
+                        and make settling into a new city easier.
+
+                    </p>
+
+
+                    <div class="visual-image-wrap">
+
+                        <img src="~/images/Student/illustration.png"
+                             alt="SettleMate Illustration"
+                             class="visual-image">
+
+                    </div>
+
+
+                    <div class="visual-features">
+
+
+                        <div class="visual-feature">
+
+                            <span>
+
+                                <i data-lucide="shield-check"></i>
+
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Trusted
+                                </strong>
+
+                                <small>
+                                    Student-focused
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="visual-feature">
+
+                            <span>
+
+                                <i data-lucide="home"></i>
+
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Connected
+                                </strong>
+
+                                <small>
+                                    Find your space
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </aside>
+
 
         </div>
 
+    </main>
 
-        <!-- =================================================
-             RIGHT SIDE - ILLUSTRATION
-             ================================================= -->
-
-        <div class="hidden md:flex md:w-[50%] bg-[#F1F5F9] relative items-center justify-center">
-
-            <img src="~/images/illustration.png"
-                 alt="SettleMate Illustration"
-                 class="w-full h-full object-cover z-10">
-
-        </div>
-
-    </div>
 
 
     <!-- =====================================================
@@ -796,60 +1122,52 @@
          class="verify-modal hidden">
 
 
+        <div class="verify-modal-overlay"
+             onclick="closeModal()">
+        </div>
+
+
         <div class="verify-modal-card">
 
 
-            <!-- CLOSE -->
-
             <button type="button"
                     onclick="closeModal()"
-                    class="absolute right-6 top-6 text-[#526777] hover:text-[#102A43]">
+                    class="modal-close">
 
-                <i data-lucide="x"
-                   class="w-5 h-5">
-
-                </i>
+                <i data-lucide="x"></i>
 
             </button>
 
 
-            <!-- EMAIL ICON -->
+            <div class="modal-icon">
 
-            <div class="w-16 h-16 bg-[#CCFBF1] rounded-full flex items-center justify-center mx-auto mb-6">
-
-                <i data-lucide="mail"
-                   class="w-8 h-8 text-[#0D9488]">
-
-                </i>
+                <i data-lucide="mail-check"></i>
 
             </div>
 
 
-            <h2 class="text-xl font-bold mb-2">
+            <span class="modal-eyebrow">
+                EMAIL VERIFICATION
+            </span>
 
-                Verify Email
 
+            <h2>
+                Verify your email
             </h2>
 
 
-            <p class="text-sm text-[#526777] mb-8">
+            <p class="modal-description">
 
-                We sent a 6-digit code to
+                Enter the 6-digit verification code sent to
 
-                <span class="font-medium text-[#102A43]">
-
+                <strong>
                     @(ViewBag.OTPEmail ?? Model?.Email ?? "your email")
-
-                </span>
+                </strong>
 
             </p>
 
 
-            <!-- =================================================
-                 OTP INPUTS
-                 ================================================= -->
-
-            <div class="flex justify-between gap-2 mb-6">
+            <div class="otp-container">
 
 
                 <input type="text"
@@ -901,719 +1219,85 @@
             </div>
 
 
-            <!-- TIMER -->
+            <div class="otp-meta">
 
-            <p id="otpTimer"
-               class="text-xs text-[#526777] mb-2">
+                <span id="otpTimer">
+                    02:00 remaining
+                </span>
 
-                02:00 remaining
+            </div>
 
-            </p>
-
-
-            <!-- RESEND -->
 
             <button type="button"
                     onclick="resendOTP()"
-                    class="text-sm font-semibold text-[#0D9488] mb-8 hover:underline">
+                    class="resend-button">
 
-                Resend Code
+                Didn't receive the code?
+
+                <strong>
+                    Resend
+                </strong>
 
             </button>
 
-
-            <!-- VERIFY -->
 
             <button type="button"
                     onclick="verifyOTP()"
-                    class="w-full registration-primary-btn py-4 font-semibold">
+                    class="modal-verify-btn">
 
-                Verify Account
+                <span>
+                    Verify Account
+                </span>
+
+                <i data-lucide="arrow-right"></i>
 
             </button>
+
+
+            <p class="modal-security-note">
+
+                <i data-lucide="shield-check"></i>
+
+                Your verification code is secure.
+
+            </p>
+
 
         </div>
 
     </div>
 
 
+
     <!-- =====================================================
-         JAVASCRIPT
+         JAVASCRIPT CONFIGURATION
          ===================================================== -->
 
     <script>
 
-
-        // =====================================================
-        // LUCIDE
-        // =====================================================
-
-        lucide.createIcons();
-
-
-        // =====================================================
-        // CURRENT STEP
-        // =====================================================
-
-        let currentStep = 1;
-
-
-        // =====================================================
-        // OTP TIMER
-        // =====================================================
-
-        let otpTime = 120;
-
-        let otpTimerInterval = null;
-
-
-        // =====================================================
-        // UPDATE UI
-        // =====================================================
-
-        function updateUI() {
-
-            document
-                .querySelectorAll('.step-content')
-                .forEach(step => {
-
-                    step.classList.remove('active');
-
-                });
-
-
-            document
-                .getElementById(`step-${currentStep}`)
-                .classList.add('active');
-
-
-            document
-                .querySelectorAll('.step-pill')
-                .forEach((pill, index) => {
-
-                    const stepIndex = index + 1;
-
-
-                    if (stepIndex < currentStep) {
-
-                        pill.classList.add('completed');
-
-                        pill.classList.remove('active');
-
-                        pill.innerHTML =
-                            '<i data-lucide="check" class="w-4 h-4"></i>';
-
-                    }
-
-                    else if (stepIndex === currentStep) {
-
-                        pill.classList.add('active');
-
-                        pill.classList.remove('completed');
-
-                        pill.innerHTML = stepIndex;
-
-                    }
-
-                    else {
-
-                        pill.classList.remove('active');
-
-                        pill.classList.remove('completed');
-
-                        pill.innerHTML = stepIndex;
-
-                    }
-
-                });
-
-
-            lucide.createIcons();
-
-
-            // Back button
-
-            document
-                .getElementById('backBtn')
-                .classList
-                .toggle(
-                    'hidden',
-                    currentStep === 1
-                );
-
-
-            // Next button
-
-            const nextText =
-                document.getElementById('nextText');
-
-            const nextIcon =
-                document.getElementById('nextIcon');
-
-
-            if (currentStep === 4) {
-
-                nextText.textContent =
-                    "Complete Registration";
-
-
-                nextIcon.setAttribute(
-                    'data-lucide',
-                    'check-circle'
-                );
-
-            }
-
-            else {
-
-                nextText.textContent =
-                    "Continue";
-
-
-                nextIcon.setAttribute(
-                    'data-lucide',
-                    'arrow-right'
-                );
-
-            }
-
-
-            lucide.createIcons();
-
-        }
-
-
-        // =====================================================
-        // FRONTEND VALIDATION FOR CURRENT STEP
-        // =====================================================
-
-        function validateCurrentStep() {
-
-            const step =
-                document.getElementById(
-                    `step-${currentStep}`
-                );
-
-
-            const inputs =
-                step.querySelectorAll(
-                    'input, select'
-                );
-
-
-            for (let input of inputs) {
-
-                if (!input.checkValidity()) {
-
-                    input.reportValidity();
-
-                    return false;
-
-                }
-
-            }
-
-
-            // Password confirmation
-
-            if (currentStep === 2) {
-
-                const password =
-                    document.getElementById(
-                        "passwordInput"
-                    ).value;
-
-
-                const confirmPassword =
-                    document.getElementById(
-                        "confirmPasswordInput"
-                    ).value;
-
-
-                if (password !== confirmPassword) {
-
-                    alert(
-                        "Passwords do not match."
-                    );
-
-                    return false;
-
-                }
-
-            }
-
-
-            return true;
-
-        }
-
-
-        // =====================================================
-        // NEXT STEP
-        // =====================================================
-
-        function nextStep() {
-
-            if (!validateCurrentStep()) {
-
-                return;
-
-            }
-
-
-            if (currentStep < 4) {
-
-                currentStep++;
-
-                updateUI();
-
-            }
-
-            else {
-
-                // Submit complete registration
-
-                document
-                    .getElementById("regForm")
-                    .submit();
-
-            }
-
-        }
-
-
-        // =====================================================
-        // PREVIOUS STEP
-        // =====================================================
-
-        function prevStep() {
-
-            if (currentStep > 1) {
-
-                currentStep--;
-
-                updateUI();
-
-            }
-
-        }
-
-
-        // =====================================================
-        // GENDER
-        // =====================================================
-
-        function selectGender(element) {
-
-            document
-                .querySelectorAll('.gender-pill')
-                .forEach(pill => {
-
-                    pill.classList.remove(
-                        'selected'
-                    );
-
-                });
-
-
-            element.classList.add(
-                'selected'
-            );
-
-
-            document.getElementById(
-                'genderInput'
-            ).value =
-                element.innerText.trim();
-
-        }
-
-
-        // =====================================================
-        // AVATAR
-        // =====================================================
-
-        function selectAvatar(element) {
-
-            document
-                .querySelectorAll('.avatar-circle')
-                .forEach(avatar => {
-
-                    avatar.classList.remove(
-                        'selected'
-                    );
-
-                });
-
-
-            element.classList.add(
-                'selected'
-            );
-
-
-            const image =
-                element.querySelector('img');
-
-
-            const imagePath =
-                image.getAttribute('src');
-
-
-            const fileName =
-                imagePath.split('/').pop();
-
-
-            document.getElementById(
-                'profilePhotoInput'
-            ).value = fileName;
-
-        }
-
-
-        // =====================================================
-        // PASSWORD SHOW / HIDE
-        // =====================================================
-
-        function togglePassword(
-            inputId,
-            button
-        ) {
-
-            const input =
-                document.getElementById(
-                    inputId
-                );
-
-
-            if (input.type === "password") {
-
-                input.type = "text";
-
-            }
-
-            else {
-
-                input.type = "password";
-
-            }
-
-        }
-
-
-        // =====================================================
-        // OPEN OTP MODAL
-        // =====================================================
-
-        function openModal() {
-
-            const modal =
-                document.getElementById(
-                    'verifyModal'
-                );
-
-
-            modal.classList.remove(
-                'hidden'
-            );
-
-
-            modal.classList.add(
-                'show'
-            );
-
-
-            startOTPTimer();
-
-
-            document
-                .getElementById('otp1')
-                .focus();
-
-        }
-
-
-        // =====================================================
-        // CLOSE OTP MODAL
-        // =====================================================
-
-        function closeModal() {
-
-            const modal =
-                document.getElementById(
-                    'verifyModal'
-                );
-
-
-            modal.classList.remove(
-                'show'
-            );
-
-
-            modal.classList.add(
-                'hidden'
-            );
-
-        }
-
-
-        // =====================================================
-        // START OTP TIMER
-        // =====================================================
-
-        function startOTPTimer() {
-
-            otpTime = 120;
-
-
-            if (otpTimerInterval != null) {
-
-                clearInterval(
-                    otpTimerInterval
-                );
-
-            }
-
-
-            otpTimerInterval =
-                setInterval(function () {
-
-                    let minutes =
-                        Math.floor(
-                            otpTime / 60
-                        );
-
-
-                    let seconds =
-                        otpTime % 60;
-
-
-                    document.getElementById(
-                        "otpTimer"
-                    ).innerText =
-                        String(minutes)
-                            .padStart(2, "0")
-                        + ":"
-                        + String(seconds)
-                            .padStart(2, "0")
-                        + " remaining";
-
-
-                    otpTime--;
-
-
-                    if (otpTime < 0) {
-
-                        clearInterval(
-                            otpTimerInterval
-                        );
-
-
-                        document.getElementById(
-                            "otpTimer"
-                        ).innerText =
-                            "OTP expired";
-
-                    }
-
-                }, 1000);
-
-        }
-
-
-        // =====================================================
-        // MOVE TO NEXT OTP BOX
-        // =====================================================
-
-        function moveOTP(
-            current,
-            nextId
-        ) {
-
-            current.value =
-                current.value.replace(
-                    /[^0-9]/g,
-                    ''
-                );
-
-
-            if (current.value.length === 1) {
-
-                document
-                    .getElementById(nextId)
-                    .focus();
-
-            }
-
-        }
-
-
-        // =====================================================
-        // GET OTP
-        // =====================================================
-
-        function getOTP() {
-
-            let otp = "";
-
-
-            otp +=
-                document.getElementById(
-                    "otp1"
-                ).value;
-
-
-            otp +=
-                document.getElementById(
-                    "otp2"
-                ).value;
-
-
-            otp +=
-                document.getElementById(
-                    "otp3"
-                ).value;
-
-
-            otp +=
-                document.getElementById(
-                    "otp4"
-                ).value;
-
-
-            otp +=
-                document.getElementById(
-                    "otp5"
-                ).value;
-
-
-            otp +=
-                document.getElementById(
-                    "otp6"
-                ).value;
-
-
-            return otp;
-
-        }
-
-
-        // =====================================================
-        // VERIFY OTP
-        // =====================================================
-
-        function verifyOTP() {
-
-            const otp =
-                getOTP();
-
-
-            if (otp.length !== 6) {
-
-                alert(
-                    "Please enter the 6-digit OTP."
-                );
-
-                return;
-
-            }
-
-
-            const form =
-                document.createElement(
-                    "form"
-                );
-
-
-            form.method = "POST";
-
-
-            form.action =
-                "/Student/Register/VerifyOTP";
-
-
-            const input =
-                document.createElement(
-                    "input"
-                );
-
-
-            input.type = "hidden";
-
-
-            input.name = "otp";
-
-
-            input.value = otp;
-
-
-            form.appendChild(input);
-
-
-            document.body.appendChild(
-                form
-            );
-
-
-            form.submit();
-
-        }
-
-
-        // =====================================================
-        // RESEND OTP
-        // =====================================================
-
-        function resendOTP() {
-
-            const form =
-                document.createElement(
-                    "form"
-                );
-
-
-            form.method = "POST";
-
-
-            form.action =
-                "/Student/Register/ResendOTP";
-
-
-            document.body.appendChild(
-                form
-            );
-
-
-            form.submit();
-
-        }
-
-
-        // =====================================================
-        // SHOW OTP MODAL AFTER OTP IS SENT
-        // =====================================================
-
-        @if (ViewBag.ShowOTP == true)
-        {
-                <text>
-
-                    window.addEventListener(
-                        "load",
-                        function () {
-
-                            currentStep = 4;
-
-                            updateUI();
-
-                            openModal();
-
-                        }
-                    );
-
-                </text>
-        }
-
+        window.settleMateRegistration = {
+
+            showOTP:
+                @((ViewBag.ShowOTP == true)
+                                        .ToString()
+                                        .ToLowerInvariant()),
+
+            showBackendErrors:
+                @((ViewBag.ShowBackendErrors == true)
+                                        .ToString()
+                                        .ToLowerInvariant())
+
+        };
 
     </script>
+
+
+
+    <!-- =====================================================
+         REGISTRATION JAVASCRIPT
+         ===================================================== -->
+
+    <script src="~/js/Student/register.js"></script>
 
 
 </body>

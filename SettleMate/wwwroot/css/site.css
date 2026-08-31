@@ -1,76 +1,65 @@
 /* =========================================================
-   SETTLEMATE — GLOBAL DESIGN TOKENS
-   Only shared colors and fonts
+   SETTLEMATE GLOBAL STYLE
+   ========================================================= */
+
+
+/* =========================================================
+   IMPORT FONT
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+
+/* =========================================================
+   GLOBAL COLORS
    ========================================================= */
 
 :root {
-    /* =====================================================
-       COLOR PALETTE
-       ===================================================== */
-    /* Brand */
-    --color-primary: #123B66;
-    --color-primary-hover: #0B2F52;
-    --color-primary-light: #EAF1F7;
-    /* Secondary */
-    --color-secondary: #0D9488;
-    --color-secondary-hover: #087A6B;
-    --color-secondary-light: #CCFBF1;
-    /* Background */
-    --color-background: #F5F8FA;
-    --color-surface: #FFFFFF;
-    --color-surface-secondary: #F1F5F9;
-    --color-surface-hover: #E2E8F0;
-    /* Text */
-    --color-text-primary: #102A43;
-    --color-text-secondary: #526777;
-    --color-text-muted: #718096;
-    --color-text-disabled: #A0AEC0;
-    --color-text-white: #FFFFFF;
-    /* Borders */
-    --color-border: #D9E2E8;
-    --color-border-light: #EDF2F5;
-    --color-border-focus: #123B66;
-    --color-border-teal: #0D9488;
-    /* =====================================================
-       STATUS COLORS
-       ===================================================== */
-
-    --color-success: #16A34A;
-    --color-warning: #F59E0B;
-    --color-danger: #DC2626;
-    --color-info: #123B66;
-    /* =====================================================
-       FONTS
-       ===================================================== */
-
-    --font-brand: 'Comfortaa', sans-serif;
+    --primary-teal: #115E59;
+    --dark-teal: #0F4F4A;
+    --light-teal: #CCFBF1;
+    --bg-color: #F8FAFC;
+    --card-color: #FFFFFF;
+    --text-primary: #134E4A;
+    --text-secondary: #64748B;
+    --border-color: #D1D5DB;
+    --error-color: #DC2626;
     --font-main: 'Nunito', sans-serif;
 }
 
 
 /* =========================================================
-   BASIC GLOBAL STYLING
+   GLOBAL RESET
    ========================================================= */
 
 * {
     box-sizing: border-box;
 }
 
+
+/* =========================================================
+   HTML
+   ========================================================= */
+
 html {
     scroll-behavior: smooth;
 }
 
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
 body {
     margin: 0;
-    background-color: var(--color-background);
-    color: var(--color-text-primary);
+    padding: 0;
+    color: var(--text-primary);
     font-family: var(--font-main);
-    -webkit-font-smoothing: antialiased;
 }
 
 
 /* =========================================================
-   BASIC HEADING FONT
+   HEADINGS
    ========================================================= */
 
 h1,
@@ -79,5 +68,44 @@ h3,
 h4,
 h5,
 h6 {
+    margin-top: 0;
+    font-family: var(--font-main);
+    color: var(--text-primary);
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+    color: var(--primary-teal);
+    text-decoration: none;
+}
+
+    a:hover {
+        color: var(--dark-teal);
+    }
+
+
+/* =========================================================
+   IMAGES
+   ========================================================= */
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+/* =========================================================
+   FORM ELEMENTS
+   ========================================================= */
+
+button,
+input,
+select,
+textarea {
     font-family: var(--font-main);
 }

@@ -3,6 +3,7 @@ using SettleMate.Models.Student;
 
 namespace SettleMate.Data.Student
 {
+    // Handles Student Login database operations
     public class LoginData
     {
         private readonly string connectionString;
@@ -24,7 +25,7 @@ namespace SettleMate.Data.Student
                 using SqlConnection connection =
                     new SqlConnection(connectionString);
 
-                // Find student by email and password
+                // Find active Student by email and password
                 string query = @"
                     SELECT UserID
                     FROM Users
@@ -59,7 +60,7 @@ namespace SettleMate.Data.Student
                     return Convert.ToInt32(result);
                 }
 
-                // Return 0 if login is invalid
+                // Return 0 if login fails
                 return 0;
             }
             catch (Exception)

@@ -3,6 +3,7 @@ using System.Text;
 
 namespace SettleMate.Data
 {
+    // Handles password hashing
     public class PasswordHelper
     {
         // Convert password into hashed text
@@ -10,7 +11,7 @@ namespace SettleMate.Data
         {
             try
             {
-                // Create SHA256 object
+                // Create SHA256 hashing object
                 using SHA256 sha256 =
                     SHA256.Create();
 
@@ -18,11 +19,11 @@ namespace SettleMate.Data
                 byte[] passwordBytes =
                     Encoding.UTF8.GetBytes(password);
 
-                // Create hashed password bytes
+                // Generate hash
                 byte[] hashBytes =
                     sha256.ComputeHash(passwordBytes);
 
-                // Convert hash bytes into text
+                // Convert hash into text
                 return Convert.ToBase64String(hashBytes);
             }
             catch (Exception)

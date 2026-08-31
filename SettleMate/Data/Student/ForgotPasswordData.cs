@@ -5,12 +5,13 @@ using System.Net.Mail;
 
 namespace SettleMate.Data.Student
 {
+    // Handles database and email operations for Forgot Password
     public class ForgotPasswordData
     {
         private readonly string connectionString;
         private readonly IConfiguration configuration;
 
-        // Get connection string and email settings
+        // Get database connection and email settings
         public ForgotPasswordData(
             IConfiguration configuration)
         {
@@ -21,7 +22,7 @@ namespace SettleMate.Data.Student
                     "DefaultConnection");
         }
 
-        // Check if email is registered
+        // Check if email exists in database
         public bool EmailExists(string email)
         {
             try
@@ -30,19 +31,21 @@ namespace SettleMate.Data.Student
                 using SqlConnection connection =
                     new SqlConnection(connectionString);
 
-                // Check email in Users table
+                // Search email in Users table
                 string query =
                     "SELECT COUNT(*) FROM Users WHERE Email = @Email";
 
                 using SqlCommand command =
                     new SqlCommand(query, connection);
 
+                // Add email safely to SQL query
                 command.Parameters.AddWithValue(
                     "@Email",
                     email);
 
                 connection.Open();
 
+                // Get number of matching records
                 int count = Convert.ToInt32(
                     command.ExecuteScalar());
 
@@ -54,7 +57,7 @@ namespace SettleMate.Data.Student
             }
         }
 
-        // Send OTP to user email
+        // Send OTP to user's email
         public bool SendOTP(string email, string otp)
         {
             try
@@ -72,7 +75,7 @@ namespace SettleMate.Data.Student
                 int port = Convert.ToInt32(
                     configuration["EmailSettings:Port"]);
 
-                // Create email message
+                // Create email
                 using MailMessage message =
                     new MailMessage();
 
@@ -93,7 +96,7 @@ namespace SettleMate.Data.Student
                     "Thank you,\n" +
                     "SettleMate";
 
-                // Create SMTP client
+                // Configure SMTP server
                 using SmtpClient smtp =
                     new SmtpClient(smtpServer, port);
 
@@ -115,7 +118,7 @@ namespace SettleMate.Data.Student
             }
         }
 
-        // Change password in database
+        // Update user's password
         public bool ChangePassword(
             string email,
             string newPassword)
@@ -126,7 +129,7 @@ namespace SettleMate.Data.Student
                 using SqlConnection connection =
                     new SqlConnection(connectionString);
 
-                // Update password for registered email
+                // Update password for the given email
                 string query = @"
                     UPDATE Users
                     SET Password = @Password
@@ -135,7 +138,7 @@ namespace SettleMate.Data.Student
                 using SqlCommand command =
                     new SqlCommand(query, connection);
 
-                // Hash new password before saving
+                // Hash password before saving
                 command.Parameters.AddWithValue(
                     "@Password",
                     PasswordHelper.HashPassword(
@@ -148,7 +151,7 @@ namespace SettleMate.Data.Student
 
                 connection.Open();
 
-                // Run update query
+                // Execute update query
                 int result =
                     command.ExecuteNonQuery();
 

@@ -1,0 +1,613 @@
+﻿/* =========================================================
+   ROOMMATE PAGE
+   ========================================================= */
+
+.roommate-page {
+    min-height: 100vh;
+    padding: 40px 20px;
+    background: #f7fafb;
+    font-family: "Nunito", sans-serif;
+}
+
+.roommate-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.roommate-details-container {
+    max-width: 900px;
+}
+
+.form-container {
+    max-width: 900px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.roommate-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.roommate-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #0d9488;
+}
+
+.roommate-header h1,
+.form-heading h1 {
+    margin: 0;
+    color: #123b66;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.roommate-header p,
+.form-heading p {
+    margin-top: 8px;
+    color: #526777;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.roommate-primary-btn,
+.roommate-secondary-btn,
+.roommate-danger-btn,
+.roommate-reset-btn,
+.roommate-details-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 10px;
+    border: none;
+    text-decoration: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.roommate-primary-btn {
+    background: #0d9488;
+    color: white;
+}
+
+    .roommate-primary-btn:hover {
+        background: #0b7f74;
+    }
+
+.roommate-secondary-btn {
+    background: white;
+    color: #123b66;
+    border: 1px solid #dce6eb;
+}
+
+    .roommate-secondary-btn:hover {
+        border-color: #0d9488;
+    }
+
+.roommate-danger-btn {
+    background: #fff1f2;
+    color: #be123c;
+}
+
+.roommate-reset-btn {
+    background: #eef3f5;
+    color: #526777;
+}
+
+.roommate-details-btn {
+    width: 100%;
+    margin-top: 20px;
+    background: #123b66;
+    color: white;
+}
+
+
+/* =========================================================
+   FILTER
+   ========================================================= */
+
+.roommate-filter-card {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr auto auto;
+    align-items: end;
+    gap: 14px;
+    padding: 20px;
+    margin-bottom: 35px;
+    background: white;
+    border: 1px solid #e3ebef;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(18, 59, 102, 0.05);
+}
+
+.filter-field label,
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #123b66;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.filter-field input,
+.filter-field select,
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d8e2e7;
+    border-radius: 10px;
+    background: white;
+    color: #263b4a;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.filter-field input,
+.filter-field select,
+.form-field input,
+.form-field select {
+    height: 46px;
+    padding: 0 13px;
+}
+
+.form-field textarea {
+    padding: 13px;
+    resize: vertical;
+}
+
+    .filter-field input:focus,
+    .filter-field select:focus,
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+        border-color: #0d9488;
+        box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+    }
+
+
+/* =========================================================
+   LISTING
+   ========================================================= */
+
+.listing-heading {
+    margin-bottom: 18px;
+}
+
+    .listing-heading h2 {
+        margin: 0;
+        color: #123b66;
+        font-size: 22px;
+    }
+
+    .listing-heading span {
+        color: #6b7c88;
+        font-size: 13px;
+    }
+
+.roommate-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.roommate-card,
+.my-listing-card,
+.details-card,
+.roommate-form-card {
+    background: white;
+    border: 1px solid #e3ebef;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(18, 59, 102, 0.05);
+}
+
+.roommate-card {
+    padding: 22px;
+}
+
+.roommate-card-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.roommate-avatar,
+.details-avatar {
+    width: 64px;
+    height: 64px;
+    flex: 0 0 64px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e7f5f3;
+    color: #0d9488;
+}
+
+    .roommate-avatar img,
+    .details-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.roommate-card h3 {
+    margin: 0 0 7px;
+    color: #123b66;
+    font-size: 18px;
+}
+
+.gender-badge {
+    display: inline-flex;
+    padding: 4px 9px;
+    border-radius: 20px;
+    background: #eef7f6;
+    color: #0d9488;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.roommate-info {
+    display: grid;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+    .roommate-info > div {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #526777;
+        font-size: 14px;
+    }
+
+    .roommate-info svg {
+        width: 17px;
+        color: #0d9488;
+    }
+
+.listing-preview {
+    margin-top: 18px;
+    color: #667985;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.roommate-empty {
+    padding: 70px 25px;
+    text-align: center;
+    background: white;
+    border: 1px dashed #cbd9df;
+    border-radius: 18px;
+}
+
+    .roommate-empty svg {
+        width: 42px;
+        height: 42px;
+        margin: 0 auto 15px;
+        color: #0d9488;
+    }
+
+    .roommate-empty h2,
+    .roommate-empty h3 {
+        margin: 0;
+        color: #123b66;
+    }
+
+    .roommate-empty p {
+        margin: 8px 0 20px;
+        color: #6b7c88;
+    }
+
+
+/* =========================================================
+   DETAILS
+   ========================================================= */
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 20px;
+    color: #526777;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.details-card {
+    padding: 35px;
+}
+
+.details-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e7eef1;
+}
+
+.details-avatar {
+    width: 100px;
+    height: 100px;
+    flex-basis: 100px;
+}
+
+.details-profile h1 {
+    margin: 0 0 10px;
+    color: #123b66;
+    font-size: 30px;
+}
+
+.details-section {
+    padding: 28px 0;
+    border-bottom: 1px solid #e7eef1;
+}
+
+    .details-section:last-child {
+        border-bottom: none;
+    }
+
+    .details-section h2 {
+        margin: 0 0 18px;
+        color: #123b66;
+        font-size: 19px;
+    }
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.details-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f7fafb;
+}
+
+    .details-item svg {
+        color: #0d9488;
+    }
+
+    .details-item small {
+        display: block;
+        color: #71818c;
+        margin-bottom: 3px;
+    }
+
+    .details-item strong {
+        color: #123b66;
+    }
+
+.details-text {
+    margin: 0;
+    color: #526777;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
+.details-muted {
+    margin: 0;
+    color: #8897a0;
+}
+
+.contact-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.contact-phone-btn,
+.contact-email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 17px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.contact-phone-btn {
+    background: #e8f7f5;
+    color: #087c72;
+}
+
+.contact-email-btn {
+    background: #eef3f8;
+    color: #123b66;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.roommate-form-card {
+    padding: 35px;
+}
+
+.form-heading {
+    margin-bottom: 30px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-field {
+    margin-bottom: 20px;
+}
+
+.full-field {
+    margin-top: 20px;
+}
+
+.form-field small {
+    display: block;
+    margin-top: 6px;
+    color: #7c8b94;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.roommate-validation {
+    margin-bottom: 25px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #fff1f2;
+    color: #be123c;
+}
+
+
+/* =========================================================
+   MY LISTING
+   ========================================================= */
+
+.my-listing-card {
+    padding: 30px;
+}
+
+.my-listing-header {
+    padding-bottom: 25px;
+    border-bottom: 1px solid #e7eef1;
+}
+
+.my-listing-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-top: 25px;
+}
+
+    .my-listing-content h3 {
+        margin: 0 0 8px;
+        color: #123b66;
+    }
+
+    .my-listing-content p {
+        margin: 0;
+        color: #667985;
+        line-height: 1.7;
+        white-space: pre-line;
+    }
+
+.my-listing-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+.roommate-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.success-message {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.error-message {
+    background: #fff1f2;
+    color: #be123c;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .roommate-filter-card {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .roommate-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+
+    .roommate-page {
+        padding: 25px 15px;
+    }
+
+    .roommate-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .roommate-filter-card,
+    .roommate-grid,
+    .form-grid,
+    .details-grid,
+    .my-listing-content {
+        grid-template-columns: 1fr;
+    }
+
+    .details-card,
+    .roommate-form-card,
+    .my-listing-card {
+        padding: 22px;
+    }
+
+    .contact-actions,
+    .form-actions,
+    .my-listing-actions {
+        flex-direction: column;
+    }
+
+        .contact-phone-btn,
+        .contact-email-btn,
+        .form-actions > *,
+        .my-listing-actions > * {
+            width: 100%;
+        }
+}

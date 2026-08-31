@@ -2,39 +2,37 @@
 
 namespace SettleMate.Controllers.Student
 {
+    // Handles Student Home and Logout
     [Route("Student/Home")]
     public class HomeController : Controller
     {
-        // ==========================================
-        // HOME
-        // ==========================================
-
+        // Open Student Home page
         [HttpGet("")]
         public IActionResult Home()
         {
             try
             {
+                // Get logged-in user's ID from Session
                 int? userID =
                     HttpContext.Session.GetInt32("UserID");
 
+                // If user is not logged in, go to Login
                 if (userID == null)
                 {
                     return Redirect("/Student/Login");
                 }
 
+                // Show Student Home page
                 return View("~/Views/Student/Home.cshtml");
             }
             catch (Exception)
             {
+                // Show error page if something goes wrong
                 return View("~/Views/Shared/Error.cshtml");
             }
         }
 
-
-        // ==========================================
-        // LOGOUT
-        // ==========================================
-
+        // Logout the student
         [HttpGet("Logout")]
         public IActionResult Logout()
         {
@@ -43,7 +41,7 @@ namespace SettleMate.Controllers.Student
                 // Clear login session
                 HttpContext.Session.Clear();
 
-                // Go back to login page
+                // Go back to Login page
                 return Redirect("/Student/Login");
             }
             catch (Exception)

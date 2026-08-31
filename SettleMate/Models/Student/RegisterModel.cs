@@ -2,25 +2,29 @@
 
 namespace SettleMate.Models.Student
 {
+    // Stores Student Registration form data
     public class RegisterModel
     {
-        // Store user ID from database
+        // Store User ID from database
         public int UserID { get; set; }
 
         // Store full name
         [Required(ErrorMessage = "Full name is required")]
-        [StringLength(100, MinimumLength = 3,
+        [StringLength(
+            100,
+            MinimumLength = 3,
             ErrorMessage = "Name must be between 3 and 100 characters")]
         public string Name { get; set; }
 
-        // Store email address
+        // Store email
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Enter a valid email address")]
         public string Email { get; set; }
 
-        // Store 10 digit mobile number
+        // Store 10-digit mobile number
         [Required(ErrorMessage = "Mobile number is required")]
-        [RegularExpression(@"^[0-9]{10}$",
+        [RegularExpression(
+            @"^[0-9]{10}$",
             ErrorMessage = "Mobile number must contain 10 digits")]
         public string Phone { get; set; }
 
@@ -36,22 +40,25 @@ namespace SettleMate.Models.Student
         [Required(ErrorMessage = "Address is required")]
         public string Address { get; set; }
 
-        // Store profile photo path if available
+        // Store profile photo path
         public string? ProfilePhoto { get; set; }
 
         // Store password
         [Required(ErrorMessage = "Password is required")]
-        [StringLength(50, MinimumLength = 8,
+        [StringLength(
+            50,
+            MinimumLength = 8,
             ErrorMessage = "Password must be at least 8 characters")]
         public string Password { get; set; }
 
         // Store confirm password
         [Required(ErrorMessage = "Please confirm password")]
-        [Compare("Password",
+        [Compare(
+            "Password",
             ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
 
-        // Set default role as Student
+        // Default role is Student
         public string Role { get; set; } = "Student";
     }
 }

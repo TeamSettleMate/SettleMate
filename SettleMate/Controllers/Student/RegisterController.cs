@@ -5,9 +5,11 @@ using System.Text.Json;
 
 namespace SettleMate.Controllers.Student
 {
+    // Handles Student Registration
     [Route("Student/Register")]
     public class RegisterController : Controller
     {
+        // Used for database and email operations
         private readonly RegisterData registerData;
 
         // Create RegisterData object
@@ -16,7 +18,7 @@ namespace SettleMate.Controllers.Student
             registerData = new RegisterData(configuration);
         }
 
-        // Open registration page
+        // Open Registration page
         [HttpGet("")]
         public IActionResult Register()
         {
@@ -30,7 +32,7 @@ namespace SettleMate.Controllers.Student
             }
         }
 
-        // Validate registration form and send OTP
+        // Validate form and send OTP
         [HttpPost("SendOTP")]
         public IActionResult SendOTP(RegisterModel model)
         {
@@ -44,7 +46,7 @@ namespace SettleMate.Controllers.Student
                         model);
                 }
 
-                // Check if email is already registered
+                // Check if email already exists
                 if (registerData.EmailExists(model.Email))
                 {
                     ModelState.AddModelError(
@@ -56,34 +58,32 @@ namespace SettleMate.Controllers.Student
                         model);
                 }
 
-                // Generate 6 digit OTP
+                // Generate 6-digit OTP
                 string otp = Random.Shared
                     .Next(100000, 1000000)
                     .ToString();
 
-                // Store registration form data temporarily
+                // Save registration data, OTP and expiry in Session
                 HttpContext.Session.SetString(
                     "PendingRegistration",
                     JsonSerializer.Serialize(model));
 
-                // Store OTP temporarily
                 HttpContext.Session.SetString(
                     "RegisterOTP",
                     otp);
 
-                // Store OTP expiry time for 2 minutes
                 HttpContext.Session.SetString(
                     "OTPExpiry",
                     DateTime.Now
                         .AddMinutes(2)
                         .ToString("O"));
 
-                // Send OTP to registered email
+                // Send OTP to user's email
                 registerData.SendOTP(
                     model.Email,
                     otp);
 
-                // Open OTP modal
+                // Open OTP section in registration page
                 ViewBag.ShowOTP = true;
                 ViewBag.OTPEmail = model.Email;
 
@@ -109,19 +109,17 @@ namespace SettleMate.Controllers.Student
         {
             try
             {
-                // Get saved OTP from session
+                // Get registration data from Session
                 string savedOTP = HttpContext.Session.GetString(
                     "RegisterOTP");
 
-                // Get saved expiry time from session
                 string expiryText = HttpContext.Session.GetString(
                     "OTPExpiry");
 
-                // Get saved registration data from session
                 string registrationText = HttpContext.Session.GetString(
                     "PendingRegistration");
 
-                // Check if session data exists
+                // Check if OTP session data exists
                 if (savedOTP == null ||
                     expiryText == null ||
                     registrationText == null)
@@ -132,15 +130,14 @@ namespace SettleMate.Controllers.Student
                     return Redirect("/Student/Register");
                 }
 
-                // Convert expiry text into DateTime
+                // Convert saved expiry and registration data
                 DateTime expiry = DateTime.Parse(expiryText);
 
-                // Convert saved registration text into model
                 RegisterModel registerModel =
                     JsonSerializer.Deserialize<RegisterModel>(
                         registrationText);
 
-                // Check if OTP has expired
+                // Check OTP expiry
                 if (DateTime.Now > expiry)
                 {
                     ModelState.AddModelError(
@@ -155,7 +152,7 @@ namespace SettleMate.Controllers.Student
                         registerModel);
                 }
 
-                // Check if OTP is empty or not 6 digits
+                // Check OTP format
                 if (string.IsNullOrWhiteSpace(otp) ||
                     otp.Length != 6 ||
                     !otp.All(char.IsDigit))
@@ -172,7 +169,7 @@ namespace SettleMate.Controllers.Student
                         registerModel);
                 }
 
-                // Check if entered OTP is correct
+                // Check entered OTP
                 if (otp != savedOTP)
                 {
                     ModelState.AddModelError(
@@ -200,14 +197,13 @@ namespace SettleMate.Controllers.Student
                     return Redirect("/Student/Register");
                 }
 
-                // Insert verified user into database
+                // Save verified user in database
                 bool result = registerData.Register(
                     registerModel);
 
-                // Check if registration is successful
                 if (result)
                 {
-                    // Clear temporary session data
+                    // Remove temporary registration data
                     HttpContext.Session.Remove("RegisterOTP");
                     HttpContext.Session.Remove("OTPExpiry");
                     HttpContext.Session.Remove("PendingRegistration");
@@ -215,6 +211,7 @@ namespace SettleMate.Controllers.Student
                     TempData["Success"] =
                         "Registration successful. Please login.";
 
+                    // Go to Login page
                     return RedirectToAction(
                         "Login",
                         "Login");
@@ -242,7 +239,7 @@ namespace SettleMate.Controllers.Student
             }
         }
 
-        // Generate new OTP and send it again
+        // Generate and send a new OTP
         [HttpPost("ResendOTP")]
         public IActionResult ResendOTP()
         {
@@ -252,7 +249,7 @@ namespace SettleMate.Controllers.Student
                 string registrationText = HttpContext.Session.GetString(
                     "PendingRegistration");
 
-                // Check if registration session exists
+                // Restart registration if Session expired
                 if (registrationText == null)
                 {
                     TempData["Error"] =
@@ -261,34 +258,33 @@ namespace SettleMate.Controllers.Student
                     return Redirect("/Student/Register");
                 }
 
-                // Convert session text into model
+                // Convert saved data back into model
                 RegisterModel model =
                     JsonSerializer.Deserialize<RegisterModel>(
                         registrationText);
 
-                // Generate new 6 digit OTP
+                // Generate new 6-digit OTP
                 string otp = Random.Shared
                     .Next(100000, 1000000)
                     .ToString();
 
-                // Replace old OTP with new OTP
+                // Replace old OTP and expiry
                 HttpContext.Session.SetString(
                     "RegisterOTP",
                     otp);
 
-                // Reset OTP expiry to 2 minutes
                 HttpContext.Session.SetString(
                     "OTPExpiry",
                     DateTime.Now
                         .AddMinutes(2)
                         .ToString("O"));
 
-                // Send new OTP email
+                // Send new OTP
                 registerData.SendOTP(
                     model.Email,
                     otp);
 
-                // Keep OTP modal open
+                // Keep OTP section open
                 ViewBag.ShowOTP = true;
                 ViewBag.OTPEmail = model.Email;
                 ViewBag.ResendMessage =

@@ -1,0 +1,253 @@
+﻿@model SettleMate.Models.Student.RoommateListingModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        SettleMate - Edit Roommate Listing
+    </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet"
+          href="~/css/site.css">
+
+    <link rel="stylesheet"
+          href="~/css/student/roommate.css">
+
+</head>
+
+<body>
+
+    <main class="roommate-page">
+
+        <div class="roommate-container form-container">
+
+            <a href="/Student/Roommate/MyListing"
+               class="back-link">
+
+                <i data-lucide="arrow-left"></i>
+
+                Back to My Listing
+
+            </a>
+
+
+            <section class="roommate-form-card">
+
+                <div class="form-heading">
+
+                    <span class="roommate-eyebrow">
+                        EDIT LISTING
+                    </span>
+
+                    <h1>
+                        Update Your Roommate Listing
+                    </h1>
+
+                    <p>
+                        Keep your roommate information up to date.
+                    </p>
+
+                </div>
+
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="roommate-validation">
+
+                        @Html.ValidationSummary(
+                        false,
+                                        "",
+                                        new { })
+
+                </div>
+                                }
+
+
+                <form method="post"
+                      action="/Student/Roommate/Edit">
+
+                    @Html.AntiForgeryToken()
+
+
+                    <input type="hidden"
+                           name="ListingID"
+                           value="@Model.ListingID">
+
+
+                    <div class="form-grid">
+
+                        <!-- GENDER -->
+
+                        <div class="form-field">
+
+                            <label for="Gender">
+                                Gender
+                            </label>
+
+                            <select id="Gender"
+                                    name="Gender">
+
+                                <option value="">
+                                    Select gender
+                                </option>
+
+                                <option value="Male"
+                                        selected="@(Model.Gender == "Male")">
+                                    Male
+                                </option>
+
+                                <option value="Female"
+                                        selected="@(Model.Gender == "Female")">
+                                    Female
+                                </option>
+
+                                <option value="Other"
+                                        selected="@(Model.Gender == "Other")">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- LOCATION -->
+
+                        <div class="form-field">
+
+                            <label for="Location">
+                                Location
+                            </label>
+
+                            <input type="text"
+                                   id="Location"
+                                   name="Location"
+                                   value="@Model.Location"
+                                   maxlength="400">
+
+                        </div>
+
+
+                        <!-- BUDGET -->
+
+                        <div class="form-field">
+
+                            <label for="Budget">
+                                Monthly Budget
+                            </label>
+
+                            <input type="number"
+                                   id="Budget"
+                                   name="Budget"
+                                   value="@Model.Budget"
+                                   min="1"
+                                   step="0.01">
+
+                        </div>
+
+
+                        <!-- PROFILE PHOTO -->
+
+                        <div class="form-field">
+
+                            <label for="ProfilePhoto">
+                                Profile Photo
+                            </label>
+
+                            <input type="text"
+                                   id="ProfilePhoto"
+                                   name="ProfilePhoto"
+                                   value="@Model.ProfilePhoto"
+                                   maxlength="1000">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LIFESTYLE -->
+
+                    <div class="form-field full-field">
+
+                        <label for="LifestylePreferences">
+                            Lifestyle Preferences
+                        </label>
+
+                        <textarea id="LifestylePreferences"
+                                  name="LifestylePreferences"
+                                  rows="5"
+                                  maxlength="4000">@Model.LifestylePreferences</textarea>
+
+                    </div>
+
+
+                    <!-- OTHER INFORMATION -->
+
+                    <div class="form-field full-field">
+
+                        <label for="OtherListingInformation">
+                            Other Listing Information
+                        </label>
+
+                        <textarea id="OtherListingInformation"
+                                  name="OtherListingInformation"
+                                  rows="5"
+                                  maxlength="4000">@Model.OtherListingInformation</textarea>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <a href="/Student/Roommate/MyListing"
+                           class="roommate-reset-btn">
+
+                            Cancel
+
+                        </a>
+
+
+                        <button type="submit"
+                                class="roommate-primary-btn">
+
+                            <i data-lucide="save"></i>
+
+                            Save Changes
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        lucide.createIcons();
+
+    </script>
+
+</body>
+
+</html>

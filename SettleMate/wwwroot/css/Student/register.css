@@ -1,317 +1,1433 @@
 ﻿/* =========================================================
-   SETTLEMATE — STUDENT REGISTRATION PAGE
+   SETTLEMATE REGISTRATION PAGE
    ========================================================= */
 
 
 /* =========================================================
-   01. REGISTRATION CARD
+   PAGE
+   ========================================================= */
+
+.registration-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   MAIN SHELL
+   ========================================================= */
+
+.registration-shell {
+    width: 100%;
+    max-width: 1120px;
+}
+
+
+/* =========================================================
+   REGISTRATION CARD
    ========================================================= */
 
 .registration-card {
-    background-color: var(--color-surface);
-    border-radius: 20px;
-    box-shadow: 0 1px 3px rgba(16, 42, 67, 0.08);
-}
-
-
-/* =========================================================
-   02. FORM INPUTS
-   ========================================================= */
-
-.registration-input {
     width: 100%;
-    border: 1px solid var(--color-border);
-    border-radius: 32px;
-    padding: 12px 16px;
-    background-color: var(--color-surface);
-    color: var(--color-text-primary);
-    font-family: var(--font-main);
-    font-size: 15px;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-    .registration-input::placeholder {
-        color: var(--color-text-disabled);
-    }
-
-    .registration-input:focus {
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 2px rgba(18, 59, 102, 0.10);
-    }
-
-
-/* =========================================================
-   03. FORM LABEL
-   ========================================================= */
-
-.registration-label {
-    display: block;
-    margin-bottom: 6px;
-    color: var(--color-text-secondary);
-    font-size: 12px;
-    font-weight: 600;
-}
-
-
-/* =========================================================
-   04. PRIMARY BUTTON
-   ========================================================= */
-
-.registration-primary-btn {
-    background-color: var(--color-primary);
-    color: var(--color-text-white);
-    border: 1px solid var(--color-primary);
-    border-radius: 10px;
-    transition: background-color 0.2s ease;
-}
-
-    .registration-primary-btn:hover {
-        background-color: var(--color-primary-hover);
-    }
-
-
-/* =========================================================
-   05. BACK BUTTON
-   ========================================================= */
-
-.registration-back-btn {
-    background-color: var(--color-surface);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-}
-
-    .registration-back-btn:hover {
-        background-color: var(--color-background);
-    }
-
-
-/* =========================================================
-   06. VERIFY BUTTON
-   ========================================================= */
-
-.registration-verify-btn {
-    background-color: var(--color-secondary-light);
-    color: var(--color-secondary);
-    border-radius: 999px;
-    transition: all 0.2s ease;
-}
-
-    .registration-verify-btn:hover {
-        background-color: #BBF7ED;
-    }
-
-
-/* =========================================================
-   07. GENDER PILLS
-   ========================================================= */
-
-.gender-pill {
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    padding: 10px 32px;
-    color: var(--color-text-primary);
-    background-color: var(--color-surface);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-    .gender-pill:hover {
-        border-color: var(--color-secondary);
-    }
-
-    .gender-pill.selected {
-        background-color: var(--color-secondary-light);
-        border-color: #99F6E4;
-        color: var(--color-secondary);
-    }
-
-
-/* =========================================================
-   08. AVATAR
-   ========================================================= */
-
-.avatar-circle {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
+    min-height: 680px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+    background: var(--card-color);
+    border: 1px solid rgba(15, 79, 74, 0.08);
+    border-radius: 28px;
     overflow: hidden;
+    box-shadow: 0 30px 70px rgba(15, 79, 74, 0.10), 0 8px 25px rgba(15, 79, 74, 0.05);
+}
+
+
+/* =========================================================
+   FORM SIDE
+   ========================================================= */
+
+.registration-form-side {
+    padding: 38px 46px 28px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.brand-block {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.brand-logo-wrap {
+    width: 100px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
-    .avatar-circle:hover {
-        transform: scale(1.1);
-    }
+.brand-logo {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+}
 
-    .avatar-circle.selected {
-        outline: 3px solid var(--color-primary);
-        outline-offset: 4px;
-    }
+.brand-title {
+    margin: 0;
+    font-size: 25px;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+}
 
-    .avatar-circle img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+.brand-subtitle {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
 
 
 /* =========================================================
-   09. STEP PROGRESS
+   PROGRESS
    ========================================================= */
 
-.registration-step-track {
+.registration-progress {
     position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    max-width: 430px;
+    margin: 0 auto 34px;
+    width: 100%;
 }
 
-    .registration-step-track::before {
-        content: "";
-        position: absolute;
-        height: 2px;
-        background-color: #E5E7EB;
-        width: 100%;
-        top: 50%;
-        left: 0;
-        transform: translateY(-50%);
-        z-index: 0;
+.progress-line {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 16px;
+    height: 2px;
+    background: #E2E8F0;
+    z-index: 0;
+}
+
+.progress-step-wrap {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    min-width: 52px;
+}
+
+    .progress-step-wrap span {
+        font-size: 10px;
+        font-weight: 700;
+        color: #94A3B8;
+        transition: 0.25s ease;
     }
 
 .step-pill {
-    width: 32px;
-    height: 32px;
+    width: 33px;
+    height: 33px;
     border-radius: 50%;
-    border: 2px solid #D9E2E8;
-    background-color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #9CA3AF;
-    font-size: 14px;
-    font-weight: 600;
-    position: relative;
-    z-index: 1;
+    background: #FFFFFF;
+    border: 2px solid #E2E8F0;
+    color: #94A3B8;
+    font-size: 12px;
+    font-weight: 800;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-    .step-pill.active,
-    .step-pill.completed {
-        background-color: var(--color-primary);
-        border-color: var(--color-primary);
+    .step-pill.active {
+        background: var(--primary-teal);
+        border-color: var(--primary-teal);
         color: white;
+        box-shadow: 0 0 0 5px rgba(17, 94, 89, 0.10);
+        transform: translateY(-1px);
+    }
+
+    .step-pill.completed {
+        background: var(--primary-teal);
+        border-color: var(--primary-teal);
+        color: white;
+    }
+
+.progress-step-wrap:has(.step-pill.active) span,
+.progress-step-wrap:has(.step-pill.completed) span {
+    color: var(--primary-teal);
+}
+
+
+/* =========================================================
+   TOAST NOTIFICATIONS
+   ========================================================= */
+
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 10000;
+    width: min(420px, calc(100vw - 48px));
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.settlemate-toast {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    padding: 18px 17px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08), 0 3px 10px rgba(15, 23, 42, 0.04);
+    pointer-events: auto;
+    animation: toast-in 0.35s ease forwards;
+    overflow: hidden;
+}
+
+
+    /* =========================================================
+   TOAST LEFT ACCENT
+   ========================================================= */
+
+    .settlemate-toast::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+    }
+
+
+/* SUCCESS */
+
+.success-toast::before {
+    background: #3A9D83;
+}
+
+
+/* ERROR */
+
+.error-toast::before {
+    background: #C85A5A;
+}
+
+
+/* =========================================================
+   TOAST ICON
+   ========================================================= */
+
+.toast-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 13px;
+    border-radius: 50%;
+}
+
+
+/* SUCCESS ICON */
+
+.success-toast .toast-icon {
+    background: #E4F4EE;
+    color: #3A9D83;
+}
+
+
+/* ERROR ICON */
+
+.error-toast .toast-icon {
+    background: #FBE7E7;
+    color: #C85A5A;
+}
+
+
+.toast-icon svg {
+    width: 15px;
+    height: 15px;
+    stroke-width: 2.5;
+}
+
+
+/* =========================================================
+   TOAST CONTENT
+   ========================================================= */
+
+.toast-content {
+    flex: 1;
+    min-width: 0;
+    padding-top: 1px;
+}
+
+    .toast-content strong {
+        display: block;
+        margin: 0 0 5px;
+        color: #111827;
+        font-size: 14px;
+        line-height: 1.3;
+        font-weight: 800;
+    }
+
+    .toast-content p {
+        margin: 0;
+        color: #64748B;
+        font-size: 12px;
+        line-height: 1.55;
+        word-break: break-word;
     }
 
 
 /* =========================================================
-   10. STEP CONTENT
+   TOAST CLOSE BUTTON
    ========================================================= */
 
-.step-content {
-    display: none;
+.toast-close {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #94A3B8;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
-    .step-content.active {
-        display: block;
-        animation: fadeIn 0.3s ease-in-out;
+    .toast-close:hover {
+        background: #F1F5F9;
+        color: #475569;
     }
 
-@keyframes fadeIn {
+    .toast-close svg {
+        width: 16px;
+        height: 16px;
+    }
+
+
+/* =========================================================
+   TOAST ANIMATION
+   ========================================================= */
+
+@keyframes toast-in {
 
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateX(35px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
+    }
+}
+
+
+.toast-hide {
+    animation: toast-out 0.3s ease forwards;
+}
+
+@keyframes toast-out {
+
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(35px);
     }
 }
 
 
 /* =========================================================
-   11. PASSWORD HELPER
+   STEP CONTENT
    ========================================================= */
 
-.password-helper {
-    color: var(--color-text-secondary);
-    font-size: 10px;
+.step-content {
+    display: none;
+    animation: step-enter 0.25s ease;
+}
+
+    .step-content.active {
+        display: block;
+    }
+
+@keyframes step-enter {
+
+    from {
+        opacity: 0;
+        transform: translateX(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 
 /* =========================================================
-   12. EMAIL VERIFICATION MODAL
+   STEP HEADING
+   ========================================================= */
+
+.step-heading {
+    margin-bottom: 24px;
+}
+
+.step-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: var(--primary-teal);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.step-heading h2 {
+    margin: 0;
+    font-size: 25px;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+}
+
+.step-heading p {
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM FIELDS
+   ========================================================= */
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-field {
+    width: 100%;
+}
+
+.registration-label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.registration-input {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #D9E2E7;
+    border-radius: 13px;
+    background: #F8FAFC;
+    color: var(--text-primary);
+    font-size: 13px;
+    outline: none;
+    padding: 0 15px 0 43px;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+    .registration-input::placeholder {
+        color: #94A3B8;
+    }
+
+    .registration-input:hover {
+        border-color: #B8C8CF;
+        background: #FFFFFF;
+    }
+
+    .registration-input:focus {
+        border-color: var(--primary-teal);
+        background: #FFFFFF;
+        box-shadow: 0 0 0 4px rgba(17, 94, 89, 0.09);
+    }
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #94A3B8;
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.input-wrap:focus-within .input-icon {
+    color: var(--primary-teal);
+}
+
+.field-helper,
+.password-helper {
+    margin: 6px 2px 0;
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.registration-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 43px;
+    cursor: pointer;
+}
+
+.select-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #94A3B8;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   PASSWORD
+   ========================================================= */
+
+.password-field {
+    padding-right: 47px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: #94A3B8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+    .password-toggle:hover {
+        background: #ECFDF5;
+        color: var(--primary-teal);
+    }
+
+    .password-toggle svg {
+        width: 16px;
+        height: 16px;
+    }
+
+
+/* =========================================================
+   GENDER
+   ========================================================= */
+
+.gender-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+}
+
+.gender-pill {
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 1px solid #D9E2E7;
+    border-radius: 12px;
+    background: #F8FAFC;
+    color: #64748B;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .gender-pill svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .gender-pill:hover {
+        border-color: #99C9C4;
+        background: #FFFFFF;
+        color: var(--primary-teal);
+        transform: translateY(-1px);
+    }
+
+    .gender-pill.selected {
+        border-color: var(--primary-teal);
+        background: #ECFDF5;
+        color: var(--primary-teal);
+        box-shadow: 0 0 0 3px rgba(17, 94, 89, 0.07);
+    }
+
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.avatar-section {
+    width: 100%;
+}
+
+.avatar-group-title {
+    margin: 0 0 10px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+    .avatar-group-title:not(:first-child) {
+        margin-top: 22px;
+    }
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 11px;
+}
+
+.avatar-card {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+    padding: 4px;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+    .avatar-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+        transition: transform 0.25s ease, filter 0.25s ease;
+    }
+
+    .avatar-card:hover {
+        transform: translateY(-3px);
+        border-color: #8CC7C1;
+        background: #FFFFFF;
+        box-shadow: 0 8px 18px rgba(15, 79, 74, 0.10);
+    }
+
+        .avatar-card:hover img {
+            transform: scale(1.035);
+        }
+
+    .avatar-card.selected {
+        border: 2px solid var(--primary-teal);
+        background: #ECFDF5;
+        box-shadow: 0 0 0 4px rgba(17, 94, 89, 0.08);
+    }
+
+        .avatar-card.selected img {
+            border-radius: 10px;
+        }
+
+.avatar-check {
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-teal);
+    color: white;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.avatar-card.selected .avatar-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.avatar-check svg {
+    width: 13px;
+    height: 13px;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.registration-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 28px;
+}
+
+.registration-primary-btn,
+.registration-back-btn {
+    min-height: 48px;
+    border-radius: 13px;
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.registration-primary-btn {
+    flex: 1;
+    border: 1px solid var(--primary-teal);
+    background: var(--primary-teal);
+    color: white;
+    box-shadow: 0 8px 18px rgba(17, 94, 89, 0.18);
+}
+
+    .registration-primary-btn:hover {
+        background: var(--dark-teal);
+        border-color: var(--dark-teal);
+        transform: translateY(-1px);
+        box-shadow: 0 11px 22px rgba(17, 94, 89, 0.22);
+    }
+
+    .registration-primary-btn:active {
+        transform: translateY(0);
+    }
+
+    .registration-primary-btn svg {
+        width: 17px;
+        height: 17px;
+    }
+
+.registration-back-btn {
+    flex: 0 0 105px;
+    border: 1px solid #D9E2E7;
+    background: #FFFFFF;
+    color: #64748B;
+}
+
+    .registration-back-btn:hover {
+        border-color: #B8C8CF;
+        color: var(--text-primary);
+        background: #F8FAFC;
+    }
+
+    .registration-back-btn svg {
+        width: 15px;
+        height: 15px;
+    }
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.registration-footer {
+    margin: 12px 0 0;
+    text-align: center;
+    color: #94A3B8;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   RIGHT VISUAL
+   ========================================================= */
+
+.registration-visual {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient( 145deg, #115E59 0%, #0F4F4A 50%, #0B403D 100% );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 40px;
+    color: white;
+}
+
+.visual-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.glow-one {
+    width: 260px;
+    height: 260px;
+    top: -120px;
+    right: -90px;
+    background: rgba(204, 251, 241, 0.10);
+}
+
+.glow-two {
+    width: 220px;
+    height: 220px;
+    bottom: -100px;
+    left: -80px;
+    background: rgba(94, 234, 212, 0.08);
+}
+
+.visual-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 410px;
+}
+
+.visual-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #CCFBF1;
+    font-size: 10px;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+    .visual-badge svg {
+        width: 13px;
+        height: 13px;
+    }
+
+.visual-content h2 {
+    margin: 0;
+    color: white;
+    font-size: 31px;
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+}
+
+.visual-content > p {
+    max-width: 370px;
+    margin: 13px 0 22px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   ILLUSTRATION
+   ========================================================= */
+
+.visual-image-wrap {
+    width: 100%;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px 0 18px;
+}
+
+.visual-image {
+    width: 82%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow( 0 18px 25px rgba(0, 0, 0, 0.14) );
+}
+
+
+/* =========================================================
+   VISUAL FEATURES
+   ========================================================= */
+
+.visual-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.visual-feature {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 13px;
+}
+
+    .visual-feature > span {
+        width: 31px;
+        height: 31px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        background: rgba(204, 251, 241, 0.10);
+        color: #CCFBF1;
+    }
+
+    .visual-feature svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .visual-feature strong {
+        display: block;
+        font-size: 11px;
+        color: white;
+    }
+
+    .visual-feature small {
+        display: block;
+        margin-top: 1px;
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.58);
+    }
+
+
+/* =========================================================
+   OTP MODAL
    ========================================================= */
 
 .verify-modal {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.40);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 50;
+    z-index: 9999;
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
 }
-
-    .verify-modal.hidden {
-        display: none;
-    }
 
     .verify-modal.show {
-        display: flex;
+        opacity: 1;
+        visibility: visible;
     }
 
-.verify-modal-card {
-    background-color: white;
-    border-radius: 24px;
-    padding: 32px;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-    position: relative;
+.verify-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(7, 31, 29, 0.68);
+    backdrop-filter: blur(7px);
 }
+
+.verify-modal-card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 425px;
+    padding: 35px 34px 27px;
+    border-radius: 24px;
+    background: #FFFFFF;
+    border: 1px solid rgba(15, 79, 74, 0.08);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.22);
+    text-align: center;
+    transform: translateY(15px) scale(0.97);
+    transition: transform 0.25s ease;
+}
+
+.verify-modal.show .verify-modal-card {
+    transform: translateY(0) scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 33px;
+    height: 33px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 10px;
+    background: #F8FAFC;
+    color: #94A3B8;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+    .modal-close:hover {
+        background: #F1F5F9;
+        color: var(--text-primary);
+    }
+
+    .modal-close svg {
+        width: 16px;
+        height: 16px;
+    }
+
+.modal-icon {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 17px;
+    border-radius: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #CCFBF1;
+    color: var(--primary-teal);
+}
+
+    .modal-icon svg {
+        width: 26px;
+        height: 26px;
+    }
+
+.modal-eyebrow {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--primary-teal);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.verify-modal-card h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.modal-description {
+    margin: 9px auto 24px;
+    max-width: 330px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+    .modal-description strong {
+        display: block;
+        margin-top: 3px;
+        color: var(--text-primary);
+        font-weight: 800;
+        word-break: break-word;
+    }
 
 
 /* =========================================================
-   13. OTP INPUT
+   OTP INPUTS
    ========================================================= */
 
+.otp-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
 .otp-input {
-    width: 48px;
-    height: 48px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
+    width: 100%;
+    height: 50px;
     text-align: center;
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    background: #F8FAFC;
+    border: 1px solid #D9E2E7;
+    border-radius: 12px;
     outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
     .otp-input:focus {
-        border-color: var(--color-primary);
+        background: white;
+        border-color: var(--primary-teal);
+        box-shadow: 0 0 0 4px rgba(17, 94, 89, 0.09);
+        transform: translateY(-1px);
+    }
+
+.otp-meta {
+    margin-bottom: 10px;
+    color: #64748B;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.resend-button {
+    border: 0;
+    background: transparent;
+    color: #64748B;
+    font-size: 11px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+    .resend-button strong {
+        color: var(--primary-teal);
+        font-weight: 800;
+    }
+
+    .resend-button:hover strong {
+        color: var(--dark-teal);
+        text-decoration: underline;
     }
 
 
 /* =========================================================
-   14. MOBILE
+   MODAL VERIFY BUTTON
    ========================================================= */
 
-@media (max-width: 768px) {
+.modal-verify-btn {
+    width: 100%;
+    min-height: 48px;
+    border: 0;
+    border-radius: 13px;
+    background: var(--primary-teal);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(17, 94, 89, 0.18);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .modal-verify-btn:hover {
+        background: var(--dark-teal);
+        transform: translateY(-1px);
+        box-shadow: 0 11px 22px rgba(17, 94, 89, 0.22);
+    }
+
+    .modal-verify-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+
+/* =========================================================
+   MODAL SECURITY
+   ========================================================= */
+
+.modal-security-note {
+    margin: 15px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: #94A3B8;
+    font-size: 10px;
+}
+
+    .modal-security-note svg {
+        width: 12px;
+        height: 12px;
+        color: var(--primary-teal);
+    }
+
+
+/* =========================================================
+   MODAL BODY LOCK
+   ========================================================= */
+
+body.modal-open {
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 960px) {
+
+    .registration-page {
+        padding: 18px;
+    }
+
+    .registration-card {
+        grid-template-columns: 1fr;
+        max-width: 620px;
+        min-height: auto;
+    }
+
+    .registration-visual {
+        display: none;
+    }
+
+    .registration-form-side {
+        padding: 32px 36px 26px;
+    }
+}
+
+
+@media (max-width: 640px) {
+
+    .registration-page {
+        display: block;
+        padding: 0;
+        background: #FFFFFF;
+    }
+
+    .registration-shell {
+        min-height: 100vh;
+    }
+
+    .registration-card {
+        min-height: 100vh;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .registration-form-side {
+        padding: 24px 20px 20px;
+    }
+
+    .brand-block {
+        margin-bottom: 24px;
+    }
+
+    .brand-logo-wrap {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+    }
+
+    .brand-logo {
+        width: 37px;
+        height: 37px;
+    }
+
+    .brand-title {
+        font-size: 21px;
+    }
+
+    .brand-subtitle {
+        font-size: 11px;
+    }
+
+    .registration-progress {
+        margin-bottom: 28px;
+    }
+
+    .progress-line {
+        left: 8%;
+        right: 8%;
+    }
+
+    .step-heading h2 {
+        font-size: 22px;
+    }
+
+    .form-fields {
+        gap: 15px;
+    }
+
+    .registration-input {
+        height: 46px;
+    }
+
+    .gender-options {
+        gap: 7px;
+    }
 
     .gender-pill {
-        padding: 10px 20px;
+        min-height: 43px;
+        font-size: 11px;
+        gap: 5px;
+    }
+
+        .gender-pill svg {
+            width: 14px;
+            height: 14px;
+        }
+
+    .avatar-grid {
+        gap: 8px;
+    }
+
+    .avatar-card {
+        border-radius: 13px;
+        padding: 3px;
+    }
+
+        .avatar-card img {
+            border-radius: 10px;
+        }
+
+    .avatar-check {
+        width: 20px;
+        height: 20px;
+        right: 5px;
+        top: 5px;
+    }
+
+        .avatar-check svg {
+            width: 11px;
+            height: 11px;
+        }
+
+    .registration-actions {
+        padding-top: 22px;
+    }
+
+    .registration-back-btn {
+        flex-basis: 90px;
+    }
+
+    .registration-footer {
+        margin-bottom: 4px;
+    }
+
+
+    /* TOAST MOBILE */
+
+    .toast-container {
+        top: 14px;
+        right: 14px;
+        width: calc(100vw - 28px);
+    }
+
+    .settlemate-toast {
+        padding: 15px 14px;
+        border-radius: 14px;
+    }
+
+
+    .verify-modal {
+        padding: 14px;
     }
 
     .verify-modal-card {
-        padding: 24px;
+        padding: 31px 19px 23px;
+        border-radius: 21px;
+    }
+
+    .otp-container {
+        gap: 5px;
     }
 
     .otp-input {
-        width: 42px;
-        height: 42px;
+        height: 46px;
+        border-radius: 10px;
+        font-size: 16px;
     }
+}
+
+
+@media (max-width: 380px) {
+
+    .registration-form-side {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .brand-title {
+        font-size: 19px;
+    }
+
+    .brand-subtitle {
+        font-size: 10px;
+    }
+
+    .step-heading h2 {
+        font-size: 20px;
+    }
+
+    .step-heading p {
+        font-size: 12px;
+    }
+
+    .gender-pill span {
+        font-size: 10px;
+    }
+
+    .gender-pill {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .otp-input {
+        height: 42px;
+        font-size: 15px;
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid rgba(17, 94, 89, 0.35);
+    outline-offset: 2px;
 }

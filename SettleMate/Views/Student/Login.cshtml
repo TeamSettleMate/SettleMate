@@ -28,7 +28,7 @@
           href="https://fonts.gstatic.com"
           crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nunito:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
 
 
@@ -55,6 +55,15 @@
 
 
     <!-- =====================================================
+         REGISTER CSS
+         Contains common SettleMate styling
+         ===================================================== -->
+
+    <link rel="stylesheet"
+          href="~/css/student/register.css">
+
+
+    <!-- =====================================================
          LOGIN CSS
          ===================================================== -->
 
@@ -64,224 +73,441 @@
 </head>
 
 
-<body class="min-h-screen flex items-center justify-center">
-
-    @if (TempData["Success"] != null)
-    {
-        <div class="mb-5 text-center text-green-600 text-sm font-semibold">
-
-            @TempData["Success"]
-
-        </div>
-    }
+<body>
 
     <!-- =====================================================
-         LOGIN CARD
+         TOAST NOTIFICATIONS
          ===================================================== -->
 
-    <div class="login-card">
+    <div class="toast-container">
 
-
-        <!-- =================================================
-             LOGO
-             ================================================= -->
-
-        <div class="text-center mb-8">
-
-            <img src="~/images/Student/logo.png"
-                 alt="SettleMate Logo"
-                 class="h-28 w-28 object-contain mx-auto">
-
-
-            <h2 class="text-xl font-bold text-[#102A43] mt-2">
-
-                Welcome Back
-
-            </h2>
-
-
-            <p class="text-sm text-[#526777] mt-2">
-
-                Login to continue to SettleMate
-
-            </p>
-
-        </div>
-
-
-        <!-- =================================================
-             ERROR MESSAGE
-             ================================================= -->
-        @if (!ViewData.ModelState.IsValid)
+        @if (TempData["Success"] != null)
         {
-            <div class="mb-5 text-sm text-red-500">
+            <div class="settlemate-toast success-toast">
 
-                @Html.ValidationSummary(
-                false,
-                        "",
-                        new { @class = "text-red-500" })
+                <div class="toast-icon">
+                    <i data-lucide="check"></i>
+                </div>
 
-        </div>
-                }
+                <div class="toast-content">
 
+                    <strong>Success</strong>
 
-        <!-- =================================================
-             LOGIN FORM
-             ================================================= -->
-
-        <form method="post"
-              action="/Student/Login"
-              id="loginForm">
-
-
-            <!-- =================================================
-                 EMAIL
-                 ================================================= -->
-
-            <div class="mb-5">
-
-                <label class="registration-label">
-
-                    Email Address
-
-                </label>
-
-
-                <div class="relative">
-
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#526777]">
-
-                        <i data-lucide="mail"
-                           class="w-4 h-4">
-                        </i>
-
-                    </span>
-
-
-                    <input type="email"
-                           name="Email"
-                           value="@Model?.Email"
-                           placeholder="john@example.com"
-                           class="registration-input pl-10"
-                           required>
+                    <p>
+                        @TempData["Success"]
+                    </p>
 
                 </div>
 
+                <button type="button"
+                        class="toast-close"
+                        onclick="closeToast(this)">
 
-                <span asp-validation-for="Email"
-                      class="text-red-500 text-xs">
-                </span>
+                    <i data-lucide="x"></i>
+
+                </button>
 
             </div>
+        }
 
 
-            <!-- =================================================
-                 PASSWORD
-                 ================================================= -->
+        @{
+            string loginError = null;
 
-            <div class="mb-3">
+            // 1. Check Email first
+            if (ViewData.ModelState.TryGetValue("Email", out var emailState)
+            && emailState.Errors.Count > 0)
+            {
+                loginError = emailState.Errors[0].ErrorMessage;
+            }
 
-                <label class="registration-label">
+            // 2. Only check Password if Email has no error
+            else if (ViewData.ModelState.TryGetValue("Password", out var passwordState)
+            && passwordState.Errors.Count > 0)
+            {
+                loginError = passwordState.Errors[0].ErrorMessage;
+            }
 
-                    Password
+            // 3. Check general login error
+            else if (ViewData.ModelState.TryGetValue("", out var generalState)
+            && generalState.Errors.Count > 0)
+            {
+                loginError = generalState.Errors[0].ErrorMessage;
+            }
+        }
 
-                </label>
+        @if (!string.IsNullOrEmpty(loginError))
+        {
+            <div class="settlemate-toast error-toast">
 
+                <div class="toast-icon">
+                    <i data-lucide="circle-alert"></i>
+                </div>
 
-                <div class="relative">
+                <div class="toast-content">
 
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#526777]">
+                    <strong>Login Failed</strong>
 
-                        <i data-lucide="lock"
-                           class="w-4 h-4">
-                        </i>
-
-                    </span>
-
-
-                    <input type="password"
-                           name="Password"
-                           id="password"
-                           placeholder="••••••••"
-                           class="registration-input px-10"
-                           required>
-
-
-                    <button type="button"
-                            onclick="togglePassword()"
-                            class="absolute right-4 top-1/2 -translate-y-1/2 text-[#526777]">
-
-                        <i data-lucide="eye-off"
-                           id="passwordIcon"
-                           class="w-4 h-4">
-                        </i>
-
-                    </button>
+                    <p>
+                        @loginError
+                    </p>
 
                 </div>
 
+                <button type="button"
+                        class="toast-close"
+                        onclick="closeToast(this)">
 
-                <span asp-validation-for="Password"
-                      class="text-red-500 text-xs">
-                </span>
+                    <i data-lucide="x"></i>
 
-            </div>
-
-
-            <!-- =================================================
-                 FORGOT PASSWORD
-                 ================================================= -->
-
-            <div class="text-right mb-7">
-
-                <a href="/Student/ForgotPassword"
-                   class="text-sm font-semibold text-[#0D9488] hover:underline">
-
-                    Forgot Password?
-
-                </a>
+                </button>
 
             </div>
-
-
-            <!-- =================================================
-                 LOGIN BUTTON
-                 ================================================= -->
-
-            <button type="submit"
-                    class="w-full registration-primary-btn py-3 font-semibold">
-
-                Login
-
-            </button>
-
-
-        </form>
-
-
-        <!-- =================================================
-             CREATE ACCOUNT
-             ================================================= -->
-
-        <div class="text-center mt-7">
-
-            <p class="text-sm text-[#526777]">
-
-                Don't have an account?
-
-                <a href="/Student/Register"
-                   class="font-semibold text-[#0D9488] hover:underline">
-
-                    Create Account
-
-                </a>
-
-            </p>
-
-        </div>
-
+        }
 
     </div>
+
+
+    <!-- =====================================================
+         PAGE
+         ===================================================== -->
+
+    <main class="registration-page">
+
+        <div class="registration-shell">
+
+            <div class="registration-card login-registration-card">
+
+
+                <!-- =================================================
+                     LEFT - LOGIN FORM
+                     ================================================= -->
+
+                <section class="registration-form-side">
+
+
+                    <!-- =================================================
+                         BRAND
+                         ================================================= -->
+
+                    <div class="brand-block">
+
+                        <div class="brand-logo-wrap">
+
+                            <img src="~/images/Student/logo.png"
+                                 alt="SettleMate Logo"
+                                 class="brand-logo">
+
+                        </div>
+
+                        <div>
+
+                            <h1 class="brand-title">
+                                SettleMate
+                            </h1>
+
+                            <p class="brand-subtitle">
+                                Your journey starts here
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         LOGIN HEADING
+                         ================================================= -->
+
+                    <div class="step-heading login-heading">
+
+                        <span class="step-eyebrow">
+                            WELCOME BACK
+                        </span>
+
+                        <h2>
+                            Login to your account
+                        </h2>
+
+                        <p>
+                            Enter your details to continue to SettleMate.
+                        </p>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         LOGIN FORM
+                         ================================================= -->
+
+                    <form method="post"
+                          action="/Student/Login"
+                          id="loginForm"
+                          class="login-form">
+
+
+                        <!-- =================================================
+                             EMAIL
+                             ================================================= -->
+
+                        <div class="form-field">
+
+                            <label class="registration-label"
+                                   for="Email">
+
+                                Email Address
+
+                            </label>
+
+                            <div class="input-wrap">
+
+                                <i data-lucide="mail"
+                                   class="input-icon">
+                                </i>
+
+                                <input type="text"
+                                       name="Email"
+                                       id="Email"
+                                       value="@Model?.Email"
+                                       placeholder="john@example.com"
+                                       class="registration-input"
+                                       autocomplete="email"
+                                       >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             PASSWORD
+                             ================================================= -->
+
+                        <div class="form-field">
+
+                            <label class="registration-label"
+                                   for="password">
+
+                                Password
+
+                            </label>
+
+                            <div class="input-wrap">
+
+                                <i data-lucide="lock"
+                                   class="input-icon">
+                                </i>
+
+                                <input type="password"
+                                       name="Password"
+                                       id="password"
+                                       placeholder="Enter your password"
+                                       class="registration-input password-field"
+                                       autocomplete="current-password"
+                                      >
+
+
+                                <!-- PASSWORD TOGGLE -->
+
+                                <button type="button"
+                                        class="password-toggle"
+                                        onclick="togglePassword()"
+                                        aria-label="Show password">
+
+                                    <i data-lucide="eye-off"
+                                       id="passwordIcon">
+                                    </i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             FORGOT PASSWORD
+                             ================================================= -->
+
+                        <div class="login-forgot">
+                            <a href="/Student/ForgotPassword" 
+                            class="login-forgot-password">
+                                Forgot Password?
+                            </a>
+                        </div>
+
+
+                        <!-- =================================================
+                             LOGIN BUTTON
+                             ================================================= -->
+
+                        <div class="registration-actions login-actions">
+
+                            <button type="submit"
+                                    class="registration-primary-btn login-button">
+
+                                <span>
+                                    Login
+                                </span>
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+
+                    <!-- =================================================
+                         CREATE ACCOUNT
+                         ================================================= -->
+
+                    <div class="registration-footer login-register-footer">
+
+                        <span>
+                            Don't have an account?
+                        </span>
+
+                        <a href="/Student/Register">
+
+                            Create Account
+
+                        </a>
+
+                    </div>
+
+
+                 
+
+
+                </section>
+
+
+                <!-- =================================================
+                     RIGHT VISUAL
+                     ================================================= -->
+
+                <section class="registration-visual">
+
+
+                    <!-- DECORATIVE GLOWS -->
+
+                    <div class="visual-glow glow-one"></div>
+
+                    <div class="visual-glow glow-two"></div>
+
+
+                    <div class="visual-content">
+
+
+                        <!-- BADGE -->
+
+                        <div class="visual-badge">
+
+                            <i data-lucide="sparkles"></i>
+
+                            <span>
+                                WELCOME BACK
+                            </span>
+
+                        </div>
+
+
+                        <!-- HEADING -->
+
+                        <h2>
+                            Continue your journey with SettleMate.
+                        </h2>
+
+
+                        <p>
+                            Everything you need to manage your student
+                            journey, all in one simple and secure place.
+                        </p>
+
+
+                        <!-- =================================================
+                             ILLUSTRATION
+                             ================================================= -->
+
+                        <div class="visual-image-wrap login-visual-image-wrap">
+
+                            <img src="~/images/Student/login.png"
+                                 alt="SettleMate"
+                                 class="visual-image login-visual-image">
+
+                        </div>
+
+
+                        <!-- =================================================
+                             FEATURES
+                             ================================================= -->
+
+                        <div class="visual-features">
+
+
+                     
+                            <div class="visual-feature">
+
+                                <span>
+
+                                    <i data-lucide="clock-3"></i>
+
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Anytime
+                                    </strong>
+
+                                    <small>
+                                        Access your account anytime
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="visual-feature">
+
+                                <span>
+
+                                    <i data-lucide="heart"></i>
+
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Made for Students
+                                    </strong>
+
+                                    <small>
+                                        Built around your needs
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+            </div>
+
+        </div>
+
+    </main>
 
 
     <!-- =====================================================
@@ -290,12 +516,16 @@
 
     <script>
 
+        // =====================================================
+        // LUCIDE ICONS
+        // =====================================================
+
         lucide.createIcons();
 
 
-        // ==========================================
+        // =====================================================
         // SHOW / HIDE PASSWORD
-        // ==========================================
+        // =====================================================
 
         function togglePassword()
         {
@@ -314,6 +544,13 @@
                     "data-lucide",
                     "eye"
                 );
+
+                document
+                    .querySelector(".password-toggle")
+                    .setAttribute(
+                        "aria-label",
+                        "Hide password"
+                    );
             }
             else
             {
@@ -323,6 +560,13 @@
                     "data-lucide",
                     "eye-off"
                 );
+
+                document
+                    .querySelector(".password-toggle")
+                    .setAttribute(
+                        "aria-label",
+                        "Show password"
+                    );
             }
 
 
@@ -330,12 +574,45 @@
         }
 
 
-        // ==========================================
-        // FORGOT PASSWORD
-        // UI ONLY
-        // ==========================================
+        // =====================================================
+        // CLOSE TOAST
+        // =====================================================
 
-       
+        function closeToast(button)
+        {
+            const toast =
+                button.closest(".settlemate-toast");
+
+            toast.classList.add("toast-hide");
+
+            setTimeout(function ()
+            {
+                toast.remove();
+
+            }, 300);
+        }
+
+
+        // =====================================================
+        // AUTOMATICALLY HIDE SUCCESS TOAST
+        // =====================================================
+
+        setTimeout(function ()
+        {
+            document
+                .querySelectorAll(".success-toast")
+                .forEach(function (toast)
+                {
+                    toast.classList.add("toast-hide");
+
+                    setTimeout(function ()
+                    {
+                        toast.remove();
+
+                    }, 300);
+                });
+
+        }, 5000);
 
     </script>
 

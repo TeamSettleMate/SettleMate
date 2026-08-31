@@ -1,0 +1,239 @@
+﻿@model SettleMate.Models.Student.RoommateListingModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        SettleMate - Roommate Details
+    </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet"
+          href="~/css/site.css">
+
+    <link rel="stylesheet"
+          href="~/css/student/roommate.css">
+
+</head>
+
+<body>
+
+    <main class="roommate-page">
+
+        <div class="roommate-container roommate-details-container">
+
+            <a href="/Student/Roommate"
+               class="back-link">
+
+                <i data-lucide="arrow-left"></i>
+
+                Back to Listings
+
+            </a>
+
+
+            <section class="details-card">
+
+                <div class="details-profile">
+
+                    <div class="details-avatar">
+
+                        @if (!string.IsNullOrWhiteSpace(
+                                                Model.ProfilePhoto))
+                        {
+                            <img src="~/@Model.ProfilePhoto"
+                                 alt="Profile Photo">
+                        }
+                        else
+                        {
+                            <i data-lucide="user"></i>
+                        }
+
+                    </div>
+
+
+                    <div>
+
+                        <span class="roommate-eyebrow">
+                            ROOMMATE PROFILE
+                        </span>
+
+                        <h1>
+                            @Model.FullName
+                        </h1>
+
+                        <span class="gender-badge">
+                            @Model.Gender
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BASIC INFORMATION -->
+
+                <div class="details-section">
+
+                    <h2>
+                        Profile Information
+                    </h2>
+
+
+                    <div class="details-grid">
+
+                        <div class="details-item">
+
+                            <i data-lucide="map-pin"></i>
+
+                            <div>
+
+                                <small>
+                                    Location
+                                </small>
+
+                                <strong>
+                                    @Model.Location
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="details-item">
+
+                            <i data-lucide="wallet"></i>
+
+                            <div>
+
+                                <small>
+                                    Budget
+                                </small>
+
+                                <strong>
+                                    ₹@Model.Budget?.ToString("N0")
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LIFESTYLE -->
+
+                <div class="details-section">
+
+                    <h2>
+                        Lifestyle Preferences
+                    </h2>
+
+                    @if (!string.IsNullOrWhiteSpace(
+                                        Model.LifestylePreferences))
+                    {
+                        <p class="details-text">
+                            @Model.LifestylePreferences
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="details-muted">
+                            No lifestyle preferences provided.
+                        </p>
+                    }
+
+                </div>
+
+
+                <!-- OTHER INFORMATION -->
+
+                <div class="details-section">
+
+                    <h2>
+                        Other Information
+                    </h2>
+
+                    @if (!string.IsNullOrWhiteSpace(
+                                        Model.OtherListingInformation))
+                    {
+                        <p class="details-text">
+                            @Model.OtherListingInformation
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="details-muted">
+                            No additional information provided.
+                        </p>
+                    }
+
+                </div>
+
+
+                <!-- CONTACT -->
+
+                <div class="details-section">
+
+                    <h2>
+                        Contact
+                    </h2>
+
+                    <div class="contact-actions">
+
+                        <a href="tel:@Model.MobileNumber"
+                           class="contact-phone-btn">
+
+                            <i data-lucide="phone"></i>
+
+                            Contact via Phone
+
+                        </a>
+
+
+                        <a href="mailto:@Model.Email"
+                           class="contact-email-btn">
+
+                            <i data-lucide="mail"></i>
+
+                            Contact via Email
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        lucide.createIcons();
+
+    </script>
+
+</body>
+
+</html>

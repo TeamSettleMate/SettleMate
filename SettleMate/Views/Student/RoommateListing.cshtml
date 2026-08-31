@@ -1,0 +1,316 @@
+﻿@model SettleMate.Models.Student.RoommateListingModel
+
+@{
+    Layout = null;
+
+    var listings =
+        ViewBag.Listings as List<SettleMate.Models.Student.RoommateListingModel>
+        ?? new List<SettleMate.Models.Student.RoommateListingModel>();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SettleMate - Find a Roommate</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet"
+          href="~/css/site.css">
+
+    <link rel="stylesheet"
+          href="~/css/student/roommate.css">
+
+</head>
+
+<body>
+
+    <main class="roommate-page">
+
+        <div class="roommate-container">
+
+            <!-- HEADER -->
+
+            <div class="roommate-header">
+
+                <div>
+
+                    <span class="roommate-eyebrow">
+                        ROOMMATE FINDER
+                    </span>
+
+                    <h1>
+                        Find Your Roommate
+                    </h1>
+
+                    <p>
+                        Discover students looking for a compatible roommate.
+                    </p>
+
+                </div>
+
+                <a href="/Student/Roommate/MyListing"
+                   class="roommate-secondary-btn">
+
+                    <i data-lucide="user"></i>
+
+                    My Listing
+
+                </a>
+
+            </div>
+
+
+            <!-- FILTERS -->
+
+            <form method="get"
+                  action="/Student/Roommate"
+                  class="roommate-filter-card">
+
+                <div class="filter-field">
+
+                    <label>
+                        Location
+                    </label>
+
+                    <input type="text"
+                           name="location"
+                           value="@Model?.FilterLocation"
+                           placeholder="City or area">
+
+                </div>
+
+
+                <div class="filter-field">
+
+                    <label>
+                        Gender
+                    </label>
+
+                    <select name="gender">
+
+                        <option value="">
+                            All genders
+                        </option>
+
+                        <option value="Male"
+                                selected="@(Model?.FilterGender == "Male")">
+                            Male
+                        </option>
+
+                        <option value="Female"
+                                selected="@(Model?.FilterGender == "Female")">
+                            Female
+                        </option>
+
+                        <option value="Other"
+                                selected="@(Model?.FilterGender == "Other")">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-field">
+
+                    <label>
+                        Minimum Budget
+                    </label>
+
+                    <input type="number"
+                           name="minBudget"
+                           value="@Model?.MinBudget"
+                           min="0"
+                           placeholder="₹ Minimum">
+
+                </div>
+
+
+                <div class="filter-field">
+
+                    <label>
+                        Maximum Budget
+                    </label>
+
+                    <input type="number"
+                           name="maxBudget"
+                           value="@Model?.MaxBudget"
+                           min="0"
+                           placeholder="₹ Maximum">
+
+                </div>
+
+
+                <button type="submit"
+                        class="roommate-primary-btn">
+
+                    <i data-lucide="search"></i>
+
+                    Search
+
+                </button>
+
+
+                <a href="/Student/Roommate"
+                   class="roommate-reset-btn">
+
+                    Reset
+
+                </a>
+
+            </form>
+
+
+            <!-- LISTINGS -->
+
+            <div class="listing-heading">
+
+                <div>
+
+                    <h2>
+                        Available Roommates
+                    </h2>
+
+                    <span>
+                        @listings.Count listing(s) found
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            @if (listings.Count == 0)
+            {
+                <div class="roommate-empty">
+
+                    <i data-lucide="users-round"></i>
+
+                    <h3>
+                        No roommate listings found
+                    </h3>
+
+                    <p>
+                        Try changing your filters or check again later.
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                <div class="roommate-grid">
+
+                    @foreach (var listing in listings)
+                    {
+                        <article class="roommate-card">
+
+                            <div class="roommate-card-top">
+
+                                <div class="roommate-avatar">
+
+                                    @if (!string.IsNullOrWhiteSpace(
+                                                                listing.ProfilePhoto))
+                                    {
+                                        <img src="~/@listing.ProfilePhoto"
+                                             alt="Profile Photo">
+                                    }
+                                    else
+                                    {
+                                        <i data-lucide="user"></i>
+                                    }
+
+                                </div>
+
+
+                                <div>
+
+                                    <h3>
+                                        @listing.FullName
+                                    </h3>
+
+                                    <span class="gender-badge">
+                                        @listing.Gender
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="roommate-info">
+
+                                <div>
+
+                                    <i data-lucide="map-pin"></i>
+
+                                    <span>
+                                        @listing.Location
+                                    </span>
+
+                                </div>
+
+
+                                <div>
+
+                                    <i data-lucide="wallet"></i>
+
+                                    <span>
+                                        ₹@listing.Budget?.ToString("N0")
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            @if (!string.IsNullOrWhiteSpace(
+                                                listing.OtherListingInformation))
+                            {
+                                <p class="listing-preview">
+
+                                    @listing.OtherListingInformation
+
+                                </p>
+                            }
+
+
+                            <a href="/Student/Roommate/Details/@listing.ListingID"
+                               class="roommate-details-btn">
+
+                                View Details
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </a>
+
+                        </article>
+                    }
+
+                </div>
+            }
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        lucide.createIcons();
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,268 @@
+﻿@model SettleMate.Models.Student.RoommateListingModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        SettleMate - My Roommate Listing
+    </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet"
+          href="~/css/site.css">
+
+    <link rel="stylesheet"
+          href="~/css/student/roommate.css">
+
+</head>
+
+<body>
+
+    <main class="roommate-page">
+
+        <div class="roommate-container">
+
+            <div class="roommate-header">
+
+                <div>
+
+                    <span class="roommate-eyebrow">
+                        MY LISTING
+                    </span>
+
+                    <h1>
+                        My Roommate Listing
+                    </h1>
+
+                    <p>
+                        Manage your roommate listing.
+                    </p>
+
+                </div>
+
+                <a href="/Student/Roommate"
+                   class="roommate-secondary-btn">
+
+                    <i data-lucide="users"></i>
+
+                    Find Roommates
+
+                </a>
+
+            </div>
+
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="roommate-message success-message">
+
+                    <i data-lucide="check-circle"></i>
+
+                    @TempData["Success"]
+
+                </div>
+            }
+
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="roommate-message error-message">
+
+                    <i data-lucide="circle-alert"></i>
+
+                    @TempData["Error"]
+
+                </div>
+            }
+
+
+            @if (Model == null)
+            {
+                <section class="roommate-empty">
+
+                    <i data-lucide="plus-circle"></i>
+
+                    <h2>
+                        You don't have a roommate listing yet.
+                    </h2>
+
+                    <p>
+                        Create a listing so other students can find you.
+                    </p>
+
+                    <a href="/Student/Roommate/Add"
+                       class="roommate-primary-btn">
+
+                        <i data-lucide="plus"></i>
+
+                        Add Listing
+
+                    </a>
+
+                </section>
+            }
+            else
+            {
+                <section class="my-listing-card">
+
+                    <div class="my-listing-header">
+
+                        <div class="roommate-card-top">
+
+                            <div class="roommate-avatar">
+
+                                @if (!string.IsNullOrWhiteSpace(
+                                                            Model.ProfilePhoto))
+                                {
+                                    <img src="~/@Model.ProfilePhoto"
+                                         alt="Profile Photo">
+                                }
+                                else
+                                {
+                                    <i data-lucide="user"></i>
+                                }
+
+                        </div>
+
+
+                        <div>
+
+                            <span class="roommate-eyebrow">
+                                YOUR LISTING
+                            </span>
+
+                            <h2>
+                                @Model.FullName
+                            </h2>
+
+                            <span class="gender-badge">
+                                @Model.Gender
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="roommate-info">
+
+                    <div>
+
+                        <i data-lucide="map-pin"></i>
+
+                        <span>
+                            @Model.Location
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <i data-lucide="wallet"></i>
+
+                        <span>
+                            ₹@Model.Budget?.ToString("N0")
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="my-listing-content">
+
+                    <div>
+
+                        <h3>
+                            Lifestyle Preferences
+                        </h3>
+
+                        <p>
+                            @(string.IsNullOrWhiteSpace(
+                                                        Model.LifestylePreferences)
+                                                        ? "Not provided"
+                                                        : Model.LifestylePreferences)
+                                                                                 </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <h3>
+                            Other Information
+                        </h3>
+
+                        <p>
+                            @(string.IsNullOrWhiteSpace(
+                                                        Model.OtherListingInformation)
+                                                        ? "Not provided"
+                                                        : Model.OtherListingInformation)
+                        </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="my-listing-actions">
+
+                        <a href="/Student/Roommate/Edit/@Model.ListingID"
+                           class="roommate-primary-btn">
+
+                            <i data-lucide="pencil"></i>
+
+                            Edit
+
+                        </a>
+
+
+                        <form method="post"
+                              action="/Student/Roommate/Delete/@Model.ListingID"
+                              onsubmit="return confirmDelete();">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="roommate-danger-btn">
+
+                                <i data-lucide="trash-2"></i>
+
+                                Delete
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </section>
+                        }
+
+        </div>
+
+    </main>
+
+
+    <script src="~/js/student/roommate.js"></script>
+
+</body>
+
+</html>

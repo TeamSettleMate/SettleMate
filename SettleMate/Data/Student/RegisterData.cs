@@ -5,12 +5,13 @@ using System.Net.Mail;
 
 namespace SettleMate.Data.Student
 {
+    // Handles Student Registration database and email operations
     public class RegisterData
     {
         private readonly string connectionString;
         private readonly IConfiguration configuration;
 
-        // Get connection string and email settings
+        // Get database connection and email settings
         public RegisterData(IConfiguration configuration)
         {
             this.configuration = configuration;
@@ -20,12 +21,12 @@ namespace SettleMate.Data.Student
                     "DefaultConnection");
         }
 
-        // Send OTP to user email
+        // Send OTP to user's email
         public bool SendOTP(string email, string otp)
         {
             try
             {
-                // Get email settings from appsettings.json
+                // Get SMTP settings from appsettings.json
                 string senderEmail =
                     configuration["EmailSettings:Email"];
 
@@ -59,7 +60,7 @@ namespace SettleMate.Data.Student
                     "Thank you,\n" +
                     "SettleMate";
 
-                // Create SMTP client
+                // Configure SMTP server
                 using SmtpClient smtp =
                     new SmtpClient(smtpServer, port);
 
@@ -70,7 +71,7 @@ namespace SettleMate.Data.Student
 
                 smtp.EnableSsl = true;
 
-                // Send email
+                // Send OTP email
                 smtp.Send(message);
 
                 return true;
@@ -90,19 +91,21 @@ namespace SettleMate.Data.Student
                 using SqlConnection connection =
                     new SqlConnection(connectionString);
 
-                // Check email in Users table
+                // Search email in Users table
                 string query =
                     "SELECT COUNT(*) FROM Users WHERE Email = @Email";
 
                 using SqlCommand command =
                     new SqlCommand(query, connection);
 
+                // Add email parameter
                 command.Parameters.AddWithValue(
                     "@Email",
                     email);
 
                 connection.Open();
 
+                // Get matching email count
                 int count = Convert.ToInt32(
                     command.ExecuteScalar());
 
@@ -123,7 +126,7 @@ namespace SettleMate.Data.Student
                 using SqlConnection connection =
                     new SqlConnection(connectionString);
 
-                // Insert student details into Users table
+                // Insert student into Users table
                 string query = @"
                     INSERT INTO Users
                     (
@@ -157,37 +160,32 @@ namespace SettleMate.Data.Student
                 using SqlCommand command =
                     new SqlCommand(query, connection);
 
-                // Add full name
+                // Add student details
                 command.Parameters.AddWithValue(
                     "@FullName",
                     model.Name);
 
-                // Add email
                 command.Parameters.AddWithValue(
                     "@Email",
                     model.Email);
 
-                // Add mobile number
                 command.Parameters.AddWithValue(
                     "@MobileNumber",
                     model.Phone);
 
-                // Add gender
                 command.Parameters.AddWithValue(
                     "@Gender",
                     model.Gender);
 
-                // Add city
                 command.Parameters.AddWithValue(
                     "@City",
                     model.City);
 
-                // Add address
                 command.Parameters.AddWithValue(
                     "@Address",
                     model.Address);
 
-                // Add profile photo if available
+                // Save profile photo or NULL
                 command.Parameters.AddWithValue(
                     "@ProfileAvatar",
                     (object?)model.ProfilePhoto ?? DBNull.Value);
@@ -198,24 +196,22 @@ namespace SettleMate.Data.Student
                     PasswordHelper.HashPassword(
                         model.Password));
 
-                // Set user role
+                // Set default student values
                 command.Parameters.AddWithValue(
                     "@Role",
                     "Student");
 
-                // Activate account
                 command.Parameters.AddWithValue(
                     "@IsActive",
                     true);
 
-                // Save registration date
                 command.Parameters.AddWithValue(
                     "@CreatedDate",
                     DateTime.Now);
 
                 connection.Open();
 
-                // Run insert query
+                // Execute INSERT query
                 int result =
                     command.ExecuteNonQuery();
 

@@ -4,12 +4,14 @@ using SettleMate.Models.Student;
 
 namespace SettleMate.Controllers.Student
 {
+    // Handles the Forgot Password flow
     [Route("Student/ForgotPassword")]
     public class ForgotPasswordController : Controller
     {
+        // Used for database and email operations
         private readonly ForgotPasswordData forgotPasswordData;
 
-        // Create ForgotPasswordData object
+        // Create Data Layer object
         public ForgotPasswordController(
             IConfiguration configuration)
         {
@@ -17,7 +19,7 @@ namespace SettleMate.Controllers.Student
                 new ForgotPasswordData(configuration);
         }
 
-        // Open forgot password page
+        // Open Forgot Password page
         [HttpGet("")]
         public IActionResult ForgotPassword()
         {
@@ -33,7 +35,7 @@ namespace SettleMate.Controllers.Student
             }
         }
 
-        // Check email and send OTP
+        // Validate email and send OTP
         [HttpPost("SendOTP")]
         public IActionResult SendOTP(
             ForgotPasswordModel model)
@@ -48,7 +50,7 @@ namespace SettleMate.Controllers.Student
                         model);
                 }
 
-                // Check if email is registered
+                // Check whether email exists in database
                 if (!forgotPasswordData.EmailExists(
                     model.Email))
                 {
@@ -61,33 +63,32 @@ namespace SettleMate.Controllers.Student
                         model);
                 }
 
-                // Generate 6 digit OTP
+                // Generate 6-digit OTP
                 string otp = Random.Shared
                     .Next(100000, 1000000)
                     .ToString();
 
-                // Store email in session
+                // Store email, OTP and expiry in Session
                 HttpContext.Session.SetString(
                     "ForgotPasswordEmail",
                     model.Email);
 
-                // Store OTP in session
                 HttpContext.Session.SetString(
                     "ForgotPasswordOTP",
                     otp);
 
-                // Store expiry time for 2 minutes
                 HttpContext.Session.SetString(
                     "ForgotPasswordOTPExpiry",
                     DateTime.Now
                         .AddMinutes(2)
                         .ToString("O"));
 
-                // Send OTP to email
+                // Send OTP to user's email
                 forgotPasswordData.SendOTP(
                     model.Email,
                     otp);
 
+                // Go to OTP verification page
                 return RedirectToAction("OTP");
             }
             catch (Exception)
@@ -108,17 +109,18 @@ namespace SettleMate.Controllers.Student
         {
             try
             {
-                // Get email from session
+                // Get email saved during SendOTP
                 string email = HttpContext.Session.GetString(
                     "ForgotPasswordEmail");
 
-                // Redirect if session does not exist
+                // Restart flow if Session expired
                 if (email == null)
                 {
                     return RedirectToAction(
                         "ForgotPassword");
                 }
 
+                // Send email to View
                 ViewBag.Email = email;
 
                 return View(
@@ -138,7 +140,7 @@ namespace SettleMate.Controllers.Student
         {
             try
             {
-                // Check OTP input validation
+                // Check OTP model validation
                 if (!ModelState.IsValid)
                 {
                     ViewBag.Email =
@@ -150,7 +152,7 @@ namespace SettleMate.Controllers.Student
                         model);
                 }
 
-                // Get OTP data from session
+                // Get OTP details from Session
                 string savedOTP = HttpContext.Session.GetString(
                     "ForgotPasswordOTP");
 
@@ -160,7 +162,7 @@ namespace SettleMate.Controllers.Student
                 string email = HttpContext.Session.GetString(
                     "ForgotPasswordEmail");
 
-                // Check if session exists
+                // Check whether OTP Session data exists
                 if (savedOTP == null ||
                     expiryText == null ||
                     email == null)
@@ -172,10 +174,10 @@ namespace SettleMate.Controllers.Student
                         "ForgotPassword");
                 }
 
-                // Convert expiry text into DateTime
+                // Convert saved expiry time back to DateTime
                 DateTime expiry = DateTime.Parse(expiryText);
 
-                // Check OTP expiry
+                // Check whether OTP has expired
                 if (DateTime.Now > expiry)
                 {
                     ModelState.AddModelError(
@@ -189,7 +191,7 @@ namespace SettleMate.Controllers.Student
                         model);
                 }
 
-                // Check OTP value
+                // Check entered OTP
                 if (model.OTP != savedOTP)
                 {
                     ModelState.AddModelError(
@@ -203,11 +205,12 @@ namespace SettleMate.Controllers.Student
                         model);
                 }
 
-                // Mark OTP as verified
+                // Remember that OTP verification was successful
                 HttpContext.Session.SetString(
                     "ForgotPasswordOTPVerified",
                     "true");
 
+                // Move to password reset page
                 return RedirectToAction(
                     "ResetPassword");
             }
@@ -227,17 +230,18 @@ namespace SettleMate.Controllers.Student
             }
         }
 
-        // Open reset password page
+        // Open Reset Password page
         [HttpGet("ResetPassword")]
         public IActionResult ResetPassword()
         {
             try
             {
-                // Check if OTP was verified
+                // Check whether OTP was verified
                 string verified =
                     HttpContext.Session.GetString(
                         "ForgotPasswordOTPVerified");
 
+                // Do not allow password reset without OTP verification
                 if (verified != "true")
                 {
                     return RedirectToAction(
@@ -254,7 +258,7 @@ namespace SettleMate.Controllers.Student
             }
         }
 
-        // Change the user's password
+        // Validate and change the password
         [HttpPost("ChangePassword")]
         public IActionResult ChangePassword(
             ResetPasswordModel model)
@@ -269,7 +273,7 @@ namespace SettleMate.Controllers.Student
                         model);
                 }
 
-                // Get verified status and email
+                // Get OTP verification status and email
                 string verified =
                     HttpContext.Session.GetString(
                         "ForgotPasswordOTPVerified");
@@ -278,7 +282,7 @@ namespace SettleMate.Controllers.Student
                     HttpContext.Session.GetString(
                         "ForgotPasswordEmail");
 
-                // Check if OTP was verified
+                // Make sure OTP was verified and Session is valid
                 if (verified != "true" || email == null)
                 {
                     TempData["Error"] =
@@ -288,7 +292,7 @@ namespace SettleMate.Controllers.Student
                         "ForgotPassword");
                 }
 
-                // Update password in database
+                // Update password through Data Layer
                 bool result =
                     forgotPasswordData.ChangePassword(
                         email,
@@ -296,7 +300,7 @@ namespace SettleMate.Controllers.Student
 
                 if (result)
                 {
-                    // Clear session data
+                    // Remove temporary Forgot Password data
                     HttpContext.Session.Remove(
                         "ForgotPasswordEmail");
 
@@ -309,9 +313,11 @@ namespace SettleMate.Controllers.Student
                     HttpContext.Session.Remove(
                         "ForgotPasswordOTPVerified");
 
+                    // Show success message after redirect
                     TempData["Success"] =
                         "Password changed successfully. Please login.";
 
+                    // Go to Login page
                     return RedirectToAction(
                         "Login",
                         "Login");
@@ -337,18 +343,18 @@ namespace SettleMate.Controllers.Student
             }
         }
 
-        // Send a new OTP
+        // Generate and send a new OTP
         [HttpPost("ResendOTP")]
         public IActionResult ResendOTP()
         {
             try
             {
-                // Get email from session
+                // Get email from current Session
                 string email =
                     HttpContext.Session.GetString(
                         "ForgotPasswordEmail");
 
-                // Redirect if session does not exist
+                // Restart if Session has expired
                 if (email == null)
                 {
                     TempData["Error"] =
@@ -358,24 +364,23 @@ namespace SettleMate.Controllers.Student
                         "ForgotPassword");
                 }
 
-                // Generate new 6 digit OTP
+                // Generate new 6-digit OTP
                 string otp = Random.Shared
                     .Next(100000, 1000000)
                     .ToString();
 
-                // Save new OTP in session
+                // Replace old OTP and expiry
                 HttpContext.Session.SetString(
                     "ForgotPasswordOTP",
                     otp);
 
-                // Reset expiry time for 2 minutes
                 HttpContext.Session.SetString(
                     "ForgotPasswordOTPExpiry",
                     DateTime.Now
                         .AddMinutes(2)
                         .ToString("O"));
 
-                // Send new OTP to email
+                // Send new OTP
                 forgotPasswordData.SendOTP(
                     email,
                     otp);
@@ -383,6 +388,7 @@ namespace SettleMate.Controllers.Student
                 TempData["Success"] =
                     "New OTP sent successfully.";
 
+                // Return to OTP page
                 return RedirectToAction("OTP");
             }
             catch (Exception)

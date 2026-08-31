@@ -2,14 +2,15 @@
 
 namespace SettleMate.Models.Student
 {
+    // Stores Student Login form data
     public class LoginModel
     {
-        // Store email entered on login page
+        // Email entered by the user
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Enter a valid email address")]
         public string Email { get; set; }
 
-        // Store password entered on login page
+        // Password entered by the user
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
     }
