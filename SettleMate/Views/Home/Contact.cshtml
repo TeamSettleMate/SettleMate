@@ -1,0 +1,84 @@
+@model SupportRequest
+@{
+    ViewData["Title"] = "Contact";
+}
+<section class="page-intro">
+    <p class="eyebrow">
+        We’re here to help
+    </p>
+    <h1>
+        Let’s make things clearer.
+    </h1>
+    <p>
+        Questions, ideas or something that needs attention? Tell us about it.
+    </p>
+</section>
+<div class="contact-grid section">
+    <aside class="card contact-info">
+        <span class="icon-tile">
+            <i data-lucide="messages-square">
+            </i>
+        </span>
+        <h2>
+            Start a conversation
+        </h2>
+        <p>
+            Your message becomes a support ticket. Signed-in users can follow the reply in Help & Support.
+        </p>
+        <hr/>
+        <a href="mailto:settlemate12@gmail.com">
+            settlemate12@gmail.com
+        </a>
+        <p class="hint">
+            Please do not include passwords or identity documents.
+        </p>
+    </aside>
+    <div class="card form-card">
+        <h2>
+            Send a message
+        </h2>
+        <form method="post" asp-action="Contact" data-validate>
+            <div asp-validation-summary="All" class="validation-summary-errors">
+            </div>
+            <div class="field">
+                <label asp-for="FullName">
+                    Full name *
+                </label>
+                <input asp-for="FullName" required maxlength="100"/>
+                <span asp-validation-for="FullName">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="Email">
+                    Email *
+                </label>
+                <input asp-for="Email" type="email" required/>
+                <span asp-validation-for="Email">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="Subject">
+                    Subject *
+                </label>
+                <input asp-for="Subject" required maxlength="150"/>
+                <span asp-validation-for="Subject">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="Message">
+                    Message *
+                </label>
+                <textarea asp-for="Message" required minlength="10" maxlength="2000" rows="5" data-counter="message-count"></textarea>
+                <span asp-validation-for="Message">
+                </span>
+                <small id="message-count" class="counter">
+                </small>
+            </div>
+            <button class="button primary">
+                Send message
+                <i data-lucide="send">
+                </i>
+            </button>
+        </form>
+    </div>
+</div>

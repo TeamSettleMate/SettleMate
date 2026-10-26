@@ -1,8 +1,220 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model List<Listing>
+@{
+List<Listing> related=(List<Listing>)ViewData["Related"]!;
+    ViewData["Title"] = ViewData["Title"];
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<section class="hero">
+    <div class="hero-copy">
+        <p class="eyebrow">
+            <span class="small-line">
+            </span>
+            A fresh start, a familiar feeling
+        </p>
+        <h1>
+            Your next chapter
+            <br/>
+            starts with
+            <span class="accent-text">
+                a place.
+            </span>
+        </h1>
+        <p class="hero-description">
+            Find a room, meet your people, and make it yours. A simpler way to settle into student life.
+        </p>
+        <form action="/Catalog/Browse" class="hero-search">
+            <input type="hidden" name="kind" value="Property"/>
+            <label class="sr-only" for="hero-city">
+                City or area
+            </label>
+            <input id="hero-city" name="city" placeholder="Where are you moving?"/>
+            <label class="sr-only" for="hero-type">
+                Property type
+            </label>
+            <select id="hero-type" name="type">
+                <option value="">
+                    Any property
+                </option>
+                <option>
+                    Room
+                </option>
+                <option>
+                    Flat
+                </option>
+                <option>
+                    PG
+                </option>
+                <option>
+                    Hostel
+                </option>
+            </select>
+            <button class="button primary">
+                <i data-lucide="search">
+                </i>
+                Find a place
+            </button>
+        </form>
+        <div class="hero-notes">
+            <span>
+                <i data-lucide="shield-check">
+                </i>
+                Reviewed owners
+            </span>
+            <a href="/Catalog/Browse?kind=Room">
+                Find a roommate
+                <i data-lucide="arrow-right">
+                </i>
+            </a>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <img src="/images/room.svg" alt="A calm student room"/>
+        <div class="image-caption">
+            <i data-lucide="house">
+            </i>
+            <div>
+                <strong>
+                    Make room for what’s next.
+                </strong>
+                <small>
+                    Your space. Your people. Your pace.
+                </small>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="feature-strip">
+    <div>
+        <strong>
+            @ViewData["Total"]
+        </strong>
+        <span>
+            Approved properties
+        </span>
+    </div>
+    <div>
+        <strong>
+            01
+        </strong>
+        <span>
+            Search your neighbourhood
+        </span>
+    </div>
+    <div>
+        <strong>
+            02
+        </strong>
+        <span>
+            Meet your future roommates
+        </span>
+    </div>
 </div>
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">
+                Your next address
+            </p>
+            <h2>
+                Find a place that fits.
+            </h2>
+        </div>
+        <a class="text-link" href="/Catalog/Browse?kind=Property">
+            View all properties
+            <i data-lucide="arrow-up-right">
+            </i>
+        </a>
+    </div>
+    <partial name="_ListingCards" model="Model"/>
+</section>
+<section class="section steps-section">
+    <div>
+        <p class="eyebrow">
+            A little less complicated
+        </p>
+        <h2>
+            From searching
+            <br/>
+            to settling in.
+        </h2>
+        <p class="muted">
+            Three steps toward a place you can call yours.
+        </p>
+    </div>
+    <ol class="steps">
+        <li>
+            <span>
+                1
+            </span>
+            <div>
+                <h3>
+                    Explore your options
+                </h3>
+                <p>
+                    Compare location, rent and amenities.
+                </p>
+            </div>
+        </li>
+        <li>
+            <span>
+                2
+            </span>
+            <div>
+                <h3>
+                    Plan a visit
+                </h3>
+                <p>
+                    Send a request and agree on a time with the owner.
+                </p>
+            </div>
+        </li>
+        <li>
+            <span>
+                3
+            </span>
+            <div>
+                <h3>
+                    Start your next chapter
+                </h3>
+                <p>
+                    Meet in person, ask questions and choose your fit.
+                </p>
+            </div>
+        </li>
+    </ol>
+</section>
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">
+                Make it yours
+            </p>
+            <h2>
+                Essentials for your everyday.
+            </h2>
+        </div>
+        <a href="/Catalog/Marketplace" class="text-link">
+            Explore marketplace
+            <i data-lucide="arrow-up-right">
+            </i>
+        </a>
+    </div>
+    <partial name="_ListingCards" model="related"/>
+</section>
+<section class="section card callout">
+    <div>
+        <p class="eyebrow">
+            For property owners
+        </p>
+        <h2>
+            Your space. Someone’s new beginning.
+        </h2>
+        <p>
+            List your property and connect with people looking to move.
+        </p>
+    </div>
+    <a class="button primary" href="/Account/Register/Owner">
+        Become an owner
+        <i data-lucide="arrow-right">
+        </i>
+    </a>
+</section>

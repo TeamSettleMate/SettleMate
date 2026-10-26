@@ -1,0 +1,148 @@
+@model string
+@{
+    ViewData["Title"] = Model;
+}
+<article class="reading section">
+    <p class="eyebrow">
+        SettleMate
+    </p>
+    <h1>
+        @ViewData["Title"]
+    </h1>
+    @if (Model=="About")
+    {
+        <p class="lead">
+            New city. New people. A place to belong.
+        </p>
+        <div class="card">
+            <h2>
+                Built around student life
+            </h2>
+            <p>
+                SettleMate brings finding accommodation, meeting roommates and sourcing everyday essentials into one place. Compare useful information, arrange visits and connect locally.
+            </p>
+            <h2>
+                Clarity before commitment
+            </h2>
+            <p>
+                Property owners and their listings are reviewed before publication. Visit a property yourself and confirm the details before making a rental decision.
+            </p>
+            <h2>
+                The project
+            </h2>
+            <p>
+                Created by Rudra Lodhari as a Computer Engineering project.
+            </p>
+        </div>
+    }
+    else if(Model=="Services")
+    {
+        <div class="grid two">
+            <div class="card">
+                <i data-lucide="building-2">
+                </i>
+                <h2>
+                    Find a property
+                </h2>
+                <p>
+                    Rooms, flats, PGs and hostels with rent, amenities, rules and visit requests.
+                </p>
+                <a href="/Catalog/Browse?kind=Property">
+                    Explore properties
+                </a>
+            </div>
+            <div class="card">
+                <i data-lucide="users">
+                </i>
+                <h2>
+                    Find a roommate
+                </h2>
+                <p>
+                    Post a room you have or describe the room you need.
+                </p>
+                <a href="/Catalog/Browse?kind=Room">
+                    Find your people
+                </a>
+            </div>
+            <div class="card">
+                <i data-lucide="shopping-bag">
+                </i>
+                <h2>
+                    Buy, sell or rent
+                </h2>
+                <p>
+                    Local furniture, electronics, books and more with cash on delivery.
+                </p>
+                <a href="/Catalog/Marketplace">
+                    Explore marketplace
+                </a>
+            </div>
+            <div class="card">
+                <i data-lucide="shield-check">
+                </i>
+                <h2>
+                    Reviewed owners
+                </h2>
+                <p>
+                    Identity and property documents are reviewed privately by the admin.
+                </p>
+                <a href="/Account/Register/Owner">
+                    Register as an owner
+                </a>
+            </div>
+        </div>
+    }
+    else if(Model=="Privacy")
+    {
+        <div class="card">
+            <h2>
+                Your information
+            </h2>
+            <p>
+                Account details, listings, messages, orders, visits and support requests are stored to provide the service. Identity and property-proof documents are accessible to the uploader and authorized administrators.
+            </p>
+            <h2>
+                Email and cookies
+            </h2>
+            <p>
+                We use essential authentication and anti-forgery cookies. Verification codes and service updates are delivered by email. Passwords and codes are stored as hashes.
+            </p>
+            <h2>
+                Contact
+            </h2>
+            <p>
+                Use the Contact page to ask the project operator about your data. This student project requires an operator-defined retention policy before public deployment.
+            </p>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <h2>
+                Using SettleMate
+            </h2>
+            <p>
+                Provide accurate information, list only items or accommodation you are entitled to offer, and communicate respectfully.
+            </p>
+            <h2>
+                Property visits
+            </h2>
+            <p>
+                Approval is an administrative review, not a guarantee about a property. Inspect accommodation and agree rental terms directly with the owner.
+            </p>
+            <h2>
+                Marketplace orders
+            </h2>
+            <p>
+                Payment is cash on delivery. Rental duration and deposit are shown at checkout. Return arrangements and deposit refunds must be agreed directly with the seller;
+                the app records delivery and collection, not automated refunds.
+            </p>
+            <h2>
+                Support
+            </h2>
+            <p>
+                Report concerns using the Contact page. Admin may remove listings or restrict accounts with a recorded reason.
+            </p>
+        </div>
+    }
+</article>
