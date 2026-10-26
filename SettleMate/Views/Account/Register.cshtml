@@ -1,0 +1,221 @@
+@model Registration
+@{
+    ViewData["Title"] = "Create " + Model.Role.ToLowerInvariant() + " account";
+}
+<div class="reading section">
+    <p class="eyebrow">
+        Your next chapter
+    </p>
+    <h1>
+        @ViewData["Title"]
+    </h1>
+    <p class="muted">
+        @(Model.Role=="Owner"?"Verify your email and submit your identity document for admin review.":"A few details, and you’re ready to find your place.")
+    </p>
+    <nav class="tabs">
+        <a href="/Account/Register/User" aria-current="@(Model.Role=="User"?"page":null)">
+            I’m looking for a place
+        </a>
+        <a href="/Account/Register/Owner" aria-current="@(Model.Role=="Owner"?"page":null)">
+            I’m a property owner
+        </a>
+    </nav>
+    <form method="post" enctype="multipart/form-data" class="card" data-validate data-register>
+        <input asp-for="Role" type="hidden"/>
+        <div asp-validation-summary="All" class="validation-summary-errors">
+        </div>
+        <div class="step-pills">
+            <span class="active">
+                1 · Personal information
+            </span>
+            <span>
+                2 · Security
+            </span>
+            <span>
+                3 · @(Model.Role=="Owner"?"Verification":"Avatar")
+            </span>
+        </div>
+        <section data-step="0">
+            <div class="grid two">
+                <div class="field">
+                    <label asp-for="FullName">
+                        Full name *
+                    </label>
+                    <input asp-for="FullName" required/>
+                    <span asp-validation-for="FullName">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="Phone">
+                        Phone *
+                    </label>
+                    <input asp-for="Phone" inputmode="numeric" required pattern="[0-9]{10}" maxlength="10"/>
+                    <span asp-validation-for="Phone">
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <label asp-for="Email">
+                    Email *
+                </label>
+                <input asp-for="Email" type="email" required data-email/>
+                <span asp-validation-for="Email">
+                </span>
+            </div>
+            <partial name="_Otp" model='"Registration"'/>
+            @if (Model.Role=="User")
+            {
+                <div class="grid two">
+                    <div class="field">
+                        <label asp-for="DateOfBirth">
+                            Date of birth *
+                        </label>
+                        <input asp-for="DateOfBirth" type="date" required/>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Gender">
+                            Gender
+                        </label>
+                        <select asp-for="Gender">
+                            <option>
+                                Male
+                            </option>
+                            <option>
+                                Female
+                            </option>
+                            <option>
+                                Other
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label asp-for="Address">
+                        Address *
+                    </label>
+                    <textarea asp-for="Address" required rows="2"></textarea>
+                </div>
+            }
+            <div class="grid two">
+                <div class="field">
+                    <label asp-for="City">
+                        City *
+                    </label>
+                    <input asp-for="City" required/>
+                </div>
+                <div class="field">
+                    <label asp-for="State">
+                        State *
+                    </label>
+                    <input asp-for="State" required/>
+                </div>
+                @if (Model.Role=="User")
+                {
+                    <div class="field">
+                        <label asp-for="Pincode">
+                            Pincode *
+                        </label>
+                        <input asp-for="Pincode" required pattern="[0-9]{6}" maxlength="6"/>
+                    </div>
+                }
+                <div class="field">
+                    <label>
+                        Country
+                    </label>
+                    <input value="India" readonly/>
+                </div>
+            </div>
+        </section>
+        <section data-step="1">
+            <h2>
+                Secure your account
+            </h2>
+            <div class="field">
+                <label asp-for="Password">
+                    Password *
+                </label>
+                <input asp-for="Password" type="password" required minlength="8" maxlength="128" autocomplete="new-password"/>
+                <span asp-validation-for="Password">
+                </span>
+                <small>
+                    At least 8 characters, one number and one symbol.
+                </small>
+            </div>
+            <div class="field">
+                <label asp-for="ConfirmPassword">
+                    Confirm password *
+                </label>
+                <input asp-for="ConfirmPassword" type="password" required autocomplete="new-password"/>
+                <span asp-validation-for="ConfirmPassword">
+                </span>
+            </div>
+        </section>
+        <section data-step="2">
+            @if (Model.Role=="Owner")
+            {
+                <h2>
+                    Identity verification
+                </h2>
+                <div class="field">
+                    <label asp-for="DocumentType">
+                        Document type *
+                    </label>
+                    <select asp-for="DocumentType">
+                        <option>
+                            Government ID
+                        </option>
+                        <option>
+                            Passport
+                        </option>
+                        <option>
+                            Driving Licence
+                        </option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label asp-for="IdentityDocument">
+                        Identity document *
+                    </label>
+                    <input asp-for="IdentityDocument" type="file" accept=".pdf,.jpg,.jpeg,.png" required data-max-file="5242880"/>
+                    <small class="hint">
+                        PDF, JPG or PNG. Maximum 5 MB. Visible only to you and admin.
+                    </small>
+                </div>
+            }
+            else
+            {
+                <h2>
+                    Choose your avatar
+                </h2>
+                <div class="avatar-picker">
+                    @for (int i=1;i<=8;i++)
+                    {
+                        <label>
+                            <input asp-for="Avatar" type="radio" value="@i"/>
+                            <span class="avatar large">
+                                @i
+                            </span>
+                        </label>
+                    }
+                </div>
+            }
+        </section>
+        <div class="wizard-actions">
+            <button type="button" class="button secondary" data-prev>
+                Previous
+            </button>
+            <button type="button" class="button primary" data-next>
+                Continue
+            </button>
+            <button class="button primary" type="submit" data-finish>
+                Complete registration
+            </button>
+        </div>
+    </form>
+    <p class="auth-register">
+        Already registered?
+        <a href="/Account/Login/@Model.Role">
+            Sign in
+        </a>
+    </p>
+</div>

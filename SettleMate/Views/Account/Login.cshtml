@@ -1,0 +1,73 @@
+@model Login
+@{
+    ViewData["Title"] = Model.Role + " sign in";
+}
+<div class="auth-wrap">
+    <div class="auth-card card">
+        <span class="icon-tile">
+            <i data-lucide="key-round">
+            </i>
+        </span>
+        <h1>
+            Welcome back.
+        </h1>
+        <p class="muted">
+            Sign in to your @Model.Role.ToLowerInvariant() workspace.
+        </p>
+        <nav class="tabs" aria-label="Sign-in role">
+            @foreach (var role in new[]{"User","Owner","Admin"})
+            {
+                <a href="/Account/Login/@role" aria-current="@(role==Model.Role?"page":null)">
+                    @role
+                </a>
+            }
+        </nav>
+        <form method="post" data-validate>
+            <input asp-for="Role" type="hidden"/>
+            <input asp-for="ReturnUrl" type="hidden"/>
+            <div asp-validation-summary="All" class="validation-summary-errors">
+            </div>
+            <div class="field">
+                <label asp-for="Email">
+                    Email address
+                </label>
+                <input asp-for="Email" type="email" autocomplete="email" required/>
+                <span asp-validation-for="Email">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="Password">
+                    Password
+                </label>
+                <div class="password-field">
+                    <input asp-for="Password" type="password" autocomplete="current-password" required/>
+                    <button type="button" class="icon-button" data-password="Password" aria-label="Show password">
+                        <i data-lucide="eye">
+                        </i>
+                    </button>
+                </div>
+                <span asp-validation-for="Password">
+                </span>
+            </div>
+            <p class="text-right">
+                <a href="/Account/ForgotPassword">
+                    Forgot password?
+                </a>
+            </p>
+            <button class="button primary full-width">
+                Sign in
+                <i data-lucide="arrow-right">
+                </i>
+            </button>
+        </form>
+        @if (Model.Role!="Admin")
+        {
+            <p class="auth-register">
+                New here?
+                <a href="/Account/Register/@Model.Role">
+                    Create an account
+                </a>
+            </p>
+        }
+    </div>
+</div>
