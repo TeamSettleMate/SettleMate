@@ -1,27 +1,99 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using SettleMate.Web.Configuration;
+using SettleMate.Web.Common;
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// Create the ASP.NET Core application builder.
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllersWithViews(options =>
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+    options.Filters.Add<AppExceptionFilter>();
+    options.Filters.Add<NotificationCountFilter>();
+});
+// Register the cookie validation event.
+builder.Services.AddScoped<CookieValidator>();
+// Authentication cookies remember which account has signed in.
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.LoginPath = "/Account/Login/User";
+    options.AccessDeniedPath = "/Error/403";
+    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    options.SlidingExpiration = true;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    if (builder.Environment.IsDevelopment())
+    {
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    }
+    else
+    {
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    }
+
+    options.EventsType = typeof(CookieValidator);
+});
+builder.Services.AddAuthorization();
+// Keep the existing limits on repeated login, OTP and contact requests.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = 429;
+    foreach (string name in new string[]
+    {
+        "auth",
+        "otp",
+        "contact"
+    }
+
+    )
+    {
+        options.AddPolicy(name, context => RateLimitPartition.GetFixedWindowLimiter((context.Connection.RemoteIpAddress?.ToString() ?? "unknown") + name, _ => new FixedWindowRateLimiterOptions { PermitLimit = name == "otp" ? 10 : 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0, AutoReplenishment = true }));
+    }
+});
+builder.Services.AddHostedService<OutboxWorker>();
+// Session state (stored in server memory) for the "Recently viewed" list.
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+WebApplication app = builder.Build();
+foreach (string argument in args)
+{
+    if (argument == "--initialize-database" || argument == "--check-database" || argument == "--seed-admin")
+    {
+        DatabaseSetup.Run(argument, app.Configuration, app.Environment.ContentRootPath);
+        return;
+    }
 }
 
-app.UseHttpsRedirection();
+app.UseExceptionHandler("/Error/500");
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+    app.UseHttpsRedirection();
+}
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["Referrer-Policy"] = "same-origin";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    await next();
+});
+// Request pipeline: files, routes, authentication, then authorization.
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseRateLimiter();
+app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+app.UseSession();
+app.MapControllerRoute("areas", "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 app.Run();
