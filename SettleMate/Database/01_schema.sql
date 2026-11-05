@@ -250,3 +250,15 @@ IF OBJECT_ID(N'dbo.EmailOutbox',N'U') IS NULL
 BEGIN
     EXEC(N'CREATE TABLE dbo.EmailOutbox(Id bigint IDENTITY PRIMARY KEY,Recipient nvarchar(254) NOT NULL,Subject nvarchar(200) NOT NULL,Body nvarchar(max) NOT NULL,Attempts int NOT NULL DEFAULT 0,SentAt datetime2 NULL,NextAttemptAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME(),CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
 END;
+IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.Accounts') AND name=N'UX_Accounts_Email')
+    EXEC(N'CREATE UNIQUE INDEX UX_Accounts_Email ON dbo.Accounts(NormalizedEmail);');
+IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.OtpChallenges') AND name=N'IX_Otp_EmailPurpose')
+    EXEC(N'CREATE INDEX IX_Otp_EmailPurpose ON dbo.OtpChallenges(Email,Purpose,CreatedAt DESC);');
+IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.Listings') AND name=N'IX_Listings_Search')
+    EXEC(N'CREATE INDEX IX_Listings_Search ON dbo.Listings(Kind,Status,City,Price);');
+COMMIT;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK;
+    THROW;
+END CATCH;
