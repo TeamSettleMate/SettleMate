@@ -202,3 +202,19 @@ IF OBJECT_ID(N'dbo.ReviewReports',N'U') IS NULL
 BEGIN
     EXEC(N'CREATE TABLE dbo.ReviewReports(ReviewId bigint NOT NULL REFERENCES dbo.Reviews(Id),UserId bigint NOT NULL REFERENCES dbo.Accounts(Id),Reason nvarchar(500) NOT NULL,PRIMARY KEY(ReviewId,UserId));');
 END;
+IF OBJECT_ID(N'dbo.CartItems',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.CartItems(UserId bigint NOT NULL REFERENCES dbo.Accounts(Id),ListingId bigint NOT NULL REFERENCES dbo.Listings(Id),Months int NOT NULL DEFAULT 1 CHECK(Months BETWEEN 1 AND 24),PRIMARY KEY(UserId,ListingId));');
+END;
+IF OBJECT_ID(N'dbo.Orders',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Orders(Id bigint IDENTITY PRIMARY KEY,BuyerId bigint NOT NULL REFERENCES dbo.Accounts(Id),CheckoutToken uniqueidentifier NOT NULL UNIQUE,Address nvarchar(300) NOT NULL,City nvarchar(80) NOT NULL,State nvarchar(80) NOT NULL,Pincode varchar(6) NOT NULL,Phone varchar(10) NOT NULL,CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
+IF OBJECT_ID(N'dbo.OrderItems',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.OrderItems(Id bigint IDENTITY PRIMARY KEY,OrderId bigint NOT NULL REFERENCES dbo.Orders(Id),ListingId bigint NOT NULL REFERENCES dbo.Listings(Id),SellerId bigint NOT NULL REFERENCES dbo.Accounts(Id),Title nvarchar(100) NOT NULL,ListingType nvarchar(40) NOT NULL,UnitPrice decimal(18,2) NOT NULL,Deposit decimal(18,2) NOT NULL,Months int NOT NULL,Amount decimal(18,2) NOT NULL,Status varchar(12) NOT NULL DEFAULT ''Pending'' CHECK(Status IN(''Pending'',''Processing'',''Completed'')),Collected bit NOT NULL DEFAULT 0,CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME(),ProcessedAt datetime2 NULL,CompletedAt datetime2 NULL);');
+END;
+IF OBJECT_ID(N'dbo.OrderHistory',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.OrderHistory(Id bigint IDENTITY PRIMARY KEY,OrderItemId bigint NOT NULL REFERENCES dbo.OrderItems(Id),Status varchar(20) NOT NULL,ActorId bigint NOT NULL REFERENCES dbo.Accounts(Id),CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
