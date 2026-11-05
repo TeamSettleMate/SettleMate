@@ -218,3 +218,35 @@ IF OBJECT_ID(N'dbo.OrderHistory',N'U') IS NULL
 BEGIN
     EXEC(N'CREATE TABLE dbo.OrderHistory(Id bigint IDENTITY PRIMARY KEY,OrderItemId bigint NOT NULL REFERENCES dbo.OrderItems(Id),Status varchar(20) NOT NULL,ActorId bigint NOT NULL REFERENCES dbo.Accounts(Id),CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
 END;
+IF OBJECT_ID(N'dbo.Tickets',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Tickets(Id bigint IDENTITY PRIMARY KEY,AccountId bigint NULL REFERENCES dbo.Accounts(Id),FullName nvarchar(100) NOT NULL,Email nvarchar(254) NOT NULL,Subject nvarchar(150) NOT NULL,Message nvarchar(2000) NOT NULL,Status varchar(10) NOT NULL DEFAULT ''Open'' CHECK(Status IN(''Open'',''Resolved'')),CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
+IF OBJECT_ID(N'dbo.TicketReplies',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.TicketReplies(Id bigint IDENTITY PRIMARY KEY,TicketId bigint NOT NULL REFERENCES dbo.Tickets(Id),AdminId bigint NOT NULL REFERENCES dbo.Accounts(Id),Message nvarchar(2000) NOT NULL,CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
+IF OBJECT_ID(N'dbo.Conversations',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Conversations(Id bigint IDENTITY PRIMARY KEY,ListingId bigint NOT NULL REFERENCES dbo.Listings(Id),UserId bigint NOT NULL REFERENCES dbo.Accounts(Id),OwnerId bigint NOT NULL REFERENCES dbo.Accounts(Id),CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME(),UNIQUE(ListingId,UserId));');
+END;
+IF OBJECT_ID(N'dbo.Messages',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Messages(Id bigint IDENTITY PRIMARY KEY,ConversationId bigint NOT NULL REFERENCES dbo.Conversations(Id),SenderId bigint NOT NULL REFERENCES dbo.Accounts(Id),Text nvarchar(2000) NOT NULL,CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
+IF OBJECT_ID(N'dbo.Notifications',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Notifications(Id bigint IDENTITY PRIMARY KEY,AccountId bigint NOT NULL REFERENCES dbo.Accounts(Id),Text nvarchar(500) NOT NULL,Url nvarchar(300) NOT NULL,IsRead bit NOT NULL DEFAULT 0,CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
+IF OBJECT_ID(N'dbo.ModerationHistory',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.ModerationHistory(Id bigint IDENTITY PRIMARY KEY,ActorId bigint NOT NULL REFERENCES dbo.Accounts(Id),Entity varchar(20) NOT NULL,EntityId bigint NOT NULL,Action varchar(30) NOT NULL,Reason nvarchar(500) NOT NULL,CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
+IF OBJECT_ID(N'dbo.PropertyViews',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.PropertyViews(Id bigint IDENTITY PRIMARY KEY,ListingId bigint NOT NULL REFERENCES dbo.Listings(Id),ViewerId bigint NOT NULL REFERENCES dbo.Accounts(Id),ViewDate date NOT NULL DEFAULT CONVERT(date,SYSUTCDATETIME()),UNIQUE(ListingId,ViewerId,ViewDate));');
+END;
+IF OBJECT_ID(N'dbo.EmailOutbox',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.EmailOutbox(Id bigint IDENTITY PRIMARY KEY,Recipient nvarchar(254) NOT NULL,Subject nvarchar(200) NOT NULL,Body nvarchar(max) NOT NULL,Attempts int NOT NULL DEFAULT 0,SentAt datetime2 NULL,NextAttemptAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME(),CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
