@@ -178,3 +178,27 @@ IF OBJECT_ID(N'dbo.OtpChallenges',N'U') IS NULL
 BEGIN
     EXEC(N'CREATE TABLE dbo.OtpChallenges(Id bigint IDENTITY PRIMARY KEY,Email nvarchar(254) NOT NULL,Purpose varchar(20) NOT NULL CHECK(Purpose IN(''Registration'',''ForgotPassword'',''ChangeEmail'')),ActorId bigint NULL REFERENCES dbo.Accounts(Id),SessionHash varchar(64) NOT NULL,CodeHash varchar(300) NOT NULL,ExpiresAt datetime2 NOT NULL,Attempts int NOT NULL DEFAULT 0,IsUsed bit NOT NULL DEFAULT 0,VerifiedAt datetime2 NULL,ProofHash varchar(64) NULL,CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
 END;
+IF OBJECT_ID(N'dbo.Listings',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Listings(Id bigint IDENTITY PRIMARY KEY,OwnerId bigint NOT NULL REFERENCES dbo.Accounts(Id),Kind varchar(12) NOT NULL CHECK(Kind IN(''Property'',''Room'',''Finder'',''Item'')),Title nvarchar(100) NOT NULL,Description nvarchar(1200) NOT NULL,Type nvarchar(40) NOT NULL,City nvarchar(80) NOT NULL,State nvarchar(80) NOT NULL,Address nvarchar(300) NOT NULL DEFAULT '''',Price decimal(18,2) NOT NULL CHECK(Price BETWEEN 0 AND 10000000),Deposit decimal(18,2) NOT NULL DEFAULT 0 CHECK(Deposit>=0),Status varchar(25) NOT NULL CHECK(Status IN(''Draft'',''PendingVerification'',''Approved'',''Rejected'',''Unpublished'',''Removed'',''Reserved'',''Sold'')),Available bit NOT NULL DEFAULT 1,Reason nvarchar(500) NOT NULL DEFAULT '''',Details nvarchar(max) NOT NULL CHECK(ISJSON(Details)=1),CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME(),UpdatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
+IF OBJECT_ID(N'dbo.Files',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Files(Id bigint IDENTITY PRIMARY KEY,OwnerId bigint NOT NULL REFERENCES dbo.Accounts(Id),ListingId bigint NULL REFERENCES dbo.Listings(Id),Name varchar(80) NOT NULL UNIQUE,OriginalName nvarchar(255) NOT NULL,ContentType varchar(80) NOT NULL,Private bit NOT NULL,Purpose varchar(40) NOT NULL,CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
+IF OBJECT_ID(N'dbo.Wishlists',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Wishlists(AccountId bigint NOT NULL REFERENCES dbo.Accounts(Id),ListingId bigint NOT NULL REFERENCES dbo.Listings(Id),PRIMARY KEY(AccountId,ListingId));');
+END;
+IF OBJECT_ID(N'dbo.VisitRequests',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.VisitRequests(Id bigint IDENTITY PRIMARY KEY,UserId bigint NOT NULL REFERENCES dbo.Accounts(Id),ListingId bigint NOT NULL REFERENCES dbo.Listings(Id),VisitAt datetime2 NOT NULL,Message nvarchar(1000) NOT NULL DEFAULT '''',Response nvarchar(1000) NOT NULL DEFAULT '''',Status varchar(12) NOT NULL DEFAULT ''Pending'' CHECK(Status IN(''Pending'',''Approved'',''Rejected'',''Completed'')),CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME(),UNIQUE(UserId,ListingId));');
+END;
+IF OBJECT_ID(N'dbo.Reviews',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Reviews(Id bigint IDENTITY PRIMARY KEY,UserId bigint NOT NULL REFERENCES dbo.Accounts(Id),ListingId bigint NOT NULL REFERENCES dbo.Listings(Id),Rating int NOT NULL CHECK(Rating BETWEEN 1 AND 5),Text nvarchar(1500) NOT NULL,Removed bit NOT NULL DEFAULT 0,Reason nvarchar(500) NOT NULL DEFAULT '''',CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME(),UNIQUE(UserId,ListingId));');
+END;
+IF OBJECT_ID(N'dbo.ReviewReports',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.ReviewReports(ReviewId bigint NOT NULL REFERENCES dbo.Reviews(Id),UserId bigint NOT NULL REFERENCES dbo.Accounts(Id),Reason nvarchar(500) NOT NULL,PRIMARY KEY(ReviewId,UserId));');
+END;
