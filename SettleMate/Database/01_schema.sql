@@ -170,3 +170,11 @@ WHERE OBJECT_ID(expected.TableName,N'U') IS NOT NULL AND COL_LENGTH(expected.Tab
 IF @incompatible IS NOT NULL THROW 51001, @incompatible, 1;
 BEGIN TRY
 BEGIN TRANSACTION;
+IF OBJECT_ID(N'dbo.Accounts',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.Accounts(Id bigint IDENTITY PRIMARY KEY,FullName nvarchar(100) NOT NULL,Email nvarchar(254) NOT NULL,NormalizedEmail AS UPPER(Email) PERSISTED,Phone varchar(10) NOT NULL,PasswordHash varchar(300) NOT NULL,Role varchar(10) NOT NULL CHECK(Role IN(''User'',''Owner'',''Admin'')),Status varchar(20) NOT NULL CHECK(Status IN(''Active'',''PendingApproval'',''Approved'',''Rejected'',''Blocked'')),Reason nvarchar(500) NOT NULL DEFAULT '''',EmailVerified bit NOT NULL DEFAULT 1,SecurityStamp uniqueidentifier NOT NULL DEFAULT NEWID(),DateOfBirth date NULL,Gender varchar(20) NOT NULL DEFAULT ''Other'',Address nvarchar(300) NOT NULL DEFAULT '''',City nvarchar(80) NOT NULL,State nvarchar(80) NOT NULL,Pincode varchar(6) NULL,Avatar int NOT NULL DEFAULT 1 CHECK(Avatar BETWEEN 1 AND 8),DocumentType nvarchar(40) NOT NULL DEFAULT '''',CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
+IF OBJECT_ID(N'dbo.OtpChallenges',N'U') IS NULL
+BEGIN
+    EXEC(N'CREATE TABLE dbo.OtpChallenges(Id bigint IDENTITY PRIMARY KEY,Email nvarchar(254) NOT NULL,Purpose varchar(20) NOT NULL CHECK(Purpose IN(''Registration'',''ForgotPassword'',''ChangeEmail'')),ActorId bigint NULL REFERENCES dbo.Accounts(Id),SessionHash varchar(64) NOT NULL,CodeHash varchar(300) NOT NULL,ExpiresAt datetime2 NOT NULL,Attempts int NOT NULL DEFAULT 0,IsUsed bit NOT NULL DEFAULT 0,VerifiedAt datetime2 NULL,ProofHash varchar(64) NULL,CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME());');
+END;
