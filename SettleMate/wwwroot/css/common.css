@@ -1,0 +1,146 @@
+/* 01. Tokens, typography and reset */
+:root {
+    /* SettleMate theme - colours taken from the logo. Change here to restyle the whole site. */
+    --bg: #f4f7f6;
+    --surface: #ffffff;
+    --surface-soft: #eef4f2;
+    --border: #e1e8e6;
+    --border-strong: #c9d5d2;
+    --text: #12201e;
+    --text-secondary: #42524f;
+    --text-muted: #687976;
+    --text-disabled: #9aa8a5;
+    --brand: #0f766e;
+    --brand-hover: #0b5e57;
+    --brand-tint: #e3f5f1;
+    --brand-dark: #0a3f3b;
+    --brand-mint: #8fe3d3;
+    --accent: #0f766e;
+    --accent-hover: #0b5e57;
+    --accent-tint: #e3f5f1;
+    --accent-ink: #0b5e57;
+    --success: #15803d;
+    --success-tint: #dcfce7;
+    --warning: #b45309;
+    --warning-tint: #fef3c7;
+    --error: #dc2626;
+    --error-tint: #fee2e2;
+    --info: #0369a1;
+    --info-tint: #e0f2fe;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow-card: 0 1px 2px rgba(10, 63, 59, 0.05), 0 2px 8px rgba(10, 63, 59, 0.04);
+    --shadow-hover: 0 10px 24px rgba(10, 63, 59, 0.12);
+    --shadow-overlay: 0 16px 40px rgba(10, 63, 59, 0.18);
+    --ease: 0.22s ease;
+}
+* {
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+}
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font:
+        400 15px/1.55 "Plus Jakarta Sans",
+        system-ui,
+        sans-serif;
+}
+h1,
+h2,
+h3,
+h4 {
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+}
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+}
+h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+h3 {
+    font-size: 16px;
+    font-weight: 600;
+}
+p {
+    margin: 0 0 16px;
+}
+p:last-child {
+    margin-bottom: 0;
+}
+a {
+    color: var(--accent-ink);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+button,
+a,
+input,
+textarea,
+select {
+    transition:
+        color 150ms,
+        background-color 150ms,
+        border-color 150ms;
+}
+button {
+    cursor: pointer;
+}
+button:disabled {
+    cursor: not-allowed;
+}
+img {
+    max-width: 100%;
+    display: block;
+}
+svg.lucide {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+    flex-shrink: 0;
+}
+hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+}
+:focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 3px;
+}
+[hidden] {
+    display: none !important;
+}
+[id] {
+    scroll-margin-top: 100px;
+}
+::selection {
+    background: var(--accent-tint);
+}
+/* Every role (public, user, owner, admin) uses the same brand accent. */
+.role-public,
+.role-user,
+.role-owner,
+.role-admin {
+    --accent: var(--brand);
+    --accent-hover: var(--brand-hover);
+    --accent-tint: var(--brand-tint);
+    --accent-ink: var(--brand-hover);
+}
