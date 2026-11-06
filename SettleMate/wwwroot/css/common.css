@@ -144,3 +144,108 @@ hr {
     --accent-tint: var(--brand-tint);
     --accent-ink: var(--brand-hover);
 }
+/* 02. Layout */
+.container {
+    width: min(1200px, calc(100% - 48px));
+    margin: 0 auto;
+}
+.page-content {
+    min-height: 60vh;
+}
+.section {
+    margin: 48px 0;
+}
+.reading {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.grid {
+    display: grid;
+    gap: 24px;
+}
+.two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.wrap {
+    flex-wrap: wrap;
+}
+.stack {
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+}
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+.section-heading p {
+    margin: 8px 0 0;
+}
+.eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+.muted,
+.hint {
+    color: var(--text-secondary);
+}
+.hint,
+small {
+    font-size: 13px;
+}
+.lead {
+    font-size: 17px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+}
+.accent-text {
+    color: var(--accent-ink);
+}
+.text-right {
+    text-align: right;
+}
+.text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+.small-line {
+    width: 24px;
+    height: 2px;
+    background: var(--accent);
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+.skip-link {
+    position: fixed;
+    top: -80px;
+    left: 16px;
+    z-index: 1000;
+    background: var(--surface);
+    padding: 12px;
+}
+.skip-link:focus {
+    top: 8px;
+}
+.full-width {
+    width: 100%;
+}
