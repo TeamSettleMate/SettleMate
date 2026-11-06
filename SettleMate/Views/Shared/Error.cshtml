@@ -1,0 +1,30 @@
+@model string
+@{
+    Layout = null;
+}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <title>
+            Request unavailable · SettleMate
+        </title>
+        <link rel="stylesheet" href="/css/common.css"/>
+    </head>
+    <body>
+        <main class="container section">
+            <div class="card error-page">
+                <h1>
+                    Let’s get you back on track.
+                </h1>
+                <p>
+                    @Model
+                </p>
+                <a class="button primary" href="/">
+                    Back to home
+                </a>
+            </div>
+        </main>
+    </body>
+</html>

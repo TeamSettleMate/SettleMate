@@ -1,0 +1,30 @@
+<dialog id="confirm-dialog" class="confirm-dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <form method="dialog" id="confirm-form">
+        <div class="modal-icon">
+            <i data-lucide="circle-help" aria-hidden="true">
+            </i>
+        </div>
+        <h2 id="confirm-title">
+            Please confirm
+        </h2>
+        <p id="confirm-message" class="muted">
+        </p>
+        <div id="confirm-reason-wrap" class="field" hidden>
+            <label for="confirm-reason">
+                Reason
+                <span class="required">
+                    *
+                </span>
+            </label>
+            <textarea id="confirm-reason" maxlength="500" rows="3"></textarea>
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="button secondary" id="confirm-cancel">
+                Cancel
+            </button>
+            <button class="button primary" id="confirm-accept" value="confirm">
+                Confirm
+            </button>
+        </div>
+    </form>
+</dialog>

@@ -1,0 +1,28 @@
+@model string
+@{
+    string c = "neutral";
+    string icon = "info";
+    if (Model == "Approved" || Model == "Active" || Model == "Completed" || Model == "Available")
+    {
+        c = "success";
+        icon = "circle-check";
+    }
+    else if (Model == "Pending" || Model == "PendingApproval" || Model == "PendingVerification")
+    {
+        c = "warning";
+        icon = "clock";
+    }
+    else if (Model == "Rejected" || Model == "Blocked" || Model == "Removed")
+    {
+        c = "error";
+    }
+    else if (Model == "Processing")
+    {
+        c = "info";
+    }
+}
+<span class="badge @c">
+    <i data-lucide="@icon">
+    </i>
+    @System.Text.RegularExpressions.Regex.Replace(Model,"([a-z])([A-Z])","$1 $2")
+</span>
