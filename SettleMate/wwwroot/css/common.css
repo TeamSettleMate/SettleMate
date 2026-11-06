@@ -589,3 +589,210 @@ code {
     border-radius: 4px;
     overflow-wrap: anywhere;
 }
+/* 05. Buttons, cards, forms. Accent ink improves contrast for text and button fills. */
+.button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    white-space: normal;
+}
+.button:hover {
+    text-decoration: none;
+}
+.button.primary {
+    background: var(--accent-ink);
+    border-color: var(--accent-ink);
+    color: #fff;
+}
+.button.primary:hover {
+    background: var(--accent-ink);
+    filter: brightness(0.93);
+}
+.button.secondary {
+    background: var(--surface);
+    border-color: var(--border-strong);
+    color: var(--text-secondary);
+}
+.button.secondary:hover,
+.icon-button:hover {
+    background: var(--surface-soft);
+}
+.button.ghost {
+    background: transparent;
+    color: var(--accent-ink);
+}
+.button.danger {
+    background: var(--error);
+    color: white;
+    border-color: var(--error);
+}
+.button:disabled,
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+.button.compact {
+    padding: 6px 12px;
+}
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    color: var(--text-secondary);
+}
+.text-button {
+    background: none;
+    border: 0;
+    padding: 8px 0;
+    min-height: 44px;
+    color: var(--accent-ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+.card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    min-width: 0;
+}
+.icon-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--accent-tint);
+    color: var(--accent-ink);
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+.field {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+.field label {
+    font-size: 14px;
+    font-weight: 500;
+}
+.field input:not([type="file"]),
+.field select,
+.field textarea,
+.otp-digits input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    background: var(--surface);
+    min-height: 44px;
+    padding: 10px 12px;
+    color: var(--text);
+}
+.field textarea {
+    height: auto;
+    resize: vertical;
+    line-height: 1.6;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.otp-digits input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-tint);
+}
+.field input:disabled {
+    background: var(--surface-soft);
+}
+.field-validation-error,
+.validation-summary-errors,
+.required {
+    color: #b91c1c;
+    font-size: 13px;
+}
+.field .input-validation-error,
+.field [aria-invalid="true"] {
+    border-color: var(--error);
+}
+.field-validation-valid,
+.validation-summary-valid {
+    display: none;
+}
+.counter {
+    text-align: right;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+.filter-bar {
+    display: flex;
+    align-items: end;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+.filter-bar .field {
+    margin: 0;
+    flex: 1;
+    min-width: 140px;
+}
+.filter-bar .field:first-of-type {
+    flex: 2;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-grid;
+    place-items: center;
+    background: var(--accent-tint);
+    color: var(--accent-ink);
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.avatar.small {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+}
+.avatar.large {
+    width: 64px;
+    height: 64px;
+    font-size: 20px;
+}
+img.avatar {
+    object-fit: cover;
+    background: var(--surface-soft);
+}
+.avatar-picker img.avatar {
+    width: 56px;
+    height: 56px;
+    transition: transform 0.15s;
+}
+.avatar-picker img.avatar.large {
+    width: 72px;
+    height: 72px;
+}
+.avatar-picker label:hover img.avatar {
+    transform: scale(1.08);
+}
+.avatar-picker input:checked + img {
+    outline: 3px solid var(--accent-ink);
+    outline-offset: 3px;
+}
