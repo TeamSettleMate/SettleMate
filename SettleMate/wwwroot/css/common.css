@@ -344,3 +344,248 @@ small {
     color: var(--text-muted);
     font-size: 12px;
 }
+/* 04. Public pages */
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    padding: 64px 0 48px;
+}
+.hero h1 {
+    font-size: 44px;
+    line-height: 1.18;
+    margin-bottom: 24px;
+    letter-spacing: -0.05em;
+}
+.hero-description {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 430px;
+    line-height: 1.8;
+    margin-bottom: 28px;
+}
+.hero-notes {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+.hero-notes span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.hero-notes svg {
+    width: 16px;
+    height: 16px;
+    color: var(--accent-ink);
+}
+.hero-visual {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--surface);
+}
+.hero-visual > img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 640/490;
+    object-fit: cover;
+}
+.image-caption {
+    display: flex;
+    gap: 16px;
+    padding: 20px 24px;
+    align-items: center;
+}
+.image-caption > svg {
+    width: 24px;
+    height: 24px;
+    color: var(--accent-ink);
+}
+.image-caption strong {
+    display: block;
+    font-size: 14px;
+}
+.image-caption small {
+    display: block;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+.feature-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+.feature-strip > div {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+}
+.feature-strip > div:last-child {
+    border: 0;
+}
+.feature-strip strong {
+    font-size: 12px;
+    color: var(--accent-ink);
+}
+.feature-strip span {
+    font-size: 14px;
+    font-weight: 500;
+}
+.feature-card p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.75;
+    min-height: 74px;
+}
+.feature-card .text-link {
+    font-size: 13px;
+}
+.steps-section {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 64px;
+    padding: 32px 0;
+}
+.steps-section h2 {
+    font-size: 28px;
+}
+.steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 24px;
+}
+.steps li {
+    display: flex;
+    gap: 24px;
+}
+.steps li > span {
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    background: var(--surface);
+    color: var(--accent-ink);
+    font-weight: 600;
+}
+.steps h3 {
+    margin-bottom: 8px;
+}
+.steps p {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+.callout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 32px !important;
+}
+.callout p {
+    color: var(--text-secondary);
+}
+.development-note {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+.page-intro {
+    padding: 32px 0;
+    max-width: 720px;
+}
+.page-intro h1 {
+    font-size: 36px;
+    line-height: 1.3;
+}
+.page-intro > p:last-child {
+    color: var(--text-secondary);
+    font-size: 16px;
+    max-width: 650px;
+    line-height: 1.8;
+}
+.service-card {
+    padding: 32px !important;
+}
+.service-card > p:not(.eyebrow) {
+    color: var(--text-secondary);
+}
+.check-list {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+.check-list li {
+    padding-left: 16px;
+    border-left: 2px solid var(--accent);
+}
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.55fr;
+    gap: 48px;
+    margin-top: 16px;
+}
+.contact-info {
+    padding: 32px !important;
+}
+.contact-info p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+.form-card {
+    padding: 32px !important;
+}
+.legal-page {
+    padding: 32px 0;
+}
+.legal-page section {
+    margin-top: 32px;
+}
+.legal-page p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+.error-page {
+    max-width: 640px;
+    text-align: center;
+    margin: 80px auto;
+    padding: 48px !important;
+}
+.error-page > svg {
+    width: 40px;
+    height: 40px;
+    color: var(--text-muted);
+    margin: 0 auto 24px;
+}
+.setup-steps {
+    padding-left: 24px;
+    display: grid;
+    gap: 16px;
+    margin: 0 0 24px;
+}
+code {
+    font-size: 13px;
+    background: var(--surface-soft);
+    padding: 2px 4px;
+    border-radius: 4px;
+    overflow-wrap: anywhere;
+}
