@@ -1,0 +1,165 @@
+@*
+    Breadcrumb trail built from the current route (area / controller / action / ?kind=).
+    It only links to URLs that already exist in the navigation. Frontend only.
+*@
+@{
+    string role = CurrentAccount.Role(User);
+    bool signedIn = User.Identity?.IsAuthenticated == true;
+    string area = Convert.ToString(ViewContext.RouteData.Values["area"]) ?? "";
+    string controller = Convert.ToString(ViewContext.RouteData.Values["controller"]) ?? "";
+    string action = Convert.ToString(ViewContext.RouteData.Values["action"]) ?? "";
+    string kind = Context.Request.Query["kind"].ToString();
+    string title = Convert.ToString(ViewData["Title"]) ?? "";
+
+    // Listing details pages know the listing kind from their model.
+    if (ViewContext.ViewData.Model is Listing listingModel && kind == "")
+    {
+        kind = listingModel.Kind;
+    }
+
+    // Each crumb: (text, url). url == "" means "current page" (not a link).
+    List<(string Text, string Url)> crumbs = new List<(string Text, string Url)>();
+
+    // 1. First crumb: public home page or the signed-in dashboard.
+    if (signedIn && role != "Public")
+    {
+        crumbs.Add((role + " dashboard", "/Workspace"));
+    }
+    else
+    {
+        crumbs.Add(("Home", "/"));
+    }
+
+    // Helper names for listing kinds.
+    string browseName = kind switch
+    {
+        "Room" or "Finder" => "Find roommate",
+        "Item" => "Marketplace",
+        "Saved" => "Wishlist",
+        _ => "Find property"
+    };
+    string browseUrl = kind switch
+    {
+        "Room" or "Finder" => "/Catalog/Browse?kind=Room",
+        "Item" => "/Catalog/Marketplace",
+        "Saved" => "/Catalog/Wishlist",
+        _ => "/Catalog/Browse?kind=Property"
+    };
+
+    // 2. Middle crumbs (parents) for each page.
+    if (controller == "Catalog")
+    {
+        if (action == "Details")
+        {
+            if (role == "Admin")
+            {
+                // Admins reach listings from their own moderation pages.
+                string adminName = kind switch { "Item" => "Marketplace items", "Room" => "Room posts", "Finder" => "Room finders", _ => "Properties" };
+                crumbs.Add((adminName, "/Workspace/Listings?kind=" + (kind == "" ? "Property" : kind)));
+            }
+            else if (role == "Owner")
+            {
+                crumbs.Add(("Properties", "/Workspace/Listings?kind=Property"));
+            }
+            else
+            {
+                crumbs.Add((browseName, browseUrl));
+            }
+        }
+    }
+    else if (controller == "Account")
+    {
+        if (action is "ForgotPassword" or "ResetPassword")
+        {
+            crumbs.Add(("Sign in", "/Account/Login/User"));
+        }
+    }
+    else if (area == "User")
+    {
+        switch (controller)
+        {
+            case "Marketplace" when action is "Manage" or "Edit" or "Browse":
+                crumbs.Add(("Marketplace", "/Catalog/Marketplace"));
+                if (action == "Edit") crumbs.Add(("My items", "/Workspace/Listings?kind=Item"));
+                break;
+            case "Roommate" when action is "Manage" or "Edit":
+                crumbs.Add(("Find roommate", "/Catalog/Browse?kind=Room"));
+                if (action == "Edit") crumbs.Add(("My room posts", "/Workspace/Listings?kind=" + (kind == "Finder" ? "Finder" : "Room")));
+                break;
+            case "Cart":
+                crumbs.Add(("Marketplace", "/Catalog/Marketplace"));
+                if (action == "Checkout") crumbs.Add(("Cart", "/Workspace/Cart"));
+                break;
+            case "Order":
+                crumbs.Add(("Marketplace", "/Catalog/Marketplace"));
+                if (action == "Details") crumbs.Add(("Orders", "/Workspace/Orders"));
+                break;
+        }
+    }
+    else if (area == "Owner")
+    {
+        if (controller == "Property" && action == "Edit") crumbs.Add(("Properties", "/Workspace/Listings?kind=Property"));
+    }
+    else if (area == "Admin")
+    {
+        switch (controller)
+        {
+            case "User" when action == "Details":
+                crumbs.Add(("Users & sellers", "/Admin/Accounts?role=User"));
+                break;
+            case "Owner" when action == "Details":
+                crumbs.Add(("Owners", "/Admin/Accounts?role=Owner"));
+                break;
+            case "Order" when action == "Details":
+                crumbs.Add(("Marketplace orders", "/Workspace/Orders"));
+                break;
+        }
+    }
+    // Shared child pages in every workspace.
+    if (area != "" && controller == "Message" && action == "Thread") crumbs.Add(("Messages", "/Workspace/Messages"));
+    if (area != "" && controller == "Support" && action == "Ticket") crumbs.Add(("Help & support", "/Workspace/Support"));
+
+    // 3. Current page (skip on the dashboard itself, which is already crumb 1).
+    bool isDashboard = controller == "Dashboard" || (controller == "Home" && action == "Index");
+    if (!isDashboard && title != "")
+    {
+        crumbs.Add((title, ""));
+    }
+    else
+    {
+        crumbs[0] = (crumbs[0].Text, "");
+    }
+}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol>
+        @for (int i = 0; i < crumbs.Count; i++)
+        {
+            <li>
+                @if (i > 0)
+                {
+                    <i data-lucide="chevron-right" aria-hidden="true"></i>
+                }
+                @if (crumbs[i].Url != "")
+                {
+                    <a href="@crumbs[i].Url">
+                        @if (i == 0)
+                        {
+                            <i data-lucide="house" aria-hidden="true"></i>
+                        }
+                        @crumbs[i].Text
+                    </a>
+                }
+                else
+                {
+                    <span aria-current="page">
+                        @if (i == 0)
+                        {
+                            <i data-lucide="house" aria-hidden="true"></i>
+                        }
+                        @crumbs[i].Text
+                    </span>
+                }
+            </li>
+        }
+    </ol>
+</nav>
