@@ -1,0 +1,407 @@
+@{
+    string role = CurrentAccount.Role(User);
+    bool panel = role == "Owner" || role == "Admin";
+    int count=Convert.ToInt32(ViewData["UnreadCount"]);
+    // Avatar number (1-8) comes from NotificationCountFilter.
+    int avatarNo=Convert.ToInt32(ViewData["Avatar"] ?? 1);
+    List<NavigationLink> links = new List<NavigationLink>();
+    if (role == "Admin")
+    {
+        links.Add(new NavigationLink("/Workspace", "Dashboard", "layout-dashboard"));
+        links.Add(new NavigationLink("/Admin/Accounts?role=User", "Users & sellers", "users"));
+        links.Add(new NavigationLink("/Admin/Accounts?role=Owner", "Owners", "badge-check"));
+        links.Add(new NavigationLink("/Workspace/Listings?kind=Property", "Properties", "building-2"));
+        links.Add(new NavigationLink("/Workspace/Reviews", "Reviews", "star"));
+        links.Add(new NavigationLink("/Workspace/Support", "Help & support", "life-buoy"));
+        links.Add(new NavigationLink("/Workspace/Listings?kind=Item", "Marketplace items", "shopping-bag"));
+        links.Add(new NavigationLink("/Workspace/Orders", "Marketplace orders", "package"));
+        links.Add(new NavigationLink("/Workspace/Listings?kind=Finder", "Room finders", "search"));
+        links.Add(new NavigationLink("/Workspace/Listings?kind=Room", "Room posts", "house"));
+        links.Add(new NavigationLink("/Admin/Report", "Reports", "chart-no-axes-column"));
+    }
+    else
+    {
+        links.Add(new NavigationLink("/Workspace", "Dashboard", "layout-dashboard"));
+        links.Add(new NavigationLink("/Workspace/Listings?kind=Property", "Properties", "building-2"));
+        links.Add(new NavigationLink("/Workspace/Visits", "Visit requests", "calendar-days"));
+        links.Add(new NavigationLink("/Workspace/Reviews", "Reviews", "star"));
+        links.Add(new NavigationLink("/Workspace/Messages", "Messages", "messages-square"));
+        links.Add(new NavigationLink("/Workspace/Notifications", "Notifications", "bell"));
+        links.Add(new NavigationLink("/Workspace/Support", "Help & support", "life-buoy"));
+    }
+    // Used by IsActive() to highlight the current navigation link.
+    currentArea = Convert.ToString(ViewContext.RouteData.Values["area"]) ?? "";
+    currentController = Convert.ToString(ViewContext.RouteData.Values["controller"]) ?? "";
+    currentAction = Convert.ToString(ViewContext.RouteData.Values["action"]) ?? "";
+    currentKind = Context.Request.Query["kind"].ToString();
+    if (ViewContext.ViewData.Model is Listing shownListing && currentKind == "")
+    {
+        currentKind = shownListing.Kind;
+    }
+    bool showContentBreadcrumb = !panel
+        && Context.Request.Path != "/"
+        && !(currentController == "Account" && currentAction is "Login" or "Register" or "ForgotPassword" or "ResetPassword")
+        && currentController != "Dashboard";
+}
+@functions {
+    string currentArea = "";
+    string currentController = "";
+    string currentAction = "";
+    string currentKind = "";
+
+    // Returns "page" when a navigation URL belongs to the page being shown, otherwise null.
+    // Links like /Workspace/Visits redirect to area pages, so we compare controller names.
+    string? IsActive(string url)
+    {
+        string path = url.Split('?')[0].TrimEnd('/');
+        string query = url.Contains('?') ? url.Split('?')[1] : "";
+        string kindInUrl = query.StartsWith("kind=") ? query.Substring(5) : "";
+        bool active = path switch
+        {
+            "" => currentController == "Home" && currentAction == "Index",
+            "/About" or "/Services" or "/Contact" or "/Terms" or "/Privacy" => currentController == "Home" && "/" + currentAction == path,
+            "/Workspace" => currentController == "Dashboard",
+            "/Workspace/Listings" => (currentController is "Property" or "Marketplace" or "Roommate")
+                                     && (currentAction is "Manage" or "Edit")
+                                     && (currentKind == kindInUrl || (currentKind == "" && kindInUrl == "Property")),
+            "/Workspace/Visits" => currentController == "Visit",
+            "/Workspace/Reviews" => currentController == "Review",
+            "/Workspace/Messages" => currentController == "Message",
+            "/Workspace/Notifications" => currentController == "Notification",
+            "/Workspace/Support" => currentController == "Support",
+            "/Workspace/Orders" => currentController == "Order",
+            "/Admin/Accounts" => (query == "role=User" && currentController == "User") || (query == "role=Owner" && currentController == "Owner"),
+            "/Admin/Report" => currentController == "Report",
+            "/Account/Profile" => currentController == "Profile",
+            "/Account/Settings" => currentController == "Settings",
+            "/Catalog/Browse" => currentController == "Catalog" && (currentAction is "Browse" or "Details")
+                                 && (kindInUrl == "Room" ? (currentKind is "Room" or "Finder") : (currentKind is "Property" or "")),
+            "/Catalog/Marketplace" => (currentArea == "User" && (currentController is "Marketplace" or "Cart" or "Order"))
+                                      || (currentController == "Catalog" && currentKind == "Item"),
+            "/Catalog/Wishlist" => currentController == "Wishlist" || (currentController == "Catalog" && currentAction == "Wishlist"),
+            _ => false
+        };
+        return active ? "page" : null;
+    }
+}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <title>
+            @ViewData["Title"] · SettleMate
+        </title>
+        <link rel="icon" type="image/png" href="~/images/logo-icon.png"/>
+        <meta name="theme-color" content="#0f766e"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+        <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/css/common.css" asp-append-version="true"/>
+    </head>
+    <body class="role-@role.ToLowerInvariant() @(panel?"panel-page":"") antialiased">
+        <a class="skip-link" href="#main">
+            Skip to content
+        </a>
+        @if (panel)
+        {
+            <div class="drawer-backdrop" data-drawer-close hidden>
+            </div>
+            <aside class="sidebar" id="panel-sidebar" aria-label="Workspace navigation">
+                <a href="/" class="brand">
+                    <img class="brand-logo" src="~/images/logo.png" alt="SettleMate logo"/>
+                    <span class="brand-name">Settle<em>Mate</em></span>
+                </a>
+                <div class="sidebar-user">
+                    <img class="avatar" src="/images/avatars/avatar-@(avatarNo).svg" alt=""/>
+                    <div>
+                        <strong>
+                            @User.Identity?.Name
+                        </strong>
+                        <small>
+                            @role workspace
+                        </small>
+                    </div>
+                    <button type="button" class="icon-button drawer-close" data-drawer-close aria-label="Close navigation">
+                        <i data-lucide="x">
+                        </i>
+                    </button>
+                </div>
+                <p class="eyebrow">
+                    Workspace
+                </p>
+                <nav class="sidebar-nav">
+                    @foreach (NavigationLink link in links)
+                    {
+                        <a href="@link.Url" aria-current="@IsActive(link.Url)">
+                            <i data-lucide="@link.Icon">
+                            </i>
+                            @link.Text
+                        </a>
+                    }
+                </nav>
+                <p class="eyebrow">
+                    Account
+                </p>
+                <nav class="sidebar-nav">
+                    <a href="/Account/Profile" aria-current="@IsActive("/Account/Profile")">
+                        <i data-lucide="user-round">
+                        </i>
+                        Profile & verification
+                    </a>
+                    <a href="/Account/Settings" aria-current="@IsActive("/Account/Settings")">
+                        <i data-lucide="settings">
+                        </i>
+                        Settings
+                    </a>
+                </nav>
+                <div class="sidebar-bottom">
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" data-confirm="Sign out?">
+                        <button class="button secondary" type="submit">
+                            Sign out
+                        </button>
+                    </form>
+                    <small>
+                        SettleMate · @DateTime.Now.Year
+                    </small>
+                </div>
+            </aside>
+        }
+        <div class="page-shell @(panel?"panel-workspace":"")">
+            <header class="@(panel?"panel-topbar":"site-header")">
+                <div class="@(panel?"panel-header-inner":"container nav-shell")">
+                    @if (panel)
+                    {
+                        <button type="button" class="icon-button drawer-toggle" data-drawer="panel-sidebar" aria-expanded="false" aria-controls="panel-sidebar" aria-label="Open navigation">
+                            <i data-lucide="menu">
+                            </i>
+                        </button>
+                        <partial name="_Breadcrumb"/>
+                    }
+                    else
+                    {
+                        <a href="/" class="brand">
+                            <img class="brand-logo" src="~/images/logo.png" alt="SettleMate logo"/>
+                    <span class="brand-name">Settle<em>Mate</em></span>
+                        </a>
+                        <button type="button" class="icon-button mobile-toggle" data-menu="primary-nav" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+                            <i data-lucide="menu">
+                            </i>
+                        </button>
+                    }
+                    <nav id="primary-nav" class="@(panel?"panel-actions":"primary-nav")" aria-label="Main navigation">
+                        @if (!panel)
+                        {
+                            if(role=="User")
+                            {
+                                <a href="/Workspace" aria-current="@IsActive("/Workspace")">
+                                    Home
+                                </a>
+                                <a href="/Catalog/Browse?kind=Property" aria-current="@IsActive("/Catalog/Browse?kind=Property")">
+                                    Find Property
+                                </a>
+                                <a href="/Catalog/Browse?kind=Room" aria-current="@IsActive("/Catalog/Browse?kind=Room")">
+                                    Find Roommate
+                                </a>
+                                <a href="/Catalog/Marketplace" aria-current="@IsActive("/Catalog/Marketplace")">
+                                    Marketplace
+                                </a>
+                                <a href="/Catalog/Wishlist" class="icon-button" aria-label="Wishlist" aria-current="@IsActive("/Catalog/Wishlist")">
+                                    <i data-lucide="heart">
+                                    </i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="/" aria-current="@IsActive("/")">
+                                    Home
+                                </a>
+                                <a href="/About" aria-current="@IsActive("/About")">
+                                    About
+                                </a>
+                                <a href="/Services" aria-current="@IsActive("/Services")">
+                                    Services
+                                </a>
+                                <a href="/Contact" aria-current="@IsActive("/Contact")">
+                                    Contact
+                                </a>
+                            }
+                        }
+                        @if (User.Identity?.IsAuthenticated==true)
+                        {
+                            <a class="icon-button notification-link" href="/Workspace/Notifications" aria-label="Notifications">
+                                <i data-lucide="bell">
+                                </i>
+                                @if (count>0)
+                                {
+                                    <span class="count-badge">
+                                        @count
+                                    </span>
+                                }
+                            </a>
+                            <details class="profile-menu">
+                                <summary>
+                                    <img class="avatar" src="/images/avatars/avatar-@(avatarNo).svg" alt=""/>
+                                    <span class="sr-only">
+                                        Account menu
+                                    </span>
+                                </summary>
+                                <div class="menu-card">
+                                    <strong>
+                                        @User.Identity?.Name
+                                    </strong>
+                                    <a href="/Account/Profile">
+                                        Profile
+                                    </a>
+                                    <a href="/Account/Settings">
+                                        Settings
+                                    </a>
+                                    <a href="/Workspace/Visits">
+                                        My visits
+                                    </a>
+                                    <a href="/Workspace/Messages">
+                                        Messages
+                                    </a>
+                                    @if (role=="User")
+                                    {
+                                        <a href="/Workspace/Cart">
+                                            Cart
+                                        </a>
+                                        <a href="/Workspace/Orders">
+                                            My orders
+                                        </a>
+                                        <a href="/Workspace/Listings?kind=Item">
+                                            My items
+                                        </a>
+                                        <a href="/Workspace/Orders?received=true">
+                                            Orders received
+                                        </a>
+                                        <a href="/Workspace/Payments">
+                                            Payments
+                                        </a>
+                                    }
+                                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                                        <button class="text-button">
+                                            Sign out
+                                        </button>
+                                    </form>
+                                </div>
+                            </details>
+                        }
+                        else
+                        {
+                            <a href="/Account/Login/User" class="button secondary">
+                                Sign in
+                            </a>
+                            <a href="/Account/Register/User" class="button primary">
+                                Create an account
+                            </a>
+                        }
+                    </nav>
+                </div>
+            </header>
+            <main id="main" tabindex="-1" class="@(panel?"panel-content":"page-content")">
+                <div class="container app-container">
+                    @if (showContentBreadcrumb)
+                    {
+                        <partial name="_Breadcrumb"/>
+                    }
+                    @if (TempData["Error"] is string err)
+                    {
+                        <div class="alert-card error" role="alert">
+                            <i data-lucide="circle-alert">
+                            </i>
+                            <div>
+                                <strong>
+                                    Something needs attention
+                                </strong>
+                                <p>
+                                    @err
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    @if (TempData["Success"] is string success)
+                    {
+                        <div id="server-toast" hidden data-type="success" data-title="All set" data-message="@success">
+                        </div>
+                    }
+                    @RenderBody()
+                </div>
+            </main>
+            @if (!panel)
+            {
+                <footer class="site-footer">
+                    <div class="container footer-grid">
+                        <div>
+                            <a href="/" class="brand">
+                                <img class="brand-logo" src="~/images/logo.png" alt="SettleMate logo"/>
+                                <span class="brand-name">Settle<em>Mate</em></span>
+                            </a>
+                            <p>
+                                A place to live.
+                                <br/>
+                                A community to belong to.
+                            </p>
+                        </div>
+                        <div>
+                            <h2>
+                                Discover
+                            </h2>
+                            <a href="/About">
+                                About us
+                            </a>
+                            <a href="/Services">
+                                Services
+                            </a>
+                            <a href="/Contact">
+                                Contact
+                            </a>
+                        </div>
+                        <div>
+                            <h2>
+                                Get started
+                            </h2>
+                            <a href="/Account/Register/Owner">
+                                List your property
+                            </a>
+                            <a href="/Account/Login/Owner">
+                                Owner sign in
+                            </a>
+                            <a href="/Account/Login/Admin">
+                                Admin sign in
+                            </a>
+                        </div>
+                        <div>
+                            <h2>
+                                Information
+                            </h2>
+                            <a href="/Terms">
+                                Terms & conditions
+                            </a>
+                            <a href="/Privacy">
+                                Privacy policy
+                            </a>
+                        </div>
+                    </div>
+                    <div class="container footer-bottom">
+                        <span>
+                            © @DateTime.Now.Year SettleMate
+                        </span>
+                        <span>
+                            Made for your next chapter.
+                        </span>
+                    </div>
+                </footer>
+            }
+        </div>
+        <partial name="_ConfirmModal"/>
+        <div id="toast-stack" class="toast-stack">
+        </div>
+        <script src="~/js/icons.js" defer>
+        </script>
+        <script src="~/js/common.js" asp-append-version="true" defer>
+        </script>
+        @await RenderSectionAsync("Scripts",required:false)
+    </body>
+</html>
