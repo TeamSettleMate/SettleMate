@@ -249,3 +249,98 @@ small {
 .full-width {
     width: 100%;
 }
+/* 03. Navigation and footer */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--surface);
+    border-top: 4px solid var(--brand);
+    border-bottom: 1px solid var(--border);
+}
+.nav-shell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 84px;
+    gap: 24px;
+}
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+    font:
+        700 22px "Plus Jakarta Sans",
+        system-ui,
+        sans-serif;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+}
+.brand:hover {
+    text-decoration: none;
+}
+.brand > img {
+    width: 34px;
+    height: 34px;
+}
+.brand-name em {
+    font-style: normal;
+    color: var(--brand);
+}
+.primary-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+.primary-nav > a:not(.button) {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
+.primary-nav > a[aria-current="page"] {
+    color: var(--accent-ink);
+}
+.mobile-toggle {
+    display: none !important;
+}
+.site-footer {
+    background: var(--surface-soft);
+    border-top: 1px solid var(--border);
+    padding: 48px 0 20px;
+    margin-top: 64px;
+}
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+}
+.footer-grid h2 {
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+}
+.footer-grid p {
+    color: var(--text-muted);
+    margin-top: 16px;
+    font-size: 14px;
+}
+.footer-grid > div > a:not(.brand) {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin: 0 0 12px;
+}
+.footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 12px;
+}
