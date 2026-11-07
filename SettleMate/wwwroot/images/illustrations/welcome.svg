@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300" role="img" aria-label="A student opening the door of a new home">
+  <path d="M40 120c22-70 110-104 190-88s124 76 114 146-72 116-160 112-148-40-158-92 0-40 14-78Z" fill="#ffffff" opacity=".14"/>
+  <circle cx="300" cy="60" r="22" fill="#f6c46b"/>
+  <!-- house -->
+  <path d="M100 150 190 86l90 64v110H100Z" fill="#ffffff"/>
+  <path d="M86 156 190 76l104 80" fill="none" stroke="#8fe3d3" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="166" y="180" width="48" height="80" rx="24" fill="#0f766e"/>
+  <path d="M190 180v80" stroke="#0a3f3b" stroke-width="3" opacity=".3"/>
+  <circle cx="204" cy="222" r="4" fill="#f6c46b"/>
+  <g fill="#14a394"><rect x="118" y="166" width="32" height="32" rx="5"/><rect x="232" y="166" width="32" height="32" rx="5"/></g>
+  <g stroke="#fff" stroke-width="3"><path d="M134 166v32M118 182h32M248 166v32M232 182h32"/></g>
+  <path d="M60 260h240" stroke="#8fe3d3" stroke-width="4" stroke-linecap="round"/>
+  <g fill="#8fe3d3"><circle cx="110" cy="250" r="14"/><circle cx="128" cy="246" r="16"/><circle cx="270" cy="248" r="16"/></g>
+  <!-- student with key -->
+  <g transform="translate(46 150)">
+    <rect x="22" y="70" width="11" height="40" rx="5" fill="#0a3f3b"/><rect x="36" y="70" width="11" height="40" rx="5" fill="#0a3f3b"/>
+    <path d="M16 38c0-14 9-22 19-22s19 8 19 22v36H16Z" fill="#f2836b"/>
+    <circle cx="35" cy="2" r="13" fill="#c68b63"/>
+    <path d="M22-2c0-12 7-17 14-17s14 6 13 15c-6-4-18-4-27 2Z" fill="#1f1a17"/>
+    <path d="M52 44l18-10" stroke="#c68b63" stroke-width="7" stroke-linecap="round"/>
+    <g transform="translate(72 26)"><circle r="7" fill="none" stroke="#f6c46b" stroke-width="4"/><path d="M7 0h14M16 0v6" stroke="#f6c46b" stroke-width="4" stroke-linecap="round"/></g>
+  </g>
+  <g fill="#ffffff" opacity=".6"><circle cx="40" cy="70" r="4"/><circle cx="330" cy="200" r="5"/><circle cx="250" cy="30" r="3"/></g>
+</svg>
