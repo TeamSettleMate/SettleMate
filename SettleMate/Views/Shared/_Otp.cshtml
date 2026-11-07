@@ -1,0 +1,27 @@
+@model string
+<div class="otp-live" data-purpose="@Model">
+    <div class="actions wrap">
+        <button type="button" class="button secondary" data-send-otp>
+            Send verification code
+        </button>
+        <span data-otp-note class="hint" role="status">
+        </span>
+    </div>
+    <div class="otp-entry" hidden>
+        <label>
+            Enter the six-digit code
+        </label>
+        <div class="otp-digits">
+            @for (var i=0;i<6;i++)
+            {
+                <input type="text" inputmode="numeric" maxlength="1" aria-label="Digit @(i+1)" autocomplete="@(i==0?"one-time-code":"off")"/>
+            }
+        </div>
+        <button type="button" class="button secondary" data-verify-otp>
+            Verify code
+        </button>
+    </div>
+    <input type="hidden" name="@(Model=="Registration"?"OtpProof":"proof")" data-proof/>
+    <p class="field-validation-error" data-otp-error role="alert">
+    </p>
+</div>

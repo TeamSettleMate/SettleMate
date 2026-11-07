@@ -1,0 +1,37 @@
+@model string
+@*
+    Left-hand brand panel for sign in, register and forgot-password pages.
+    Model = "login", "register", "owner" or "forgot" (display text only).
+*@
+@{
+    string heading = Model switch
+    {
+        "register" => "Your next chapter starts here.",
+        "owner" => "List your space with confidence.",
+        "forgot" => "Back to your account in minutes.",
+        _ => "Welcome back to SettleMate."
+    };
+    string text = Model switch
+    {
+        "register" => "Create a free account to find a place, meet roommates and shop the student marketplace.",
+        "owner" => "Verify your email and submit your identity document. Our admin reviews every owner before listings go live.",
+        "forgot" => "Verify your email with a one-time code, then choose a new password.",
+        _ => "Sign in to manage your visits, messages, listings and orders."
+    };
+}
+<aside class="auth-aside">
+    <a href="/" class="auth-aside-brand">
+        <img src="/images/logo.png" alt="SettleMate logo"/>
+        <span>SettleMate</span>
+    </a>
+    <div class="auth-aside-copy">
+        <h2>@heading</h2>
+        <p>@text</p>
+    </div>
+    <img class="auth-aside-art" src="/images/illustrations/welcome.svg" alt=""/>
+    <ul class="auth-aside-points">
+        <li><i data-lucide="shield-check"></i> Reviewed owners and listings</li>
+        <li><i data-lucide="calendar-days"></i> Request visits online</li>
+        <li><i data-lucide="messages-square"></i> Chat before you decide</li>
+    </ul>
+</aside>
