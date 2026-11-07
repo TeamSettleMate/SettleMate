@@ -1,0 +1,59 @@
+@{
+    ViewData["Title"] = "Settings";
+}
+<h1>
+    Account settings
+</h1>
+<div class="grid two section">
+    <section class="card">
+        <h2>
+            Change password
+        </h2>
+        <form asp-area="" asp-controller="Account" asp-action="ChangePassword" method="post" data-validate>
+            <div class="field">
+                <label for="currentPassword">
+                    Current password
+                </label>
+                <input id="currentPassword" name="currentPassword" type="password" required/>
+            </div>
+            <div class="field">
+                <label for="password">
+                    New password
+                </label>
+                <input id="password" name="password" type="password" required minlength="8" maxlength="128" pattern="(?=.*\d)(?=.*[^\w\s]).{8,128}"/>
+                <small>
+                    At least 8 characters, a number and a symbol.
+                </small>
+            </div>
+            <div class="field">
+                <label for="confirmPassword">
+                    Confirm password
+                </label>
+                <input id="confirmPassword" name="confirmPassword" type="password" required data-match="password"/>
+            </div>
+            <button class="button primary">
+                Update password
+            </button>
+        </form>
+    </section>
+    <section class="card">
+        <h2>
+            Change email
+        </h2>
+        <p class="muted">
+            Verify the new address. You’ll sign in again after the change.
+        </p>
+        <form asp-area="" asp-controller="Account" asp-action="ChangeEmail" method="post" data-validate>
+            <div class="field">
+                <label for="Email">
+                    New email address
+                </label>
+                <input id="Email" name="email" type="email" required data-email/>
+            </div>
+            <partial name="_Otp" model='"ChangeEmail"'/>
+            <button class="button secondary">
+                Save new email
+            </button>
+        </form>
+    </section>
+</div>
