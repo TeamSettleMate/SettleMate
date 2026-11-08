@@ -1193,3 +1193,169 @@ tbody tr:hover {
     border-color: var(--accent);
     outline: 1px solid var(--accent);
 }
+/* 09. Role layouts */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.auth-brand {
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px 24px;
+}
+.auth-main {
+    width: min(440px, calc(100% - 32px));
+    margin: auto;
+    flex: 1;
+}
+.auth-card {
+    padding: 32px;
+    text-align: center;
+}
+.auth-card .field,
+.auth-card .alert-card {
+    text-align: left;
+}
+.auth-card > .icon-tile {
+    margin-bottom: 16px;
+}
+.auth-card h1 {
+    font-size: 28px;
+}
+.auth-card > .muted {
+    font-size: 14px;
+}
+.auth-card .tabs {
+    justify-content: center;
+}
+.auth-register {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin: 24px 0 0;
+}
+.auth-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 32px 16px;
+}
+.auth-footer a {
+    color: var(--text-muted);
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 256px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 40;
+    overflow: auto;
+}
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+}
+.sidebar-user strong {
+    font-size: 13px;
+    display: block;
+}
+.sidebar-user small {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+.sidebar .eyebrow {
+    margin: 8px 12px;
+}
+.sidebar-nav {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 24px;
+}
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    padding: 12px;
+    min-height: 44px;
+    border-left: 3px solid transparent;
+    border-radius: 8px;
+}
+.sidebar-nav a:hover {
+    background: var(--surface-soft);
+    text-decoration: none;
+}
+.sidebar-nav a[aria-current="page"] {
+    background: var(--accent-tint);
+    color: var(--accent-ink);
+    border-left-color: var(--accent);
+}
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 20px 12px 0;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+}
+.sidebar-bottom small {
+    display: block;
+    color: var(--text-muted);
+    margin-top: 12px;
+    font-size: 11px;
+}
+.panel-workspace {
+    margin-left: 256px;
+}
+.panel-topbar {
+    height: 76px;
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    z-index: 20;
+    font-size: 13px;
+}
+.panel-content {
+    padding: 8px 32px 48px;
+}
+.panel-content .container {
+    width: 100%;
+    max-width: 1200px;
+}
+.drawer-toggle,
+.drawer-close {
+    display: none;
+}
+.drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    z-index: 35;
+}
+.demo-container > .section-heading {
+    margin-top: 32px;
+}
+.demo-container h1 {
+    font-size: 28px;
+}
