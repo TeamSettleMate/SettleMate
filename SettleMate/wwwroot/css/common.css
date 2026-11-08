@@ -1088,3 +1088,108 @@ tbody tr:hover {
         transform: translateY(0);
     }
 }
+/* 08. OTP, file previews and gallery */
+.otp-module > p {
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+.otp-digits {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0 12px;
+}
+.otp-digits input {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    font-size: 20px;
+    padding: 0;
+}
+.upload-box {
+    position: relative;
+    border: 1px dashed var(--border-strong);
+    background: var(--bg);
+    border-radius: 12px;
+    text-align: center;
+    padding: 24px;
+    cursor: pointer;
+}
+.upload-box > svg {
+    margin: 0 auto 8px;
+    color: var(--text-muted);
+}
+.upload-box p {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+.upload-box input {
+    max-width: 100%;
+    font-size: 12px;
+}
+.upload-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+.file-previews {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.file-preview {
+    position: relative;
+    width: 88px;
+    margin: 0;
+}
+.file-preview img {
+    width: 88px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+.file-preview figcaption {
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.file-preview button {
+    font-size: 11px;
+    min-height: 44px;
+    min-width: 44px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 100%;
+}
+.gallery-main {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 12px;
+}
+.gallery-thumbs {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+.gallery-thumb {
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    width: 80px;
+    min-height: 44px;
+}
+.gallery-thumb img {
+    border-radius: 4px;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+}
+.gallery-thumb[aria-pressed="true"] {
+    border-color: var(--accent);
+    outline: 1px solid var(--accent);
+}
