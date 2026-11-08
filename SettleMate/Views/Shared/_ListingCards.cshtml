@@ -1,0 +1,74 @@
+@model List<Listing>
+@if (Model.Count==0)
+{
+    <div class="card empty-state">
+        <span class="empty-icon">
+            <i data-lucide="search">
+            </i>
+        </span>
+        <h3>
+            No listings found
+        </h3>
+        <p>
+            Try a different location or adjust your filters.
+        </p>
+    </div>
+}
+else
+{
+    <div class="listing-grid grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        @foreach (var l in Model)
+        {
+            <article class="listing-card">
+                <a href="/Catalog/Details/@l.Id" class="listing-image">
+                    <img src="@(string.IsNullOrEmpty(l.Image)?"/images/room.svg":"/uploads/"+l.Image)" alt="@l.Title" loading="lazy"/>
+                    <span class="listing-type">
+                        @l.Type
+                    </span>
+                </a>
+                <div class="listing-content">
+                    <div class="card-title-row">
+                        <h3>
+                            <a href="/Catalog/Details/@l.Id">
+                                @l.Title
+                            </a>
+                        </h3>
+                        @if (CurrentAccount.Role(User)=="User")
+                        {
+                            <form asp-area="User" asp-controller="Wishlist" asp-action="Toggle" method="post" data-ajax>
+                                <input type="hidden" name="id" value="@l.Id"/>
+                                <button class="icon-button" aria-label="Toggle wishlist">
+                                    <i data-lucide="heart">
+                                    </i>
+                                </button>
+                            </form>
+                        }
+                    </div>
+                    <p class="location">
+                        <i data-lucide="map-pin">
+                        </i>
+                        @l.City, @l.State
+                    </p>
+                    <div class="price-row">
+                        <strong>
+                            ₹@l.Price.ToString("N0")
+                        </strong>
+                        <span>
+                            @(l.Type=="Sell"?"one-time":"/ month")
+                        </span>
+                    </div>
+                    <div class="card-title-row">
+                        <span class="hint">
+                            @(l.Rating == 0?"No reviews yet":"★ "+l.Rating)
+                        </span>
+                        <a class="text-link" href="/Catalog/Details/@l.Id">
+                            View details
+                            <i data-lucide="arrow-up-right">
+                            </i>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+}
