@@ -1,8 +1,175 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model List<Listing>
+@{
+List<Listing> related=(List<Listing>)ViewData["Related"]!;
+    ViewData["Title"] = ViewData["Title"];
+    // Popular cities are plain links to the existing Browse search (?city=).
+    string[] cities = { "Ahmedabad", "Rajkot", "Surat", "Vadodara", "Gandhinagar" };
 }
+@* ---------- Hero ---------- *@
+<section class="home-hero">
+    <div class="home-hero-copy">
+        <span class="pill">
+            <i data-lucide="shield-check"></i>
+            Reviewed owners · Student friendly
+        </span>
+        <h1>
+            Find your next home,
+            <span class="accent-text">meet your people.</span>
+        </h1>
+        <p class="hero-description">
+            Rooms, flats, PGs and hostels near your college, roommates who fit your lifestyle and everyday essentials, all in one place.
+        </p>
+        <form action="/Catalog/Browse" class="hero-search">
+            <input type="hidden" name="kind" value="Property"/>
+            <div class="hero-search-field">
+                <i data-lucide="map-pin"></i>
+                <label class="sr-only" for="hero-city">City or area</label>
+                <input id="hero-city" name="city" placeholder="Where are you moving?"/>
+            </div>
+            <div class="hero-search-field">
+                <i data-lucide="building-2"></i>
+                <label class="sr-only" for="hero-type">Property type</label>
+                <select id="hero-type" name="type">
+                    <option value="">Any property</option>
+                    <option>Room</option>
+                    <option>Flat</option>
+                    <option>PG</option>
+                    <option>Hostel</option>
+                </select>
+            </div>
+            <button class="button primary">
+                <i data-lucide="search"></i>
+                Search
+            </button>
+        </form>
+        <div class="city-chips">
+            <span>Popular:</span>
+            @foreach (string city in cities)
+            {
+                <a class="chip" href="/Catalog/Browse?kind=Property&city=@city">@city</a>
+            }
+        </div>
+    </div>
+    <div class="home-hero-visual">
+        <div class="blob-shape"></div>
+        <img src="/images/illustrations/hero.svg" alt="Two students moving into a new home"/>
+        <div class="float-card float-card-top">
+            <span class="float-icon"><i data-lucide="badge-check"></i></span>
+            <div>
+                <strong>@ViewData["Total"] approved</strong>
+                <small>properties right now</small>
+            </div>
+        </div>
+        <div class="float-card float-card-bottom">
+            <span class="float-icon coral"><i data-lucide="calendar-days"></i></span>
+            <div>
+                <strong>Plan a visit</strong>
+                <small>agree a time with the owner</small>
+            </div>
+        </div>
+    </div>
+</section>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@* ---------- What are you looking for ---------- *@
+<section class="section">
+    <div class="section-heading centered">
+        <div>
+            <p class="eyebrow">Everything in one place</p>
+            <h2>What are you looking for?</h2>
+        </div>
+    </div>
+    <div class="category-grid">
+        <a class="category-card" href="/Catalog/Browse?kind=Property">
+            <img src="/images/illustrations/property.svg" alt=""/>
+            <h3>Find a property</h3>
+            <p>Rooms, flats, PGs and hostels with rent, amenities and house rules.</p>
+            <span class="text-link">Explore properties <i data-lucide="arrow-right"></i></span>
+        </a>
+        <a class="category-card" href="/Catalog/Browse?kind=Room">
+            <img src="/images/illustrations/roommates.svg" alt=""/>
+            <h3>Find a roommate</h3>
+            <p>Share a room you have, or tell others the kind of room you need.</p>
+            <span class="text-link">Find your people <i data-lucide="arrow-right"></i></span>
+        </a>
+        <a class="category-card" href="/Catalog/Marketplace">
+            <img src="/images/illustrations/marketplace.svg" alt=""/>
+            <h3>Student marketplace</h3>
+            <p>Buy, sell or rent furniture, electronics and books with cash on delivery.</p>
+            <span class="text-link">Explore marketplace <i data-lucide="arrow-right"></i></span>
+        </a>
+    </div>
+</section>
+
+@* ---------- Latest properties ---------- *@
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Your next address</p>
+            <h2>Latest approved properties</h2>
+        </div>
+        <a class="button secondary" href="/Catalog/Browse?kind=Property">
+            View all properties
+            <i data-lucide="arrow-right"></i>
+        </a>
+    </div>
+    <partial name="_ListingCards" model="Model"/>
+</section>
+
+@* ---------- How it works ---------- *@
+<section class="section how-it-works">
+    <div class="section-heading centered">
+        <div>
+            <p class="eyebrow">A little less complicated</p>
+            <h2>From searching to settling in</h2>
+        </div>
+    </div>
+    <ol class="step-cards">
+        <li>
+            <span class="step-number">1</span>
+            <span class="step-icon"><i data-lucide="search"></i></span>
+            <h3>Explore your options</h3>
+            <p>Compare location, rent and amenities.</p>
+        </li>
+        <li>
+            <span class="step-number">2</span>
+            <span class="step-icon"><i data-lucide="calendar-days"></i></span>
+            <h3>Plan a visit</h3>
+            <p>Send a request and agree on a time with the owner.</p>
+        </li>
+        <li>
+            <span class="step-number">3</span>
+            <span class="step-icon"><i data-lucide="key-round"></i></span>
+            <h3>Start your next chapter</h3>
+            <p>Meet in person, ask questions and choose your fit.</p>
+        </li>
+    </ol>
+</section>
+
+@* ---------- Marketplace ---------- *@
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Make it yours</p>
+            <h2>Essentials for your everyday</h2>
+        </div>
+        <a href="/Catalog/Marketplace" class="button secondary">
+            Explore marketplace
+            <i data-lucide="arrow-right"></i>
+        </a>
+    </div>
+    <partial name="_ListingCards" model="related"/>
+</section>
+
+@* ---------- Owner call to action ---------- *@
+<section class="section cta-banner">
+    <div class="cta-copy">
+        <p class="eyebrow">For property owners</p>
+        <h2>Your space. Someone’s new beginning.</h2>
+        <p>List your property, get it reviewed by our admin and connect with students looking to move.</p>
+        <a class="button light" href="/Account/Register/Owner">
+            Become an owner
+            <i data-lucide="arrow-right"></i>
+        </a>
+    </div>
+    <img src="/images/illustrations/verified.svg" alt=""/>
+</section>
