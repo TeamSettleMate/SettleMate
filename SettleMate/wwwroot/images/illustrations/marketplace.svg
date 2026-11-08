@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" role="img" aria-label="Furniture and books for sale">
+  <path d="M28 80c14-44 66-62 116-52s80 48 72 92-46 70-98 66-90-26-96-58 0-30 6-48Z" fill="#e3f5f1"/>
+  <!-- lamp -->
+  <path d="M52 60h36l-8 26H60Z" fill="#f6c46b"/>
+  <rect x="68" y="86" width="4" height="70" fill="#0a3f3b"/>
+  <rect x="56" y="154" width="28" height="6" rx="3" fill="#0a3f3b"/>
+  <!-- armchair -->
+  <rect x="100" y="104" width="86" height="44" rx="12" fill="#0f766e"/>
+  <rect x="110" y="84" width="66" height="36" rx="12" fill="#14a394"/>
+  <rect x="94" y="112" width="16" height="40" rx="8" fill="#0a3f3b"/><rect x="176" y="112" width="16" height="40" rx="8" fill="#0a3f3b"/>
+  <rect x="104" y="150" width="6" height="12" rx="2" fill="#0a3f3b"/><rect x="176" y="150" width="6" height="12" rx="2" fill="#0a3f3b"/>
+  <!-- books -->
+  <rect x="150" y="54" width="14" height="30" rx="2" fill="#f2836b"/>
+  <rect x="166" y="58" width="12" height="26" rx="2" fill="#0a3f3b"/>
+  <rect x="180" y="50" width="12" height="34" rx="2" transform="rotate(10 186 67)" fill="#f6c46b"/>
+  <!-- price tag -->
+  <g transform="translate(36 112) rotate(-12)">
+    <path d="M0 0h34l12 12-12 12H0Z" fill="#f2836b"/>
+    <circle cx="34" cy="12" r="3" fill="#fff"/>
+    <path d="M8 8h14M8 16h10" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <path d="M30 168h184" stroke="#0a3f3b" stroke-width="4" stroke-linecap="round"/>
+</svg>

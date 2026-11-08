@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" role="img" aria-label="Apartment building">
+  <path d="M30 70c18-40 70-56 116-44s76 46 72 92-38 76-92 74-96-26-104-58 0-34 8-64Z" fill="#e3f5f1"/>
+  <rect x="66" y="52" width="76" height="120" rx="6" fill="#0f766e"/>
+  <rect x="142" y="92" width="44" height="80" rx="6" fill="#14a394"/>
+  <g fill="#e3f5f1">
+    <rect x="78" y="66" width="16" height="16" rx="3"/><rect x="114" y="66" width="16" height="16" rx="3"/>
+    <rect x="78" y="94" width="16" height="16" rx="3"/><rect x="114" y="94" width="16" height="16" rx="3"/>
+    <rect x="78" y="122" width="16" height="16" rx="3"/><rect x="114" y="122" width="16" height="16" rx="3"/>
+    <rect x="152" y="104" width="10" height="12" rx="2"/><rect x="168" y="104" width="10" height="12" rx="2"/>
+    <rect x="152" y="126" width="10" height="12" rx="2"/><rect x="168" y="126" width="10" height="12" rx="2"/>
+  </g>
+  <rect x="94" y="148" width="20" height="24" rx="10" fill="#f6c46b"/>
+  <path d="M40 172h164" stroke="#0a3f3b" stroke-width="4" stroke-linecap="round"/>
+  <g fill="#14a394"><circle cx="52" cy="162" r="12"/><circle cx="200" cy="164" r="10"/></g>
+  <g transform="translate(176 40) rotate(20)">
+    <circle cx="0" cy="0" r="14" fill="none" stroke="#f2836b" stroke-width="6"/>
+    <path d="M14 0h30M34 0v10M42 0v8" stroke="#f2836b" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</svg>
