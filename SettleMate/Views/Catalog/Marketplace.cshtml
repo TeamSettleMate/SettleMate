@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = "Marketplace";
+}
+<section class="page-intro">
+    <p class="eyebrow">
+        Useful things. New beginnings.
+    </p>
+    <h1>
+        Make your space your own.
+    </h1>
+    <p>
+        Find everyday essentials, or give something you no longer need a new home.
+    </p>
+</section>
+<div class="grid two section">
+    <article class="card service-card">
+        <span class="icon-tile">
+            <i data-lucide="shopping-bag">
+            </i>
+        </span>
+        <h2>
+            Buy or rent an item
+        </h2>
+        <p class="muted">
+            Furniture, electronics, kitchenware, books and more.
+        </p>
+        <a href="/Catalog/Browse?kind=Item" class="button primary">
+            Browse items
+        </a>
+    </article>
+    <article class="card service-card">
+        <span class="icon-tile">
+            <i data-lucide="tag">
+            </i>
+        </span>
+        <h2>
+            Sell or rent out an item
+        </h2>
+        <p class="muted">
+            Create a listing and manage your orders in one place.
+        </p>
+        <a href="/Workspace/Edit?kind=Item" class="button secondary">
+            List an item
+        </a>
+    </article>
+</div>
+<div class="actions wrap">
+    <a href="/Workspace/Cart" class="button secondary">
+        My cart
+    </a>
+    <a href="/Workspace/Orders" class="button secondary">
+        My orders
+    </a>
+    <a href="/Workspace/Listings?kind=Item" class="button secondary">
+        My listings
+    </a>
+    <a href="/Workspace/Orders?received=true" class="button secondary">
+        Orders received
+    </a>
+    <a href="/Workspace/Payments" class="button secondary">
+        Payments
+    </a>
+</div>
