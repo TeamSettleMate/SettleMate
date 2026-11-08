@@ -1,0 +1,290 @@
+@model List<Listing>
+@{
+string kind=Convert.ToString(ViewData["Kind"]) ?? "";
+    ViewData["Title"] = ViewData["Title"];
+}
+<div class="section-heading">
+    <div>
+        <p class="eyebrow">
+            Explore SettleMate
+        </p>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </div>
+    @if (kind is "Room" or "Finder")
+    {
+        <a class="button primary" href="/Workspace/Edit?kind=@kind">
+            Create a post
+        </a>
+    }
+</div>
+@if (kind is "Room" or "Finder")
+{
+    <nav class="tabs">
+        <a href="/Catalog/Browse?kind=Room" aria-current="@(kind=="Room"?"page":null)">
+            Rooms available
+        </a>
+        <a href="/Catalog/Browse?kind=Finder" aria-current="@(kind=="Finder"?"page":null)">
+            People looking
+        </a>
+    </nav>
+}
+@{
+    // Values set in CatalogController.Browse (session + cookie examples).
+    string lastCity = Convert.ToString(ViewData["LastCity"]) ?? "";
+    List<KeyValuePair<long, string>> recent = ViewData["RecentlyViewed"] as List<KeyValuePair<long, string>> ?? new List<KeyValuePair<long, string>>();
+}
+@if (recent.Count > 0 || (lastCity != "" && kind != "Saved"))
+{
+    <div class="card memory-bar">
+        @if (lastCity != "" && kind != "Saved")
+        {
+            <p>
+                <i data-lucide="map-pin"></i>
+                Last searched city (cookie):
+                <a href="/Catalog/Browse?kind=@kind&city=@Uri.EscapeDataString(lastCity)">@lastCity</a>
+            </p>
+        }
+        @if (recent.Count > 0)
+        {
+            <p>
+                <i data-lucide="eye"></i>
+                Recently viewed (session):
+                @foreach (KeyValuePair<long, string> item in recent)
+                {
+                    <a class="chip" href="/Catalog/Details/@item.Key">@item.Value</a>
+                }
+            </p>
+        }
+    </div>
+}
+@if (kind!="Saved")
+{
+    <form method="get" class="card browse-filters" data-query-form>
+        <input type="hidden" name="kind" value="@kind"/>
+        <div class="filter-bar">
+            <div class="field">
+                <label for="search">
+                    Search
+                </label>
+                <input name="search" id="search" value="@Context.Request.Query["search"]" placeholder="Name or city"/>
+            </div>
+            <div class="field">
+                <label for="city">
+                    Location
+                </label>
+                <input name="city" id="city" value="@Context.Request.Query["city"]" placeholder="City or area"/>
+            </div>
+            <div class="field">
+                <label for="sort">
+                    Sort by
+                </label>
+                <select name="sort" id="sort">
+                    <option value="">
+                        Newest
+                    </option>
+                    <option value="price">
+                        Price: low to high
+                    </option>
+                    <option value="price-desc">
+                        Price: high to low
+                    </option>
+                    <option value="rating">
+                        Rating
+                    </option>
+                </select>
+            </div>
+            <button class="button primary">
+                Search
+            </button>
+        </div>
+        <details class="advanced-filters">
+            <summary>
+                Refine your search
+            </summary>
+            <div class="grid three">
+                <div class="field">
+                    <label for="type">
+                        Type
+                    </label>
+                    <select name="type" id="type">
+                        <option value="">
+                            Any
+                        </option>
+                        @foreach (var t in kind=="Item"?new[]{"Sell","Rent"}:new[]{"Room","Flat","PG","Hostel"})
+                        {
+                            <option>
+                                @t
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="min">
+                        Minimum budget (₹)
+                    </label>
+                    <input id="min" name="min" type="number" min="0" value="@Context.Request.Query["min"]"/>
+                </div>
+                <div class="field">
+                    <label for="max">
+                        Maximum budget (₹)
+                    </label>
+                    <input id="max" name="max" type="number" min="0" value="@Context.Request.Query["max"]"/>
+                </div>
+                @if (kind=="Item")
+                {
+                    <div class="field">
+                        <label for="category">
+                            Category
+                        </label>
+                        <select name="category" id="category">
+                            <option value="">
+                                Any
+                            </option>
+                            <option>
+                                Furniture
+                            </option>
+                            <option>
+                                Electronics
+                            </option>
+                            <option>
+                                Kitchen
+                            </option>
+                            <option>
+                                Books
+                            </option>
+                            <option>
+                                Other
+                            </option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="condition">
+                            Condition
+                        </label>
+                        <select name="condition" id="condition">
+                            <option value="">
+                                Any
+                            </option>
+                            <option>
+                                New
+                            </option>
+                            <option>
+                                Like New
+                            </option>
+                            <option>
+                                Good
+                            </option>
+                            <option>
+                                Fair
+                            </option>
+                        </select>
+                    </div>
+                }
+                @if (kind!="Item")
+                {
+                    <div class="field">
+                        <label for="roomType">
+                            Room sharing
+                        </label>
+                        <select id="roomType" name="roomType">
+                            <option value="">
+                                Any
+                            </option>
+                            <option>
+                                Single
+                            </option>
+                            <option>
+                                Double
+                            </option>
+                            <option>
+                                Triple
+                            </option>
+                            <option>
+                                Shared
+                            </option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="gender">
+                            Preference
+                        </label>
+                        <select id="gender" name="gender">
+                            <option value="">
+                                Any
+                            </option>
+                            <option>
+                                Male
+                            </option>
+                            <option>
+                                Female
+                            </option>
+                            <option>
+                                Other
+                            </option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="furnishing">
+                            Furnishing
+                        </label>
+                        <select id="furnishing" name="furnishing">
+                            <option value="">
+                                Any
+                            </option>
+                            <option>
+                                Unfurnished
+                            </option>
+                            <option>
+                                Semi-furnished
+                            </option>
+                            <option>
+                                Furnished
+                            </option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="moveIn">
+                            Available by
+                        </label>
+                        <input type="date" id="moveIn" name="moveIn" value="@Context.Request.Query["moveIn"]"/>
+                    </div>
+                    <div class="field">
+                        <label for="amenity">
+                            Amenity
+                        </label>
+                        <select id="amenity" name="amenity">
+                            <option value="">
+                                Any
+                            </option>
+                            @foreach (var a in ListingOptions.Amenities)
+                            {
+                                <option>
+                                    @a
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="bhk">
+                            BHK
+                        </label>
+                        <input type="number" min="0" max="20" id="bhk" name="bhk" value="@Context.Request.Query["bhk"]"/>
+                    </div>
+                    <label class="check-line">
+                        <input type="checkbox" name="food" value="true" checked="@(Context.Request.Query["food"]=="true")"/>
+                        Food included
+                    </label>
+                }
+            </div>
+        </details>
+        <a class="text-link" href="/Catalog/Browse?kind=@kind">
+            Clear all filters
+        </a>
+    </form>
+}
+<section class="section">
+    <partial name="_ListingCards" model="Model"/>
+    <partial name="_Pagination"/>
+</section>
