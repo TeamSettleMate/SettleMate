@@ -969,3 +969,122 @@ tbody tr:hover {
 .skeleton.short {
     width: 60%;
 }
+/* 07. Feedback */
+.alert-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+.alert-card p {
+    margin-top: 4px;
+    line-height: 1.6;
+}
+.alert-card > svg {
+    margin-top: 2px;
+}
+.toast-stack {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+    display: grid;
+    gap: 12px;
+    width: min(390px, calc(100vw - 32px));
+}
+.toast {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    box-shadow: var(--shadow-overlay);
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: appear 180ms ease;
+}
+.toast.success {
+    border-left-color: var(--success);
+}
+.toast.error {
+    border-left-color: var(--error);
+}
+.toast.warning {
+    border-left-color: var(--warning);
+}
+.toast.info {
+    border-left-color: var(--info);
+}
+.toast strong {
+    font-size: 14px;
+    display: block;
+}
+.toast p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 4px 0 0;
+    overflow-wrap: anywhere;
+}
+.toast .icon-button {
+    margin: -8px -8px 0 auto;
+}
+.confirm-dialog {
+    width: min(420px, calc(100% - 32px));
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow-overlay);
+    color: var(--text);
+    background: var(--surface);
+}
+.confirm-dialog::backdrop {
+    background: rgba(15, 23, 42, 0.4);
+}
+.confirm-dialog[open] {
+    animation: appear 180ms ease;
+}
+.modal-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--accent-tint);
+    color: var(--accent-ink);
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 20px;
+}
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+.confirm-dialog textarea {
+    width: 100%;
+}
+.password-field {
+    position: relative;
+}
+.password-field input {
+    padding-right: 48px !important;
+}
+.password-field .icon-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
