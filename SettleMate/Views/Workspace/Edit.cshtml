@@ -1,0 +1,706 @@
+@model Listing
+@{
+    ViewData["Title"] = (Model.Id == 0 ? "Add " : "Edit ") + Model.Kind.ToLowerInvariant();
+    var property = Model.Kind == "Property";
+}
+<div class="section-heading">
+    <div>
+        <p class="eyebrow">
+            Your @Model.Kind.ToLowerInvariant()
+        </p>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </div>
+    <a class="button secondary" href="/Workspace/Listings?kind=@Model.Kind">
+        Back to listings
+    </a>
+</div>
+@if (Model.RejectionReason!="")
+{
+    <div class="alert-card warning">
+        <strong>
+            Review feedback
+        </strong>
+        <p>
+            @Model.RejectionReason
+        </p>
+    </div>
+}
+<form method="post" enctype="multipart/form-data" class="editor-form" data-validate data-listing-editor>
+    <input asp-for="Id" type="hidden"/>
+    <input asp-for="Kind" type="hidden"/>
+    <div asp-validation-summary="All" class="validation-summary-errors">
+    </div>
+    @if (property)
+    {
+        <nav class="step-pills">
+            @foreach (var s in new[]{"Basic","Details","Location","Rent","Amenities","Rules","Images","Verification"})
+            {
+                <a href="#section-@s.ToLowerInvariant()">
+                    @s
+                </a>
+            }
+        </nav>
+    }
+    <section class="card section" id="section-basic">
+        <p class="eyebrow">
+            01 / Basic information
+        </p>
+        <h2>
+            Tell us about your @(property?"property":"listing").
+        </h2>
+        <div class="field">
+            <label asp-for="Title">
+                Title *
+            </label>
+            <input asp-for="Title" type="text" required maxlength="100"/>
+            <span asp-validation-for="Title">
+            </span>
+        </div>
+        <div class="grid two">
+            @if (Model.Kind=="Item")
+            {
+                <div class="field">
+                    <label asp-for="Type">
+                        Listing type
+                    </label>
+                    <select asp-for="Type">
+                        <option>
+                            Sell
+                        </option>
+                        <option>
+                            Rent
+                        </option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label asp-for="Category">
+                        Category
+                    </label>
+                    <select asp-for="Category">
+                        <option>
+                            Furniture
+                        </option>
+                        <option>
+                            Electronics
+                        </option>
+                        <option>
+                            Kitchen
+                        </option>
+                        <option>
+                            Books
+                        </option>
+                        <option>
+                            Other
+                        </option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label asp-for="Condition">
+                        Condition
+                    </label>
+                    <select asp-for="Condition">
+                        <option>
+                            New
+                        </option>
+                        <option>
+                            Like New
+                        </option>
+                        <option>
+                            Good
+                        </option>
+                        <option>
+                            Fair
+                        </option>
+                    </select>
+                </div>
+            }
+            else
+            {
+                <div class="field">
+                    <label asp-for="Type">
+                        Property / room type
+                    </label>
+                    <select asp-for="Type">
+                        <option>
+                            Room
+                        </option>
+                        <option>
+                            Flat
+                        </option>
+                        <option>
+                            PG
+                        </option>
+                        <option>
+                            Hostel
+                        </option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label asp-for="Gender">
+                        Preferred tenant
+                    </label>
+                    <select asp-for="Gender">
+                        <option>
+                            Any
+                        </option>
+                        <option>
+                            Male
+                        </option>
+                        <option>
+                            Female
+                        </option>
+                        <option>
+                            Other
+                        </option>
+                    </select>
+                </div>
+            }
+        </div>
+        <div class="field">
+            <label asp-for="Description">
+                Description *
+            </label>
+            <textarea asp-for="Description" rows="4" maxlength="1200" data-counter="Description-counter"></textarea>
+            <span asp-validation-for="Description">
+            </span>
+            <small class="counter" id="Description-counter">
+            </small>
+        </div>
+    </section>
+    @if (Model.Kind!="Item")
+    {
+        <section class="card section" id="section-details">
+            <p class="eyebrow">
+                02 / Details
+            </p>
+            <h2>
+                A few useful details.
+            </h2>
+            <div class="grid three">
+                <div class="field">
+                    <label asp-for="Furnishing">
+                        Furnishing
+                    </label>
+                    <select asp-for="Furnishing">
+                        <option>
+                            Unfurnished
+                        </option>
+                        <option>
+                            Semi-furnished
+                        </option>
+                        <option>
+                            Furnished
+                        </option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label asp-for="RoomType">
+                        Room sharing
+                    </label>
+                    <select asp-for="RoomType">
+                        <option>
+                            Single
+                        </option>
+                        <option>
+                            Double
+                        </option>
+                        <option>
+                            Triple
+                        </option>
+                        <option>
+                            Shared
+                        </option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label asp-for="Floor">
+                        Floor
+                    </label>
+                    <input asp-for="Floor" type="number"  min="-5" max="200"/>
+                    <span asp-validation-for="Floor">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="Bhk">
+                        BHK (flats)
+                    </label>
+                    <input asp-for="Bhk" type="number"  min="0" max="20"/>
+                    <span asp-validation-for="Bhk">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="Bedrooms">
+                        Bedrooms (flats)
+                    </label>
+                    <input asp-for="Bedrooms" type="number" min="0" max="20"/>
+                    <span asp-validation-for="Bedrooms">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="Beds">
+                        Beds (hostels)
+                    </label>
+                    <input asp-for="Beds" type="number"  min="0" max="1000"/>
+                    <span asp-validation-for="Beds">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="Meals">
+                        Meals included
+                    </label>
+                    <input asp-for="Meals" type="text"  />
+                    <span asp-validation-for="Meals">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="Curfew">
+                        Curfew time
+                    </label>
+                    <input asp-for="Curfew" type="text"  />
+                    <span asp-validation-for="Curfew">
+                    </span>
+                </div>
+            </div>
+            <div class="actions wrap">
+                <label class="check-line">
+                    <input asp-for="AttachedBathroom"/>
+                    Attached bathroom
+                </label>
+                <label class="check-line">
+                    <input asp-for="Food"/>
+                    Food included
+                </label>
+            </div>
+        </section>
+    }
+    <section class="card section" id="section-location">
+        <p class="eyebrow">
+            03 / Location
+        </p>
+        <h2>
+            Where is it?
+        </h2>
+        <div class="grid two">
+            <div class="field">
+                <label asp-for="City">
+                    City *
+                </label>
+                <input asp-for="City" type="text" required />
+                <span asp-validation-for="City">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="State">
+                    State *
+                </label>
+                <input asp-for="State" type="text" required />
+                <span asp-validation-for="State">
+                </span>
+            </div>
+        </div>
+        @if (Model.Kind!="Item")
+        {
+            <div class="field">
+                <label asp-for="Address">
+                    Address
+                </label>
+                <textarea asp-for="Address" rows="4" maxlength="300" data-counter="Address-counter"></textarea>
+                <span asp-validation-for="Address">
+                </span>
+                <small class="counter" id="Address-counter">
+                </small>
+            </div>
+            <div class="grid three">
+                <div class="field">
+                    <label asp-for="Landmark">
+                        Landmark
+                    </label>
+                    <input asp-for="Landmark" type="text"  />
+                    <span asp-validation-for="Landmark">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="Pincode">
+                        Pincode *
+                    </label>
+                    <input asp-for="Pincode" type="text" required pattern="[0-9]{6}" maxlength="6"/>
+                    <span asp-validation-for="Pincode">
+                    </span>
+                </div>
+                <div class="field">
+                    <label>
+                        Country
+                    </label>
+                    <input value="India" readonly/>
+                </div>
+            </div>
+            @if (property)
+            {
+                <div class="grid two">
+                    <div class="field">
+                        <label asp-for="Latitude">
+                            Latitude *
+                        </label>
+                        <input asp-for="Latitude" type="number" required min="-90" max="90" step="any"/>
+                        <span asp-validation-for="Latitude">
+                        </span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Longitude">
+                            Longitude *
+                        </label>
+                        <input asp-for="Longitude" type="number" required min="-180" max="180" step="any"/>
+                        <span asp-validation-for="Longitude">
+                        </span>
+                    </div>
+                </div>
+                <p class="hint">
+                    Use the location coordinates from your map. They will appear on the listing’s location preview.
+                </p>
+            }
+        }
+    </section>
+    <section class="card section" id="section-rent">
+        <p class="eyebrow">
+            04 / Price & availability
+        </p>
+        <h2>
+            Keep the costs clear.
+        </h2>
+        <div class="grid three">
+            <div class="field">
+                <label asp-for="Price">
+                    Price / monthly rent / budget (₹) *
+                </label>
+                <input asp-for="Price" type="number" required min="1" max="10000000" step="0.01"/>
+                <span asp-validation-for="Price">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="Deposit">
+                    Security deposit (₹)
+                </label>
+                <input asp-for="Deposit" type="number"  min="0" max="10000000" step="0.01"/>
+                <span asp-validation-for="Deposit">
+                </span>
+            </div>
+            @if (Model.Kind!="Item")
+            {
+                <div class="field">
+                    <label asp-for="Basis">
+                        Rent basis
+                    </label>
+                    <select asp-for="Basis">
+                        <option>
+                            Per Room
+                        </option>
+                        <option>
+                            Per Bed
+                        </option>
+                        <option>
+                            Entire
+                        </option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label asp-for="Maintenance">
+                        Monthly maintenance (₹)
+                    </label>
+                    <input asp-for="Maintenance" type="number"  min="0" step="0.01"/>
+                    <span asp-validation-for="Maintenance">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="AvailableFrom">
+                        Available from / move-in date *
+                    </label>
+                    <input asp-for="AvailableFrom" type="date" required />
+                    <span asp-validation-for="AvailableFrom">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="MinimumStay">
+                        Minimum stay (months)
+                    </label>
+                    <input asp-for="MinimumStay" type="number"  min="0" max="120"/>
+                    <span asp-validation-for="MinimumStay">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="NoticePeriod">
+                        Notice period (days)
+                    </label>
+                    <input asp-for="NoticePeriod" type="number"  min="0" max="365"/>
+                    <span asp-validation-for="NoticePeriod">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="Electricity">
+                        Electricity charges
+                    </label>
+                    <input asp-for="Electricity" type="text"  />
+                    <span asp-validation-for="Electricity">
+                    </span>
+                </div>
+                <div class="field">
+                    <label asp-for="Water">
+                        Water charges
+                    </label>
+                    <input asp-for="Water" type="text"  />
+                    <span asp-validation-for="Water">
+                    </span>
+                </div>
+            }
+        </div>
+        @if (Model.Kind=="Item")
+        {
+            <p class="hint">
+                For rentals, price is per month. The buyer selects 1–24 months at checkout. Deposit and rental charges are collected on delivery. Returns/refunds are arranged directly.
+            </p>
+        }
+    </section>
+    @if (Model.Kind!="Item")
+    {
+        <section class="card section" id="section-amenities">
+            <p class="eyebrow">
+                05 / Amenities
+            </p>
+            <h2>
+                The everyday essentials.
+            </h2>
+            <div class="amenity-picker">
+                @foreach (var a in ListingOptions.Amenities)
+                {
+                    <label>
+                        <input type="checkbox" name="Amenities" value="@a" checked="@Model.Amenities.Contains(a)"/>
+                        <span>
+                            @a
+                        </span>
+                    </label>
+                }
+            </div>
+            <p class="hint">
+                Select at least one amenity for a property.
+            </p>
+        </section>
+        <section class="card section" id="section-rules">
+            <p class="eyebrow">
+                06 / House rules
+            </p>
+            <h2>
+                A good fit starts with clear expectations.
+            </h2>
+            <div class="field">
+                <label asp-for="Rules">
+                    House rules
+                </label>
+                <textarea asp-for="Rules" rows="4" maxlength="1000" data-counter="Rules-counter"></textarea>
+                <span asp-validation-for="Rules">
+                </span>
+                <small class="counter" id="Rules-counter">
+                </small>
+            </div>
+            <div class="field">
+                <label asp-for="AgreementType">
+                    Agreement type
+                </label>
+                <input asp-for="AgreementType" type="text"  />
+                <span asp-validation-for="AgreementType">
+                </span>
+            </div>
+            <div class="actions wrap">
+                <label class="check-line">
+                    <input asp-for="Visitors"/>
+                    Visitors allowed
+                </label>
+                <label class="check-line">
+                    <input asp-for="Smoking"/>
+                    Smoking allowed
+                </label>
+                <label class="check-line">
+                    <input asp-for="Pets"/>
+                    Pets allowed
+                </label>
+            </div>
+        </section>
+    }
+    <section class="card section" id="section-images">
+        <p class="eyebrow">
+            07 / Images
+        </p>
+        <h2>
+            Show the details.
+        </h2>
+        <div data-upload data-max-count="@(property?15:6)" data-max-size="5242880">
+            <div class="field">
+                <label for="Images">
+                    @(property?"5–15 images":"Up to 6 images; at least 1 for marketplace items")
+                </label>
+                <div class="upload-box">
+                    <i data-lucide="upload">
+                    </i>
+                    <p>
+                        Choose images or drop them here
+                    </p>
+                    <input id="Images" name="Images" type="file" multiple accept=".jpg,.jpeg,.png,.webp"/>
+                </div>
+                <div class="upload-summary">
+                    <span data-upload-count>
+                        Selected: 0
+                    </span>
+                    <button type="button" class="text-button" data-upload-clear>
+                        Clear all
+                    </button>
+                </div>
+                <div data-previews class="file-previews">
+                </div>
+                <p data-upload-error class="field-validation-error">
+                </p>
+            </div>
+        </div>
+        <div class="existing-images">
+            @foreach (var f in Model.ExistingImages)
+            {
+                <label>
+                    <img src="/uploads/@f.Name" alt="Existing listing image"/>
+                    <span>
+                        <input type="checkbox" name="RemoveImageIds" value="@f.Id"/>
+                        Remove
+                    </span>
+                </label>
+            }
+        </div>
+        <p class="hint">
+            Each file: up to 5 MB. Existing images count toward the total.
+        </p>
+    </section>
+    @if (property)
+    {
+        <section class="card section" id="section-verification">
+            <p class="eyebrow">
+                08 / Private verification
+            </p>
+            <h2>
+                Ready for admin review.
+            </h2>
+            <div class="grid two">
+                <div class="field">
+                    <label asp-for="OwnerRelation">
+                        Your relationship to this property
+                    </label>
+                    <select asp-for="OwnerRelation">
+                        <option>
+                            Owner
+                        </option>
+                        <option>
+                            Authorized Representative
+                        </option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label asp-for="DocumentType">
+                        Identity document type
+                    </label>
+                    <select asp-for="DocumentType">
+                        <option>
+                            Government ID
+                        </option>
+                        <option>
+                            Passport
+                        </option>
+                        <option>
+                            Driving Licence
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label asp-for="IdentityDocument">
+                    Identity document
+                </label>
+                <input asp-for="IdentityDocument" type="file"  accept=".pdf,.jpg,.jpeg,.png" data-max-file="5242880"/>
+                <span asp-validation-for="IdentityDocument">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="PropertyProof">
+                    Property ownership proof
+                </label>
+                <input asp-for="PropertyProof" type="file"  accept=".pdf,.jpg,.jpeg,.png" data-max-file="5242880"/>
+                <span asp-validation-for="PropertyProof">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="AuthorizationDocument">
+                    Authorization (required for representative)
+                </label>
+                <input asp-for="AuthorizationDocument" type="file"  accept=".pdf,.jpg,.jpeg,.png" data-max-file="5242880"/>
+                <span asp-validation-for="AuthorizationDocument">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="DocumentReference">
+                    Document reference
+                </label>
+                <input asp-for="DocumentReference" type="text"  />
+                <span asp-validation-for="DocumentReference">
+                </span>
+            </div>
+            <div class="field">
+                <label asp-for="AdminNote">
+                    Note for admin
+                </label>
+                <textarea asp-for="AdminNote" rows="4" maxlength="500" data-counter="AdminNote-counter"></textarea>
+                <span asp-validation-for="AdminNote">
+                </span>
+                <small class="counter" id="AdminNote-counter">
+                </small>
+            </div>
+            @foreach (var f in Model.ExistingDocuments)
+            {
+                <p>
+                    <a href="/Files/Download/@f.Id">
+                        Existing @f.Purpose
+                    </a>
+                </p>
+            }
+            <div class="declarations">
+                <label class="check-line">
+                    <input asp-for="Declaration1"/>
+                    I am authorized to list this property.
+                </label>
+                <label class="check-line">
+                    <input asp-for="Declaration2"/>
+                    The information and images are accurate.
+                </label>
+                <label class="check-line">
+                    <input asp-for="Declaration3"/>
+                    The submitted documents are genuine.
+                </label>
+                <label class="check-line">
+                    <input asp-for="Declaration4"/>
+                    I agree to admin review and SettleMate terms.
+                </label>
+            </div>
+            <div class="alert-card info">
+                Submitted properties are visible publicly only after approval.
+            </div>
+        </section>
+    }
+    <div class="editor-actions">
+        <a class="button secondary" href="/Workspace/Listings?kind=@Model.Kind">
+            Cancel
+        </a>
+        @if (property)
+        {
+            <button type="submit" name="SaveMode" value="Draft" formnovalidate class="button secondary">
+                Save draft
+            </button>
+        }
+        <button type="submit" name="SaveMode" value="Submit" class="button primary">
+            @(property?"Submit for verification":"Save listing")
+        </button>
+    </div>
+</form>
