@@ -1,0 +1,151 @@
+@model List<Listing>
+@{
+string kind=Convert.ToString(ViewData["Kind"]) ?? "";
+    ViewData["Title"] = ViewData["Title"];
+    var admin = CurrentAccount.Role(User) == "Admin";
+}
+<div class="section-heading">
+    <div>
+        <p class="eyebrow">
+            @(admin?"Review & manage":"Your listings")
+        </p>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </div>
+    @if (!admin)
+    {
+        <a class="button primary" href="/Workspace/Edit?kind=@kind">
+            <i data-lucide="plus">
+            </i>
+            Add @(kind=="Property"?"property":"listing")
+        </a>
+    }
+</div>
+@if (kind is "Room" or "Finder")
+{
+    <nav class="tabs">
+        <a href="/Workspace/Listings?kind=Room">
+            Rooms available
+        </a>
+        <a href="/Workspace/Listings?kind=Finder">
+            People looking
+        </a>
+    </nav>
+}
+<form method="get" class="filter-bar" data-query-form>
+    <input type="hidden" name="kind" value="@kind"/>
+    <div class="field">
+        <label for="search">
+            Search
+        </label>
+        <input id="search" name="search" value="@Context.Request.Query["search"]"/>
+    </div>
+    <div class="field">
+        <label for="status">
+            Status
+        </label>
+        <select id="status" name="status">
+            <option value="">
+                All statuses
+            </option>
+            @foreach (var s in new[]{"Draft","PendingVerification","Approved","Rejected","Unpublished","Reserved","Sold","Removed"})
+            {
+                <option>
+                    @s
+                </option>
+            }
+        </select>
+    </div>
+    <button class="button secondary">
+        Apply
+    </button>
+</form>
+<div class="card table-scroll">
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Listing
+                </th>
+                <th>
+                    Type / City
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var l in Model)
+            {
+                <tr>
+                    <td>
+                        <strong>
+                            @l.Title
+                        </strong>
+                        <small class="block">
+                            @l.OwnerName
+                        </small>
+                    </td>
+                    <td>
+                        @l.Type / @l.City
+                    </td>
+                    <td>
+                        ₹@l.Price.ToString("N0")
+                    </td>
+                    <td>
+                        <partial name="_Badge" model='l.Status'/>
+                    </td>
+                    <td>
+                        <div class="actions wrap">
+                            <a class="button secondary compact" href="/Catalog/Details/@l.Id">
+                                View
+                            </a>
+                            @if (!admin&&l.Status is not("Removed" or "Reserved" or "Sold"))
+                            {
+                                <a class="button secondary compact" href="/Workspace/Edit/@l.Id?kind=@l.Kind">
+                                    Edit
+                                </a>
+                                <form asp-area="@CurrentAccount.Role(User)" asp-controller="@(kind == "Property" ? "Property" : kind == "Item" ? "Marketplace" : "Roommate")" asp-action="Delete" method="post" data-confirm="Remove this listing?" data-ask-reason="true" data-danger="true">
+                                    <input type="hidden" name="id" value="@l.Id"/>
+                                    <input type="hidden" name="returnUrl" value="/Workspace/Listings?kind=@kind"/>
+                                    <button class="button secondary compact">
+                                        Remove
+                                    </button>
+                                </form>
+                                @if (l.Status=="Approved")
+                                {
+                                    <form asp-area="@CurrentAccount.Role(User)" asp-controller="@(kind == "Property" ? "Property" : kind == "Item" ? "Marketplace" : "Roommate")" asp-action="Availability" method="post" data-ajax data-reload>
+                                        <input type="hidden" name="id" value="@l.Id"/>
+                                        <button class="button secondary compact">
+                                            @(l.Available?"Set unavailable":"Set available")
+                                        </button>
+                                    </form>
+                                }
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (Model.Count==0)
+    {
+        <div class="empty-state">
+            <h3>
+                No listings yet
+            </h3>
+            <p>
+                Your listings will appear here.
+            </p>
+        </div>
+    }
+    <partial name="_Pagination"/>
+</div>
