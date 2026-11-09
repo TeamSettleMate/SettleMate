@@ -873,3 +873,34 @@ document.addEventListener('DOMContentLoaded', function () {
         el.prepend(svg);
     });
 });
+
+                /* Broken image fallback: if an uploaded photo is missing on disk,
+   show the default room picture instead of a broken icon. */
+(function () {
+    const fallback = '/images/room.svg';
+    function useFallback(img) {
+        if (img.dataset.fallback === 'done') {
+            return;
+        }
+        img.dataset.fallback = 'done';
+        img.src = fallback;
+        img.classList.add('image-fallback');
+        // Gallery thumbnails also store their image path in a data attribute.
+        const thumb = img.closest('[data-gallery-src]');
+        if (thumb) {
+            thumb.setAttribute('data-gallery-src', fallback);
+        }
+    }
+    // Images that fail after this script loads.
+    document.addEventListener('error', function (e) {
+        if (e.target && e.target.tagName === 'IMG') {
+            useFallback(e.target);
+        }
+    }, true);
+    // Images that already failed before this script loaded.
+    document.querySelectorAll('img').forEach(function (img) {
+        if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) {
+            useFallback(img);
+        }
+    });
+})();
