@@ -1,0 +1,74 @@
+@model List<CartItem>
+@{
+    ViewData["Title"] = "Your cart";
+    decimal total = 0;
+}
+<h1>
+    Your cart
+</h1>
+<div class="record-list section">
+    @foreach (var item in Model)
+    {
+        var months=item.ChargedMonths;
+        var deposit=item.ChargedDeposit;
+        var amount=item.Amount;
+        total+=amount;
+        <article class="card cart-row">
+            <img src="@(item.Image==""?"/images/room.svg":"/uploads/"+item.Image)" alt="@item.Title"/>
+            <div>
+                <h2>
+                    @item.Title
+                </h2>
+                <p class="muted">
+                    @item.Type · @item.SellerName
+                </p>
+                <p>
+                    ₹@item.Price.ToString("N2") @(item.Type=="Rent"?"× "+months+" months":"") + ₹@deposit.ToString("N2") deposit
+                </p>
+                @if (item.Status!="Approved")
+                {
+                    <span class="badge error">
+                        Unavailable — remove this item
+                    </span>
+                }
+            </div>
+            <strong>
+                ₹@amount.ToString("N2")
+            </strong>
+            <form asp-area="User" asp-controller="Cart" asp-action="Remove" method="post">
+                <input type="hidden" name="id" value="@item.Id"/>
+                <input type="hidden" name="returnUrl" value="/Workspace/Cart"/>
+                <button class="button secondary">
+                    Remove
+                </button>
+            </form>
+        </article>
+    }
+</div>
+@if (Model.Count>0)
+{
+    <div class="card callout">
+        <div>
+            <h2>
+                Total ₹@total.ToString("N2")
+            </h2>
+            <p>
+                Cash on delivery, including any security deposits.
+            </p>
+        </div>
+        <a class="button primary" href="/Workspace/Checkout">
+            Continue to checkout
+        </a>
+    </div>
+}
+else
+{
+    <div class="card empty-state">
+        <h2>
+            Your cart is empty
+        </h2>
+        <a class="button secondary" href="/Catalog/Browse?kind=Item">
+            Explore items
+        </a>
+    </div>
+}

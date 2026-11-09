@@ -1,0 +1,80 @@
+@model OrderCheckout
+@{
+    ViewData["Title"] = "Checkout";
+    var total = Model.Items.Sum(item => item.Amount);
+}
+<div class="reading section">
+    <h1>
+        Checkout
+    </h1>
+    <p class="muted">
+        Confirm your delivery details. Prices and availability are checked again when you place the order.
+    </p>
+    <form method="post" class="card" data-validate>
+        <input asp-for="CheckoutToken" type="hidden"/>
+        <div asp-validation-summary="All" class="validation-summary-errors">
+        </div>
+        <div class="field">
+            <label asp-for="Address">
+                Delivery address *
+            </label>
+            <textarea asp-for="Address" required rows="3"></textarea>
+        </div>
+        <div class="grid two">
+            <div class="field">
+                <label asp-for="City">
+                    City *
+                </label>
+                <input asp-for="City" required/>
+            </div>
+            <div class="field">
+                <label asp-for="State">
+                    State *
+                </label>
+                <input asp-for="State" required/>
+            </div>
+            <div class="field">
+                <label asp-for="Pincode">
+                    Pincode *
+                </label>
+                <input asp-for="Pincode" required pattern="[0-9]{6}" maxlength="6"/>
+            </div>
+            <div class="field">
+                <label asp-for="Phone">
+                    Phone *
+                </label>
+                <input asp-for="Phone" required pattern="[0-9]{10}" maxlength="10"/>
+            </div>
+        </div>
+        <hr/>
+        <h2>
+            Order summary
+        </h2>
+        @foreach (var item in Model.Items)
+        {
+            <div class="price-summary">
+                <span>
+                    @item.Title
+                </span>
+                <span>
+                    @item.Type
+                </span>
+            </div>
+        }
+        <p>
+            <strong>
+                Total ₹@total.ToString("N2")
+            </strong>
+        </p>
+        <label class="check-line">
+            <input type="radio" checked disabled/>
+            Cash on delivery
+        </label>
+        <p class="hint">
+            Rental security deposits are payable on delivery. Returns and deposit refunds are arranged directly with the seller.
+        </p>
+        <button class="button primary full-width" disabled="@(Model.Items.Count==0)">
+            Place order
+        </button>
+    </form>
+</div>
