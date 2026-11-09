@@ -1,0 +1,139 @@
+@model List<OrderItem>
+@{
+string section=Convert.ToString(ViewData["Section"]) ?? "";
+    ViewData["Title"] = ViewData["Title"];
+}
+<div class="section-heading">
+    <div>
+        <p class="eyebrow">
+            Your workspace
+        </p>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </div>
+    @if (section=="Support")
+    {
+        <a href="/Contact" class="button primary">
+            New support request
+        </a>
+    }
+</div>
+@if (section=="Orders"&&CurrentAccount.Role(User)=="User")
+{
+    <nav class="tabs">
+        <a href="/Workspace/Orders">
+            My purchases
+        </a>
+        <a href="/Workspace/Orders?received=true">
+            Orders received
+        </a>
+    </nav>
+}
+<form method="get" class="filter-bar" data-query-form>
+    @foreach (var q in Context.Request.Query.Where(x=>x.Key is not("page" or "search" or "status")))
+    {
+        <input type="hidden" name="@q.Key" value="@q.Value"/>
+    }
+    <div class="field">
+        <label for="search">
+            Search
+        </label>
+        <input id="search" name="search" value="@Context.Request.Query["search"]"/>
+    </div>
+    @if (section is "Visits" or "Orders" or "Support" or "Payments")
+    {
+        <div class="field">
+            <label for="status">
+                Status
+            </label>
+            <select id="status" name="status">
+                <option value="">
+                    All
+                </option>
+                @foreach (var status in section=="Support"?new[]{"Open","Resolved"}:section=="Visits"?new[]{"Pending","Approved","Rejected","Completed"}:new[]{"Pending","Processing","Completed"})
+                {
+                    <option>
+                        @status
+                    </option>
+                }
+            </select>
+        </div>
+    }
+    <button class="button secondary">
+        Apply
+    </button>
+</form>
+<div class="record-list">
+    @foreach (var row in Model)
+    {
+        <article class="card record-card">
+
+                <div class="section-heading">
+                    <div>
+                        <h2>
+                            @row.Title
+                        </h2>
+                        <p class="muted">
+                            Order #@row.OrderId · @row.BuyerName
+                        </p>
+                    </div>
+                    <partial name="_Badge" model='row.Status'/>
+                </div>
+                <dl class="detail-facts">
+                    <div>
+                        <dt>
+                            Total
+                        </dt>
+                        <dd>
+                            ₹@row.Amount.ToString("N2")
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>
+                            Deposit
+                        </dt>
+                        <dd>
+                            ₹@row.Deposit.ToString("N2")
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>
+                            Payment
+                        </dt>
+                        <dd>
+                            COD · @(row.Collected?"Collected":"Pending")
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>
+                            Seller
+                        </dt>
+                        <dd>
+                            @row.SellerName
+                        </dd>
+                    </div>
+                </dl>
+                <a href="/Workspace/Order/@row.OrderId" class="button secondary">
+                    View order
+                </a>
+            
+        </article>
+    }
+    @if (Model.Count==0)
+    {
+        <div class="card empty-state">
+            <span class="empty-icon">
+                <i data-lucide="inbox">
+                </i>
+            </span>
+            <h3>
+                Nothing here yet
+            </h3>
+            <p>
+                New activity will appear here.
+            </p>
+        </div>
+    }
+</div>
+<partial name="_Pagination"/>

@@ -1,0 +1,143 @@
+@model List<OrderItem>
+@{
+    ViewData["Title"] = ViewData["Title"];
+    var order = Model[0];
+}
+<div class="section-heading">
+    <div>
+        <p class="eyebrow">
+            Order details
+        </p>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </div>
+    <a href="/Workspace/Orders" class="button secondary">
+        Back to orders
+    </a>
+</div>
+<div class="grid two section">
+    <section class="card">
+        <h2>
+            Delivery
+        </h2>
+        <p>
+            @order.BuyerName
+        </p>
+        <p>
+            @order.Address, @order.City, @order.State — @order.Pincode
+        </p>
+        <p>
+            @order.Phone · @order.BuyerEmail
+        </p>
+    </section>
+    <section class="card">
+        <h2>
+            Payment
+        </h2>
+        <p>
+            Cash on delivery
+        </p>
+        <p class="price-row">
+            <strong>
+                ₹@Model.Sum(x=>x.Amount).ToString("N2")
+            </strong>
+        </p>
+        <p class="hint">
+            @(order.BuyerId==CurrentAccount.Id(User)||CurrentAccount.Role(User)=="Admin"?"Total for this order.":"Total for your items in this order.")
+        </p>
+    </section>
+</div>
+@foreach (var line in Model)
+{
+    <article class="card section">
+        <div class="section-heading">
+            <div>
+                <h2>
+                    @line.Title
+                </h2>
+                <p class="muted">
+                    Seller: @line.SellerName
+                </p>
+            </div>
+            <partial name="_Badge" model='line.Status'/>
+        </div>
+        <dl class="detail-facts">
+            <div>
+                <dt>
+                    Price
+                </dt>
+                <dd>
+                    ₹@line.UnitPrice.ToString("N2")
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    Duration
+                </dt>
+                <dd>
+                    @(line.ListingType=="Rent"?line.Months+" months":"Purchase")
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    Deposit
+                </dt>
+                <dd>
+                    ₹@line.Deposit.ToString("N2")
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    Amount
+                </dt>
+                <dd>
+                    ₹@line.Amount.ToString("N2")
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    COD
+                </dt>
+                <dd>
+                    @(line.Collected?"Collected":"Pending")
+                </dd>
+            </div>
+        </dl>
+        <ol class="order-timeline">
+            <li class="done">
+                Placed
+                <small>
+                    @line.CreatedAt.ToString("dd MMM yyyy")
+                </small>
+            </li>
+            <li class="@(line.Status is "Processing" or "Completed"?"done":"")">
+                Processing
+                <small>
+                    @(line.ProcessedAt.GetValueOrDefault()==DateTime.MinValue?"Pending":line.ProcessedAt.GetValueOrDefault().ToString("dd MMM yyyy"))
+                </small>
+            </li>
+            <li class="@(line.Status=="Completed"?"done":"")">
+                Completed
+                <small>
+                    @(line.CompletedAt.GetValueOrDefault()==DateTime.MinValue?"Pending":line.CompletedAt.GetValueOrDefault().ToString("dd MMM yyyy"))
+                </small>
+            </li>
+        </ol>
+        @if (CurrentAccount.Role(User)=="Admin"||line.SellerId==CurrentAccount.Id(User))
+        {
+            if(line.Status!="Completed")
+            {
+                var next=line.Status=="Pending"?"Processing":"Completed";
+                <form asp-area="@CurrentAccount.Role(User)" asp-controller="Order" asp-action="UpdateStatus" method="post" data-confirm="@(next=="Completed"?"Confirm delivery and COD collection?":"Accept this order?")">
+                    <input type="hidden" name="id" value="@line.Id"/>
+                    <input type="hidden" name="value" value="@next"/>
+                    <input type="hidden" name="returnUrl" value="/Workspace/Order/@line.OrderId"/>
+                    <button class="button primary">
+                        @(next=="Completed"?"Mark delivered & collected":"Accept order")
+                    </button>
+                </form>
+            }
+        }
+    </article>
+}
