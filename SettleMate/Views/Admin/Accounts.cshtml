@@ -1,0 +1,105 @@
+@model List<Account>
+@{
+string kind=Convert.ToString(ViewData["Kind"]) ?? "";
+    ViewData["Title"] = ViewData["Title"];
+}
+<h1>
+    @ViewData["Title"]
+</h1>
+<form method="get" class="filter-bar" data-query-form>
+    <input type="hidden" name="role" value="@kind"/>
+    <div class="field">
+        <label for="search">
+            Name, email or city
+        </label>
+        <input id="search" name="search" value="@Context.Request.Query["search"]"/>
+    </div>
+    <div class="field">
+        <label for="status">
+            Status
+        </label>
+        <select id="status" name="status">
+            <option value="">
+                All
+            </option>
+            @foreach (var s in kind=="Owner"?new[]{"PendingApproval","Approved","Rejected","Blocked"}:new[]{"Active","Blocked"})
+            {
+                <option>
+                    @s
+                </option>
+            }
+        </select>
+    </div>
+    <button class="button secondary">
+        Apply
+    </button>
+</form>
+<div class="card table-scroll">
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email / phone
+                </th>
+                <th>
+                    City
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Listings
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>
+                        <strong>
+                            @a.FullName
+                        </strong>
+                        <small class="block">
+                            @a.CreatedAt.ToString("dd MMM yyyy")
+                        </small>
+                    </td>
+                    <td>
+                        @a.Email
+                        <small class="block">
+                            @a.Phone
+                        </small>
+                    </td>
+                    <td>
+                        @a.City
+                    </td>
+                    <td>
+                        <partial name="_Badge" model='a.Status'/>
+                    </td>
+                    <td>
+                        @a.Listings
+                    </td>
+                    <td>
+                        <a class="button secondary compact" href="/Admin/Account/@a.Id">
+                            View
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (Model.Count==0)
+    {
+        <div class="empty-state">
+            <h3>
+                No accounts found
+            </h3>
+        </div>
+    }
+    <partial name="_Pagination"/>
+</div>

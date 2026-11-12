@@ -1,0 +1,193 @@
+@model Account
+@{
+List<StoredFile> documents=(List<StoredFile>)ViewData["Documents"]!;
+List<Listing> listings=(List<Listing>)ViewData["Listings"]!;
+List<OrderItem> orders=(List<OrderItem>)ViewData["Orders"]!;
+    Account a = Model;
+    ViewData["Title"] = Model.FullName;
+    string status = a.Status;
+    List<string> options = new List<string>();
+    if (a.Role == "User")
+    {
+        if (status == "Active")
+        {
+            options.Add("Blocked");
+        }
+        else
+        {
+            options.Add("Active");
+        }
+    }
+    else if (status == "PendingApproval")
+    {
+        options.Add("Approved");
+        options.Add("Rejected");
+    }
+    else if (status == "Approved")
+    {
+        options.Add("Blocked");
+    }
+    else if (status == "Blocked")
+    {
+        options.Add("Approved");
+    }
+    else if (status == "Rejected")
+    {
+        options.Add("PendingApproval");
+    }
+}
+<div class="section-heading">
+    <div>
+        <p class="eyebrow">
+            @a.Role account
+        </p>
+        <h1>
+            @a.FullName
+        </h1>
+    </div>
+    <partial name="_Badge" model="status"/>
+</div>
+<div class="grid two section">
+    <article class="card">
+        <h2>
+            Personal information
+        </h2>
+        <dl class="detail-facts">
+            <div>
+                <dt>
+                    Email
+                </dt>
+                <dd>
+                    @a.Email · Verified
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    Phone
+                </dt>
+                <dd>
+                    @a.Phone
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    Gender
+                </dt>
+                <dd>
+                    @a.Gender
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    City / State
+                </dt>
+                <dd>
+                    @a.City, @a.State
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    Address
+                </dt>
+                <dd>
+                    @a.Address
+                </dd>
+            </div>
+            <div>
+                <dt>
+                    Joined
+                </dt>
+                <dd>
+                    @a.CreatedAt.ToString("dd MMM yyyy")
+                </dd>
+            </div>
+        </dl>
+        @if (a.Reason!="")
+        {
+            <div class="alert-card warning">
+                @a.Reason
+            </div>
+        }
+    </article>
+    <article class="card">
+        <h2>
+            Verification & account actions
+        </h2>
+        <p>
+            @a.DocumentType
+        </p>
+        @foreach (var f in documents)
+        {
+            <p>
+                <a href="/Files/Download/@f.Id">
+                    Download @f.OriginalName
+                </a>
+            </p>
+        }
+        <div class="actions wrap">
+            @foreach (var next in options)
+            {
+                <form asp-area="Admin" asp-controller="@a.Role" asp-action="Moderate" method="post" data-confirm="@(next+" this account?")" data-ask-reason="@(next is "Blocked" or "Rejected"?"true":"false")">
+                    <input type="hidden" name="id" value="@a.Id"/>
+                    <input type="hidden" name="value" value="Account:@next"/>
+                    <input type="hidden" name="returnUrl" value="/Admin/Account/@a.Id"/>
+                    <button class="button @(next is "Approved" or "Active"?"primary":"secondary")">
+                        @next
+                    </button>
+                </form>
+            }
+        </div>
+    </article>
+</div>
+<section class="section">
+    <h2>
+        Recent listings
+    </h2>
+    <partial name="_ListingCards" model="listings"/>
+</section>
+<section class="card section">
+    <h2>
+        Orders received
+    </h2>
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Order
+                    </th>
+                    <th>
+                        Item
+                    </th>
+                    <th>
+                        Amount
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in orders)
+                {
+                    <tr>
+                        <td>
+                            <a href="/Workspace/Order/@o.OrderId">
+                                #@o.OrderId
+                            </a>
+                        </td>
+                        <td>
+                            @o.Title
+                        </td>
+                        <td>
+                            ₹@o.Amount.ToString("N2")
+                        </td>
+                        <td>
+                            @o.Status
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
