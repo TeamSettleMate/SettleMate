@@ -1,0 +1,48 @@
+@model Conversation
+@{
+List<Message> messages=(List<Message>)ViewData["Messages"]!;
+    ViewData["Title"] = "Conversation";
+}
+<div class="reading section">
+    <h1>
+        @Model.Title
+    </h1>
+    <a href="/Catalog/Details/@(Model.ListingId)">
+        View listing
+    </a>
+    <section class="card section message-thread">
+        @foreach (var msg in messages)
+        {
+            <div class="message @(msg.SenderId==CurrentAccount.Id(User)?"mine":"")">
+                <strong>
+                    @msg.FullName
+                </strong>
+                <p class="preserve-lines">@msg.Text</p>
+                <small>
+                    @msg.CreatedAt.AddHours(5.5).ToString("dd MMM, hh:mm tt")
+                </small>
+            </div>
+        }
+        @if (messages.Count==0)
+        {
+            <p class="muted">
+                Start the conversation below.
+            </p>
+        }
+    </section>
+    <form asp-area="@CurrentAccount.Role(User)" asp-controller="Message" asp-action="Send" method="post" class="card" data-validate>
+        <input type="hidden" name="id" value="@Model.Id"/>
+        <input type="hidden" name="returnUrl" value="/Workspace/Thread/@Model.Id"/>
+        <div class="field">
+            <label for="message">
+                Your message
+            </label>
+            <textarea id="message" name="message" required maxlength="2000" rows="3"></textarea>
+        </div>
+        <button class="button primary">
+            Send message
+            <i data-lucide="send">
+            </i>
+        </button>
+    </form>
+</div>
