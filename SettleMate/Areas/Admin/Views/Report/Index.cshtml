@@ -1,0 +1,84 @@
+@using System.Data
+@model DataSet
+@{
+    string kind = Convert.ToString(ViewData["Kind"]) ?? "All";
+    // Options for the HTML helper drop-down list.
+    List<SelectListItem> kinds = new List<SelectListItem>
+    {
+        new SelectListItem("All kinds", "All"),
+        new SelectListItem("Properties", "Property"),
+        new SelectListItem("Room posts", "Room"),
+        new SelectListItem("Room finders", "Finder"),
+        new SelectListItem("Marketplace items", "Item")
+    };
+    DataTable listings = Model.Tables["Listings"]!;
+    DataTable accounts = Model.Tables["Accounts"]!;
+}
+<div class="section-heading">
+    <div>
+        <p class="eyebrow">Admin</p>
+        <h1>Reports</h1>
+        <p class="muted">Filled with SqlDataAdapter into a DataSet (disconnected ADO.NET).</p>
+    </div>
+</div>
+
+@* HTML helpers: Html.BeginForm, Html.Label, Html.DropDownList *@
+@using (Html.BeginForm("Index", "Report", new { area = "Admin" }, FormMethod.Get, false, new { @class = "card report-filter" }))
+{
+    <div class="field">
+        @Html.Label("kind", "Listing kind")
+        @Html.DropDownList("kind", new SelectList(kinds, "Value", "Text", kind))
+    </div>
+    <button class="button primary" type="submit">Show report</button>
+}
+
+<div class="report-grid">
+    <section class="card">
+        <h2>Listings by kind and status</h2>
+        <div class="table-scroll">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        @foreach (DataColumn column in listings.Columns)
+                        {
+                            <th>@column.ColumnName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (listings.Rows.Count == 0)
+                    {
+                        <tr><td colspan="@listings.Columns.Count">No listings yet.</td></tr>
+                    }
+                    @foreach (DataRow row in listings.Rows)
+                    {
+                        <tr>
+                            <td>@row["Kind"]</td>
+                            <td>@row["Status"]</td>
+                            <td>@row["Total"]</td>
+                            <td>₹@Convert.ToDecimal(row["Average price"]).ToString("N0")</td>
+                            <td>@row["Share"]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <p class="muted">Total listings: <strong>@ViewData["GrandTotal"]</strong></p>
+    </section>
+
+    <section class="card">
+        <h2>Accounts by role</h2>
+        <table class="data-table">
+            <thead>
+                <tr><th>Role</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow row in accounts.Rows)
+                {
+                    <tr><td>@row["Role"]</td><td>@row["Total"]</td></tr>
+                }
+            </tbody>
+        </table>
+        <p>@Html.ActionLink("Manage users", "Index", "User", new { area = "Admin" })</p>
+    </section>
+</div>
