@@ -1,0 +1,37 @@
+@model Listing
+@{
+    string status = Model.Status;
+    List<string> options = new List<string>();
+    if (status == "PendingVerification")
+    {
+        options.Add("Approved");
+        options.Add("Rejected");
+    }
+    else if (status == "Approved")
+    {
+        if (Model.Kind == "Property")
+        {
+            options.Add("Unpublished");
+            options.Add("Rejected");
+        }
+        else
+        {
+            options.Add("Removed");
+        }
+    }
+    else if (status == "Rejected" || status == "Unpublished")
+    {
+        options.Add("Approved");
+    }
+}
+@foreach (var s in options)
+{
+    <form asp-area="Admin" asp-controller="@(Model.Kind == "Property" ? "Property" : Model.Kind == "Item" ? "Marketplace" : "Roommate")" asp-action="Moderate" method="post" data-confirm="@(s+" this listing?")" data-ask-reason="@(s!="Approved"?"true":"false")" data-danger="@(s!="Approved"?"true":"false")">
+        <input type="hidden" name="id" value="@Model.Id"/>
+        <input type="hidden" name="value" value="Listing:@s"/>
+        <input type="hidden" name="returnUrl" value="/Catalog/Details/@Model.Id"/>
+        <button class="button @(s=="Approved"?"primary":"secondary") full-width">
+            @s
+        </button>
+    </form>
+}
