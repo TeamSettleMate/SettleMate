@@ -1,0 +1,289 @@
+@model List<DashboardMetric>
+@{
+List<DashboardMetric> related=(List<DashboardMetric>)ViewData["Related"]!;
+List<Listing> roomPosts=(List<Listing>)ViewData["RoomPosts"]!;
+List<Listing> marketItems=(List<Listing>)ViewData["MarketItems"]!;
+List<Listing> extra=(List<Listing>)ViewData["Extra"]!;
+List<VisitRequest> activity=(List<VisitRequest>)ViewData["Activity"]!;
+List<Account> pending=(List<Account>)ViewData["Pending"]!;
+    ViewData["Title"] = "Dashboard";
+    var role = CurrentAccount.Role(User);
+}
+<div class="section-heading">
+    <div>
+        <p class="eyebrow">
+            Your SettleMate
+        </p>
+        <h1>
+            Hi, @(User.Identity?.Name).
+        </h1>
+        <p class="muted">
+            @(role=="Admin"?"Keep your community running smoothly.":role=="Owner"?"Your properties, visits and conversations in one place.":"A fresh start is closer than you think.")
+        </p>
+    </div>
+    <span class="badge neutral">
+        @DateTime.Today.ToString("ddd, dd MMM")
+    </span>
+</div>
+@if (role=="User")
+{
+    <form class="hero-search dashboard-search" action="/Catalog/Browse">
+        <input type="hidden" name="kind" value="Property"/>
+        <label class="sr-only" for="city">
+            Search location
+        </label>
+        <input id="city" name="city" placeholder="Where would you like to live?"/>
+        <button class="button primary">
+            Find a place
+        </button>
+    </form>
+    <div class="shortcut-grid section">
+        <a href="/Catalog/Browse?kind=Property" class="card">
+            <i data-lucide="building-2">
+            </i>
+            <h3>
+                Find Property
+            </h3>
+            <p>
+                Find your next address.
+            </p>
+        </a>
+        <a href="/Catalog/Browse?kind=Room" class="card">
+            <i data-lucide="users">
+            </i>
+            <h3>
+                Find Roommate
+            </h3>
+            <p>
+                Meet your people.
+            </p>
+        </a>
+        <a href="/Catalog/Marketplace" class="card">
+            <i data-lucide="shopping-bag">
+            </i>
+            <h3>
+                Marketplace
+            </h3>
+            <p>
+                Make it feel like home.
+            </p>
+        </a>
+        <a href="/Catalog/Wishlist" class="card">
+            <i data-lucide="heart">
+            </i>
+            <h3>
+                My Wishlist
+            </h3>
+            <p>
+                Your favourite finds.
+            </p>
+        </a>
+    </div>
+    <section class="section">
+        <div class="section-heading">
+            <h2>
+                Latest approved properties
+            </h2>
+            <a href="/Catalog/Browse?kind=Property">
+                View all
+            </a>
+        </div>
+        <partial name="_ListingCards" model="extra"/>
+    </section>
+    <div class="actions wrap">
+        <a class="button secondary" href="/Workspace/Listings?kind=Room">
+            My roommate posts
+        </a>
+        <a class="button secondary" href="/Workspace/Visits">
+            My visits
+        </a>
+        <a class="button secondary" href="/Workspace/Orders">
+            My orders
+        </a>
+    </div>
+}
+else
+{
+    <div class="stat-grid section">
+        @foreach (var s in Model.Where(r=>role=="Admin"||r.Label is not("Users" or "Owners awaiting approval" or "Orders")))
+        {
+            <a class="card stat-card" href="@s.Url">
+                <div class="stat-icon">
+                    <i data-lucide="@StatIcon(s.Label)" aria-hidden="true"></i>
+                </div>
+                <span>
+                    @s.Label
+                </span>
+                <strong>
+                    @s.Value
+                </strong>
+                <small>
+                    View details
+                    <i data-lucide="arrow-up-right">
+                    </i>
+                </small>
+            </a>
+        }
+    </div>
+    <div class="grid two section">
+        @foreach (var group in related.GroupBy(x=>x.Chart))
+        {
+            <section class="card">
+                <h2>
+                    @group.Key
+                </h2>
+                <div class="chart" data-chart="@group.Key">
+                    @foreach (var point in group)
+                    {
+                        <div class="chart-row">
+                            <span>
+                                @point.Label
+                            </span>
+                            <progress value="@point.Value" max="@Math.Max(1,group.Max(x=>x.Value))">
+                                @point.Value
+                            </progress>
+                            <strong>
+                                @point.Value
+                            </strong>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+        @if (related.Count==0)
+        {
+            <div class="card empty-state">
+                <i data-lucide="chart-no-axes-column">
+                </i>
+                <h3>
+                    Your activity will appear here
+                </h3>
+                <p>
+                    Charts use the actual records in your database.
+                </p>
+            </div>
+        }
+    </div>
+}
+@if (role=="User")
+{
+    <section class="section">
+        <div class="section-heading">
+            <h2>
+                Latest roommate posts
+            </h2>
+            <a href="/Catalog/Browse?kind=Room">
+                View all
+            </a>
+        </div>
+        <partial name="_ListingCards" model="roomPosts"/>
+    </section>
+    <section class="section">
+        <div class="section-heading">
+            <h2>
+                Recent essentials
+            </h2>
+            <a href="/Catalog/Browse?kind=Item">
+                Browse marketplace
+            </a>
+        </div>
+        <partial name="_ListingCards" model="marketItems"/>
+    </section>
+}
+else
+{
+    <section class="card section">
+        <div class="section-heading">
+            <h2>
+                Recent visit requests
+            </h2>
+            <a href="/Workspace/Visits">
+                View all
+            </a>
+        </div>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Property
+                        </th>
+                        <th>
+                            Visitor
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in activity)
+                    {
+                        <tr>
+                            <td>
+                                @v.Title
+                            </td>
+                            <td>
+                                @v.FullName
+                            </td>
+                            <td>
+                                @v.VisitAt.AddHours(5.5).ToString("dd MMM, hh:mm tt")
+                            </td>
+                            <td>
+                                <partial name="_Badge" model='v.Status'/>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}
+@if (role=="Admin")
+{
+    <section class="card section">
+        <h2>
+            Owners awaiting review
+        </h2>
+        @foreach (var a in pending)
+        {
+            <div class="section-heading">
+                <strong>
+                    @a.FullName
+                </strong>
+                <a class="button secondary" href="/Admin/Account/@a.Id">
+                    Review
+                </a>
+            </div>
+        }
+        @if (pending.Count==0)
+        {
+            <p class="muted">
+                No pending owner applications.
+            </p>
+        }
+    </section>
+}
+
+@functions {
+    // Picks an icon for a dashboard statistic from its label (display only).
+    string StatIcon(string label)
+    {
+        string l = label.ToLowerInvariant();
+        if (l.Contains("pending") || l.Contains("awaiting")) return "shield-check";
+        if (l.Contains("owner")) return "badge-check";
+        if (l.Contains("user")) return "users";
+        if (l.Contains("visit")) return "calendar-days";
+        if (l.Contains("review")) return "star";
+        if (l.Contains("support") || l.Contains("ticket")) return "life-buoy";
+        if (l.Contains("order")) return "package";
+        if (l.Contains("item") || l.Contains("marketplace")) return "shopping-bag";
+        if (l.Contains("room") || l.Contains("finder")) return "house";
+        if (l.Contains("message")) return "messages-square";
+        if (l.Contains("propert") || l.Contains("listing")) return "building-2";
+        return "layout-dashboard";
+    }
+}
