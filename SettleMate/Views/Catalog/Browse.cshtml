@@ -12,7 +12,7 @@ string kind=Convert.ToString(ViewData["Kind"]) ?? "";
             @ViewData["Title"]
         </h1>
     </div>
-    @if (kind is "Room" or "Finder")
+    @if (kind is "Room" or "Finder" && !User.IsInRole("Owner") && !User.IsInRole("Admin"))
     {
         <a class="button primary" href="/Workspace/Edit?kind=@kind">
             Create a post

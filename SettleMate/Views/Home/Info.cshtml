@@ -88,9 +88,12 @@ else if(Model=="Services")
             <img src="/images/illustrations/marketplace.svg" alt=""/>
             <h2>Buy, sell or rent</h2>
             <p>Local furniture, electronics, books and more with cash on delivery.</p>
+            @if (!User.IsInRole("Owner") && !User.IsInRole("Admin"))
+            {
             <a class="text-link" href="/Catalog/Marketplace">
                 Explore marketplace <i data-lucide="arrow-right"></i>
             </a>
+            }
         </article>
         <article class="service-tile">
             <img src="/images/illustrations/verified.svg" alt=""/>

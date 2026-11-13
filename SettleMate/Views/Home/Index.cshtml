@@ -4,6 +4,8 @@ List<Listing> related=(List<Listing>)ViewData["Related"]!;
     ViewData["Title"] = ViewData["Title"];
     // Popular cities are plain links to the existing Browse search (?city=).
     string[] cities = { "Ahmedabad", "Rajkot", "Surat", "Vadodara", "Gandhinagar" };
+    // Marketplace and roommate posts are for student (User) accounts only.
+    bool studentTools = !User.IsInRole("Owner") && !User.IsInRole("Admin");
 }
 @* ---------- Hero ---------- *@
 <section class="home-hero">
@@ -91,12 +93,15 @@ List<Listing> related=(List<Listing>)ViewData["Related"]!;
             <p>Share a room you have, or tell others the kind of room you need.</p>
             <span class="text-link">Find your people <i data-lucide="arrow-right"></i></span>
         </a>
+        @if (studentTools)
+        {
         <a class="category-card" href="/Catalog/Marketplace">
             <img src="/images/illustrations/marketplace.svg" alt=""/>
             <h3>Student marketplace</h3>
             <p>Buy, sell or rent furniture, electronics and books with cash on delivery.</p>
             <span class="text-link">Explore marketplace <i data-lucide="arrow-right"></i></span>
         </a>
+        }
     </div>
 </section>
 
@@ -152,10 +157,13 @@ List<Listing> related=(List<Listing>)ViewData["Related"]!;
             <p class="eyebrow">Make it yours</p>
             <h2>Essentials for your everyday</h2>
         </div>
+        @if (studentTools)
+        {
         <a href="/Catalog/Marketplace" class="button secondary">
             Explore marketplace
             <i data-lucide="arrow-right"></i>
         </a>
+        }
     </div>
     <partial name="_ListingCards" model="related"/>
 </section>

@@ -113,7 +113,7 @@ string section=Convert.ToString(ViewData["Section"]) ?? "";
                                     <label for="at-@row.Id">
                                         Confirm date & time (India)
                                     </label>
-                                    <input type="datetime-local" id="at-@row.Id" name="at" required value="@row.VisitAt.AddHours(5.5).ToString("yyyy-MM-ddTHH:mm")"/>
+                                    <input type="datetime-local" id="at-@row.Id" name="at" required min="@DateTime.UtcNow.AddHours(5.5).AddMinutes(5).ToString("yyyy-MM-ddTHH:mm")" max="@DateTime.UtcNow.AddHours(5.5).AddYears(1).ToString("yyyy-MM-ddTHH:mm")" value="@row.VisitAt.AddHours(5.5).ToString("yyyy-MM-ddTHH:mm")"/>
                                 </div>
                                 <div class="field">
                                     <label for="message-@row.Id">

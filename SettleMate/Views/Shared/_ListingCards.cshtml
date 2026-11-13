@@ -59,7 +59,7 @@ else
                     </div>
                     <div class="card-title-row">
                         <span class="hint">
-                            @(l.Rating == 0?"No reviews yet":"★ "+l.Rating)
+                            @(l.Rating == 0?"No reviews yet":"★ "+l.Rating.ToString("0.0"))
                         </span>
                         <a class="text-link" href="/Catalog/Details/@l.Id">
                             View details

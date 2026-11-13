@@ -249,7 +249,7 @@ bool saved=(bool)ViewData["Saved"]!;
                         Reviews
                     </h2>
                     <span>
-                        @(l.Rating == 0?"No ratings yet":"★ "+l.Rating)
+                        @(l.Rating == 0?"No ratings yet":"★ "+l.Rating.ToString("0.0"))
                     </span>
                 </div>
                 @foreach (var review in reviews)
@@ -457,7 +457,7 @@ bool saved=(bool)ViewData["Saved"]!;
                                     <label for="visit-at">
                                         Visit date and time (India)
                                     </label>
-                                    <input id="visit-at" name="at" type="datetime-local" required/>
+                                    <input id="visit-at" name="at" type="datetime-local" required min="@DateTime.UtcNow.AddHours(5.5).AddMinutes(5).ToString("yyyy-MM-ddTHH:mm")" max="@DateTime.UtcNow.AddHours(5.5).AddYears(1).ToString("yyyy-MM-ddTHH:mm")"/>
                                 </div>
                                 <div class="field">
                                     <label for="visit-message">
